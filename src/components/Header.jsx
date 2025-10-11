@@ -85,7 +85,7 @@ function Header() {
     <div className="container-fluid position-relative p-0">
       <nav className="navbar navbar-expand-lg navbar-light px-4 px-lg-5 py-3 py-lg-0">
         <Link to="/" className="navbar-brand p-0" style={{ display: 'flex', alignItems: 'center'}}>
-        <img src="public/assets/img/diamond logo.png" style={{width: '30px'}} alt="Logo"></img>
+        <img src="/assets/img/diamond logo.png" style={{width: '30px'}} alt="Diamond Travels Logo"></img>
           <h1 className="text-primary m-0" style={{ fontSize: "1rem", paddingLeft: '10px', fontFamily: "'Raleway', system-ui, Avenir, Helvetica, Arial, sans-serif" }}>
             Diamond Travels
           </h1>
