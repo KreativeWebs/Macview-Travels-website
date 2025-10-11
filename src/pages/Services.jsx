@@ -82,6 +82,59 @@ function Services() {
                 </div>
               </div>
             </div>
+
+            <div className="col-lg-3 col-sm-6 wow fadeInUp" data-wow-delay="0.7s">
+              <div className="service-item rounded pt-3">
+                <div className="p-4">
+                  <i className="fa fa-3x fa-cog text-primary mb-4" />
+                  <h5 style={{ fontFamily: "'Raleway', system-ui, Avenir, Helvetica, Arial, sans-serif" }}>Chartered Flights</h5>
+                  <p>
+                    From destination weddings to corporate retreats, we handle all
+                    logistics for memorable group events.
+                  </p>
+                </div>
+              </div>
+            </div>
+
+             <div className="col-lg-3 col-sm-6 wow fadeInUp" data-wow-delay="0.5s">
+              <div className="service-item rounded pt-3">
+                <div className="p-4">
+                  <i className="fa fa-3x fa-user text-primary mb-4" />
+                  <h5 style={{ fontFamily: "'Raleway', system-ui, Avenir, Helvetica, Arial, sans-serif" }}>Protocol Service</h5>
+                  <p>
+                    Enjoy personalized tours led by experienced local guides who
+                    bring destinations to life.
+                  </p>
+                </div>
+              </div>
+            </div>
+
+             <div className="col-lg-3 col-sm-6 wow fadeInUp" data-wow-delay="0.3s">
+              <div className="service-item rounded pt-3">
+                <div className="p-4">
+                  <i className="fa fa-3x fa-hotel text-primary mb-4" />
+                  <h5 style={{ fontFamily: "'Raleway', system-ui, Avenir, Helvetica, Arial, sans-serif" }}>Travel Insurance</h5>
+                  <p>
+                    Stay at premium hotels and resorts, handpicked for comfort,
+                    luxury, and location.
+                  </p>
+                </div>
+              </div>
+            </div>
+
+             <div className="col-lg-3 col-sm-6 wow fadeInUp" data-wow-delay="0.1s">
+              <div className="service-item rounded pt-3">
+                <div className="p-4">
+                  <i className="fa fa-3x fa-globe text-primary mb-4" />
+                  <h5 style={{ fontFamily: "'Raleway', system-ui, Avenir, Helvetica, Arial, sans-serif" }}>Airport Transfers</h5>
+                  <p>
+                    Explore top destinations across continents with expertly guided
+                    tours and exclusive experiences.
+                  </p>
+                </div>
+              </div>
+            </div>
+            
           </div>
         </div>
       </div>

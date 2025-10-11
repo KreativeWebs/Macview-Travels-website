@@ -1,13 +1,17 @@
 /********** Template CSS **********/
 :root {
-    --primary: #86B817;
-    --secondary: #FE8800;
+    --primary: #175AA1;
+    --secondary: #F1741E;
     --light: #F5F5F5;
     --dark: #14141F;
+    --darkblack: #000000;
 }
 
 body {
   overflow-x: hidden;
+  font-family: 'Raleway', sans-serif;
+  color: #000000;
+
 }
 
 .fw-medium {
@@ -82,6 +86,7 @@ body {
 
 
 /*** Navbar ***/
+
 .navbar-light .navbar-nav .nav-link {
     font-family: 'Nunito', sans-serif;
     position: relative;
@@ -101,7 +106,7 @@ body {
 
 .navbar-light .navbar-nav .nav-link:hover,
 .navbar-light .navbar-nav .nav-link.active {
-    color: var(--primary) !important;
+    color: var(--secondary) !important;
 }
 
 .navbar-light .navbar-brand img {
@@ -176,11 +181,13 @@ body {
 
 /*** Hero Header ***/
 .hero-header {
-    background: linear-gradient(rgba(20, 20, 31, .7), rgba(20, 20, 31, .7)), url(../img/bg-hero.jpg);
+    background: linear-gradient(rgba(20, 20, 31, .7), rgba(20, 20, 31, .7)), url(../img/bg\ hero1.jpg);
     background-position: center center;
     background-repeat: no-repeat;
     background-size: cover;
 }
+
+
 
 .breadcrumb-item + .breadcrumb-item::before {
     color: rgba(255, 255, 255, .5);

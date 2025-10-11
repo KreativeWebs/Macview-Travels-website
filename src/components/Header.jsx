@@ -85,9 +85,9 @@ function Header() {
     <div className="container-fluid position-relative p-0">
       <nav className="navbar navbar-expand-lg navbar-light px-4 px-lg-5 py-3 py-lg-0">
         <Link to="/" className="navbar-brand p-0" style={{ display: 'flex', alignItems: 'center'}}>
-        <img src="/assets/img/diamond logo.png" style={{width: '30px'}} alt="Diamond Travels Logo"></img>
+        <img src="/assets/img/logo macview.png" style={{width: '30px'}} alt="Macview Travels Logo"></img>
           <h1 className="text-primary m-0" style={{ fontSize: "1rem", paddingLeft: '10px', fontFamily: "'Raleway', system-ui, Avenir, Helvetica, Arial, sans-serif" }}>
-            Diamond Travels
+            Macview Travels
           </h1>
           
         </Link>
@@ -100,43 +100,43 @@ function Header() {
           <span className="fa fa-bars" />
         </button>
         <div className="collapse navbar-collapse" id="navbarCollapse">
-          <div className="navbar-nav ms-auto py-0">
-            <Link to="/" className="nav-item nav-link">
+          <div className="navbar-nav ms-auto py-0" >
+            <Link to="/" className="nav-item nav-link" style={{ fontFamily: "'Raleway', sans-serif", }}>
               Home
             </Link>
-            <Link to="/About" className="nav-item nav-link">
+            <Link to="/About" className="nav-item nav-link" style={{ fontFamily: "'Raleway', sans-serif" }}>
               About
             </Link>
-            <Link to="/Services" className="nav-item nav-link">
+            <Link to="/Services" className="nav-item nav-link" style={{ fontFamily: "'Raleway', sans-serif",}}>
               Services
             </Link>
-            <Link to="/Packages" className="nav-item nav-link">
+            <Link to="/Packages" className="nav-item nav-link" style={{ fontFamily: "'Raleway', sans-serif" }}>
               Packages
             </Link>
-            <div className="nav-item dropdown">
+            <div className="nav-item dropdown" style={{ fontFamily: "'Raleway', sans-serif" }}>
               <Link
                 to="#"
                 className="nav-link dropdown-toggle"
-                data-bs-toggle="dropdown"
+                data-bs-toggle="dropdown" style={{ fontFamily: "'Raleway', sans-serif" }}
               >
                 Pages
               </Link>
               <div className="dropdown-menu m-0">
-                <Link to="/Destination" className="dropdown-item">
+                <Link to="/Destination" className="dropdown-item" style={{ fontFamily: "'Raleway', sans-serif" }}>
                   Destination
                 </Link>
-                <Link to="/Booking" className="dropdown-item">
+                <Link to="/Booking" className="dropdown-item" style={{ fontFamily: "'Raleway', sans-serif" }}>
                   Booking
                 </Link>
-                <Link to="/Team" className="dropdown-item">
+                <Link to="/Team" className="dropdown-item" style={{ fontFamily: "'Raleway', sans-serif" }}>
                   Travel Guides
                 </Link>
-                <Link to="/Testimonial" className="dropdown-item">
+                <Link to="/Testimonial" className="dropdown-item" style={{ fontFamily: "'Raleway', sans-serif" }}>
                   Testimonial
                 </Link>
               </div>
             </div>
-            <Link to="/Contact" className="nav-item nav-link">
+            <Link to="/Contact" className="nav-item nav-link" style={{ fontFamily: "'Raleway', sans-serif" }}>
               Contact
             </Link>
           </div>
