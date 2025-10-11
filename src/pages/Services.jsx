@@ -95,58 +95,66 @@ function Services() {
             </h6>
             <h1 className="mb-5">Our Clients Say</h1>
           </div>
-          <div className="owl-carousel testimonial-carousel position-relative">
-            <div className="testimonial-item bg-white text-center border p-4">
-              <img
-                className="bg-white rounded-circle shadow p-1 mx-auto mb-3"
-                src="assets/img/testimonial-1.jpg"
-                style={{ width: 80, height: 80 }}
-                alt="Sarah Johnson"
-              />
-              <h5 className="mb-0">Sarah Johnson</h5>
-              <p>London, UK</p>
-              <p className="mb-0">
-                "Diamond Travels made our honeymoon in Bali absolutely perfect. Every detail was taken care of, and the guides were fantastic!"
-              </p>
+          <div className="row justify-content-center">
+            <div className="col-md-6 col-lg-3 mb-4">
+              <div className="testimonial-item bg-white text-center border p-4">
+                <img
+                  className="bg-white rounded-circle shadow p-1 mx-auto mb-3"
+                  src="assets/img/testimonial-1.jpg"
+                  style={{ width: 80, height: 80 }}
+                  alt="Sarah Johnson"
+                />
+                <h5 className="mb-0">Sarah Johnson</h5>
+                <p>London, UK</p>
+                <p className="mb-0">
+                  "Diamond Travels made our honeymoon in Bali absolutely perfect. Every detail was taken care of, and the guides were fantastic!"
+                </p>
+              </div>
             </div>
-            <div className="testimonial-item bg-white text-center border p-4">
-              <img
-                className="bg-white rounded-circle shadow p-1 mx-auto mb-3"
-                src="assets/img/testimonial-2.jpg"
-                style={{ width: 80, height: 80 }}
-                alt="Rajesh Patel"
-              />
-              <h5 className="mb-0">Rajesh Patel</h5>
-              <p>Mumbai, India</p>
-              <p className="mt-2 mb-0">
-                "Our family trip to Australia was unforgettable. The itinerary was well-planned and the service was top-notch."
-              </p>
+            <div className="col-md-6 col-lg-3 mb-4">
+              <div className="testimonial-item bg-white text-center border p-4">
+                <img
+                  className="bg-white rounded-circle shadow p-1 mx-auto mb-3"
+                  src="assets/img/testimonial-2.jpg"
+                  style={{ width: 80, height: 80 }}
+                  alt="Rajesh Patel"
+                />
+                <h5 className="mb-0">Rajesh Patel</h5>
+                <p>Mumbai, India</p>
+                <p className="mt-2 mb-0">
+                  "Our family trip to Australia was unforgettable. The itinerary was well-planned and the service was top-notch."
+                </p>
+              </div>
             </div>
-            <div className="testimonial-item bg-white text-center border p-4">
-              <img
-                className="bg-white rounded-circle shadow p-1 mx-auto mb-3"
-                src="assets/img/testimonial-3.jpg"
-                style={{ width: 80, height: 80 }}
-                alt="Linda Chen"
-              />
-              <h5 className="mb-0">Linda Chen</h5>
-              <p>Singapore</p>
-              <p className="mt-2 mb-0">
-                "Highly recommend Diamond Travels! They helped us organize a corporate retreat in Malaysia and everything went smoothly."
-              </p>
+            <div className="col-md-6 col-lg-3 mb-4">
+              <div className="testimonial-item bg-white text-center border p-4">
+                <img
+                  className="bg-white rounded-circle shadow p-1 mx-auto mb-3"
+                  src="assets/img/testimonial-4.jpg"
+                  style={{ width: 80, height: 80 }}
+                  alt="Linda Chen"
+                />
+                <h5 className="mb-0">Linda Chen</h5>
+                <p>Singapore</p>
+                <p className="mt-2 mb-0">
+                  "Highly recommend Diamond Travels! They helped us organize a corporate retreat in Malaysia and everything went smoothly."
+                </p>
+              </div>
             </div>
-            <div className="testimonial-item bg-white text-center border p-4">
-              <img
-                className="bg-white rounded-circle shadow p-1 mx-auto mb-3"
-                src="assets/img/testimonial-4.jpg"
-                style={{ width: 80, height: 80 }}
-                alt="Carlos Rivera"
-              />
-              <h5 className="mb-0">Carlos Rivera</h5>
-              <p>Mexico City, Mexico</p>
-              <p className="mt-2 mb-0">
-                "The adventure tour in Indonesia was thrilling! Great guides, amazing locations, and excellent value."
-              </p>
+            <div className="col-md-6 col-lg-3 mb-4">
+              <div className="testimonial-item bg-white text-center border p-4">
+                <img
+                  className="bg-white rounded-circle shadow p-1 mx-auto mb-3"
+                  src="assets/img/testimonial-3.jpg"
+                  style={{ width: 80, height: 80 }}
+                  alt="Carlos Rivera"
+                />
+                <h5 className="mb-0">Carlos Rivera</h5>
+                <p>Mexico City, Mexico</p>
+                <p className="mt-2 mb-0">
+                  "The adventure tour in Indonesia was thrilling! Great guides, amazing locations, and excellent value."
+                </p>
+              </div>
             </div>
           </div>
         </div>

@@ -74,7 +74,7 @@ function Testimonial() {
                 <img
                   alt="testimonial 3"
                   className="bg-white rounded-circle shadow p-1 mx-auto mb-3"
-                  src="assets/img/testimonial-3.jpg"
+                  src="assets/img/testimonial-4.jpg"
                   style={{ width: 80, height: 80 }}
                 />
                 <h5 className="mb-0">Linda Chen</h5>
@@ -90,7 +90,7 @@ function Testimonial() {
                 <img
                   alt="testimonial 4"
                   className="bg-white rounded-circle shadow p-1 mx-auto mb-3"
-                  src="assets/img/testimonial-4.jpg"
+                  src="assets/img/testimonial-3.jpg"
                   style={{ width: 80, height: 80 }}
                 />
                 <h5 className="mb-0">Carlos Rivera</h5>

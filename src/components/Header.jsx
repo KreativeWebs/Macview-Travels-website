@@ -29,15 +29,15 @@ function Header() {
           >
             <small className="me-3 text-light">
               <i className="fa fa-map-marker-alt me-2" />
-              123 Street, New York, USA
+               42 Explorer Avenue, Lagos, Nigeria
             </small>
             <small className="me-3 text-light">
               <i className="fa fa-phone-alt me-2" />
-              +012 345 6789
+            +234 800 123 4567
             </small>
             <small className="text-light">
               <i className="fa fa-envelope-open me-2" />
-              info@example.com
+            info@diamondtravels.com
             </small>
           </div>
         </div>
@@ -134,18 +134,13 @@ function Header() {
                 <Link to="/Testimonial" className="dropdown-item">
                   Testimonial
                 </Link>
-                <Link to="/Error" className="dropdown-item">
-                  404 Page
-                </Link>
               </div>
             </div>
             <Link to="/Contact" className="nav-item nav-link">
               Contact
             </Link>
           </div>
-          <Link to="/" className="btn btn-primary rounded-pill py-2 px-4">
-            Register
-          </Link>
+          {/* Register button removed */}
         </div>
       </nav>
     </div>
