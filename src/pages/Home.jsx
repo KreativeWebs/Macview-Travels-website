@@ -1,7 +1,18 @@
 import React from "react";
 import { Link } from "react-router-dom";
+import { useEffect } from "react";
+import { Carousel } from "react-bootstrap";
 
 export default function Home() {
+  useEffect(() => {
+    const carouselEl = document.getElementById("destinationCarousel");
+    const carousel = new bootstrap.Carousel(carouselEl, {
+      interval: 3000, // 3 seconds
+      ride: "carousel", // start automatically
+      pause: "hover", // optional: pause on hover
+    });
+  }, []);
+
   return (
     <div
       style={{
@@ -15,10 +26,11 @@ export default function Home() {
           <div className="row justify-content-center py-5">
             <div className="col-lg-10 pt-lg-5 mt-lg-5 text-center">
               <h1
-                className="display-3 text-white mb-3 animated slideInDown"
+                className="display-3 fw-light text-white mb-3 animated slideInDown"
                 style={{ fontFamily: "'Raleway', system-ui, Avenir" }}
               >
-                Discover the World with Macview Travels
+                Discover the World with{" "}
+                <span className="fw-bold"> Macview Travels</span>
               </h1>
 
               <p className="fs-4 text-white mb-4 animated slideInDown">
@@ -34,7 +46,7 @@ export default function Home() {
                 <button
                   type="button"
                   className="btn btn-secondary rounded-pill py-2 px-4 position-absolute top-0 end-0 me-2"
-                  style={{ marginTop: 7 }}
+                  style={{ marginTop: 7, outline: "none", border: "none" }}
                 >
                   Search
                 </button>
@@ -57,7 +69,7 @@ export default function Home() {
                   className="img-fluid position-absolute w-100 h-100"
                   src="assets/img/passport-flight-businessman-standing-airport-checking-departure-times-schedule-travel-work-trip-professional-african-male-waiting-by-terminal-with-his-ticket-board-plane.jpg"
                   alt="Travelers enjoying a scenic view"
-                  style={{ objectFit: "cover", borderRadius: '8px' }}
+                  style={{ objectFit: "cover", borderRadius: "8px" }}
                 />
               </div>
             </div>
@@ -77,6 +89,7 @@ export default function Home() {
                   fontFamily:
                     "'Raleway', system-ui, Avenir, Helvetica, Arial, sans-serif",
                   fontWeight: "400",
+                  fontSize: "40px",
                 }}
               >
                 Welcome to{" "}
@@ -137,14 +150,18 @@ export default function Home() {
                   </p>
                 </div>
               </div>
-             <Link to="/about" className="btn btn-secondary py-3 px-5 mt-4" style={{
+              <Link
+                to="/about"
+                className="btn btn-secondary py-3 px-5 mt-4"
+                style={{
                   fontFamily:
                     "'Raleway', system-ui, Avenir, Helvetica, Arial, sans-serif",
                   fontWeight: "600",
                   outline: "none",
                   border: "none",
                   borderRadius: "4px",
-                }}>
+                }}
+              >
                 Learn More
               </Link>
             </div>
@@ -180,13 +197,17 @@ export default function Home() {
               className="col-lg-3 col-sm-6 wow fadeInUp"
               data-wow-delay="0.1s"
             >
-              <div className="service-item pt-3" style={{ border: '1px #dee2e6', borderRadius: '8px' }}>
+              <div
+                className="service-item pt-3"
+                style={{ border: "1px #dee2e6", borderRadius: "8px" }}
+              >
                 <div className="p-4">
                   <i className="fa fa-3x fa-passport text-secondary mb-4" />
                   <h5
                     style={{
                       fontFamily:
                         "'Raleway', system-ui, Avenir, Helvetica, Arial, sans-serif",
+                      color: "#175aa1",
                     }}
                   >
                     Visa Processing
@@ -203,13 +224,17 @@ export default function Home() {
               className="col-lg-3 col-sm-6 wow fadeInUp"
               data-wow-delay="0.1s"
             >
-              <div className="service-item pt-3" style={{ border: '1px #dee2e6', borderRadius: '8px' }}>
+              <div
+                className="service-item pt-3"
+                style={{ border: "1px #dee2e6", borderRadius: "8px" }}
+              >
                 <div className="p-4">
                   <i className="fa fa-3x fa-plane text-secondary mb-4" />
                   <h5
                     style={{
                       fontFamily:
                         "'Raleway', system-ui, Avenir, Helvetica, Arial, sans-serif",
+                      color: "#175aa1",
                     }}
                   >
                     Flight Booking
@@ -226,13 +251,17 @@ export default function Home() {
               className="col-lg-3 col-sm-6 wow fadeInUp"
               data-wow-delay="0.1s"
             >
-              <div className="service-item pt-3" style={{ border: '1px #dee2e6', borderRadius: '8px' }}>
+              <div
+                className="service-item pt-3"
+                style={{ border: "1px #dee2e6", borderRadius: "8px" }}
+              >
                 <div className="p-4">
                   <i className="fa fa-3x fa-bed text-secondary mb-4" />
                   <h5
                     style={{
                       fontFamily:
                         "'Raleway', system-ui, Avenir, Helvetica, Arial, sans-serif",
+                      color: "#175aa1",
                     }}
                   >
                     Hotel Booking
@@ -248,13 +277,17 @@ export default function Home() {
               className="col-lg-3 col-sm-6 wow fadeInUp"
               data-wow-delay="0.1s"
             >
-              <div className="service-item pt-3" style={{ border: '1px #dee2e6', borderRadius: '8px' }}>
+              <div
+                className="service-item pt-3"
+                style={{ border: "1px #dee2e6", borderRadius: "8px" }}
+              >
                 <div className="p-4">
                   <i className="fa fa-3x fa-graduation-cap text-secondary mb-4" />
                   <h5
                     style={{
                       fontFamily:
-                        "'Raleway', system-ui, Avenir, Helvetica, Arial, sans-serif"
+                        "'Raleway', system-ui, Avenir, Helvetica, Arial, sans-serif",
+                      color: "#175aa1",
                     }}
                   >
                     Study Abroad Programs
@@ -267,14 +300,18 @@ export default function Home() {
               </div>
             </div>
             <div className="text-center mt-5">
-              <Link to="/services" className="btn btn-secondary py-3 px-5 mt-1" style={{
+              <Link
+                to="/services"
+                className="btn btn-secondary py-3 px-5 mt-1"
+                style={{
                   fontFamily:
                     "'Raleway', system-ui, Avenir, Helvetica, Arial, sans-serif",
                   fontWeight: "600",
                   outline: "none",
                   border: "none",
                   borderRadius: "4px",
-                }}>
+                }}
+              >
                 See More
               </Link>
             </div>
@@ -282,124 +319,215 @@ export default function Home() {
         </div>
       </div>
       {/* Service End */}
+
       {/* Destination Start */}
-      <div className="container-xxl py-5 destination">
-        <div className="container">
-          <div className="text-center wow fadeInUp" data-wow-delay="0.1s">
-            <h6
-              className="section-title bg-white text-center text-primary px-3"
-              style={{
-                fontFamily:
-                  "'Raleway', system-ui, Avenir, Helvetica, Arial, sans-serif",
-              }}
-            >
-              Destinations
-            </h6>
-            <h1
-              className="mb-5"
-              style={{
-                fontFamily:
-                  "'Raleway', system-ui, Avenir, Helvetica, Arial, sans-serif",
-              }}
-            >
-              Popular Destinations
-            </h1>
-          </div>
-          <div className="row g-3">
-            <div className="col-lg-7 col-md-6">
-              <div className="row g-3">
-                <div
-                  className="col-lg-12 col-md-12 wow zoomIn"
-                  data-wow-delay="0.1s"
-                >
-                  <a
-                    className="position-relative d-block overflow-hidden"
-                    href=""
-                  >
-                    <img
-                      className="img-fluid"
-                      src="assets/img/destination-1.jpg"
-                      alt="Thailand"
-                    />
-                    <div className="bg-white text-danger fw-bold position-absolute top-0 start-0 m-3 py-1 px-2">
-                      30% OFF
-                    </div>
-                    <div className="bg-white text-primary fw-bold position-absolute bottom-0 end-0 m-3 py-1 px-2">
-                      Thailand – Beaches & Culture
-                    </div>
-                  </a>
-                </div>
-                <div
-                  className="col-lg-6 col-md-12 wow zoomIn"
-                  data-wow-delay="0.3s"
-                >
-                  <a
-                    className="position-relative d-block overflow-hidden"
-                    href=""
-                  >
-                    <img
-                      className="img-fluid"
-                      src="assets/img/destination-2.jpg"
-                      alt="Malaysia"
-                    />
-                    <div className="bg-white text-danger fw-bold position-absolute top-0 start-0 m-3 py-1 px-2">
-                      25% OFF
-                    </div>
-                    <div className="bg-white text-primary fw-bold position-absolute bottom-0 end-0 m-3 py-1 px-2">
-                      Malaysia – Urban Adventures
-                    </div>
-                  </a>
-                </div>
-                <div
-                  className="col-lg-6 col-md-12 wow zoomIn"
-                  data-wow-delay="0.5s"
-                >
-                  <a
-                    className="position-relative d-block overflow-hidden"
-                    href=""
-                  >
-                    <img
-                      className="img-fluid"
-                      src="assets/img/destination-3.jpg"
-                      alt="Australia"
-                    />
-                    <div className="bg-white text-danger fw-bold position-absolute top-0 start-0 m-3 py-1 px-2">
-                      35% OFF
-                    </div>
-                    <div className="bg-white text-primary fw-bold position-absolute bottom-0 end-0 m-3 py-1 px-2">
-                      Australia – Nature & Wildlife
-                    </div>
-                  </a>
-                </div>
-              </div>
-            </div>
-            <div
-              className="col-lg-5 col-md-6 wow zoomIn"
-              data-wow-delay="0.7s"
-              style={{ minHeight: 350 }}
-            >
-              <a
-                className="position-relative d-block h-100 overflow-hidden"
-                href=""
-              >
-                <img
-                  className="img-fluid position-absolute w-100 h-100"
-                  src="assets/img/destination-4.jpg"
-                  alt="Indonesia"
-                  style={{ objectFit: "cover" }}
-                />
-                <div className="bg-white text-danger fw-bold position-absolute top-0 start-0 m-3 py-1 px-2">
-                  20% OFF
-                </div>
-                <div className="bg-white text-primary fw-bold position-absolute bottom-0 end-0 m-3 py-1 px-2">
-                  Indonesia – Islands & Adventure
-                </div>
-              </a>
-            </div>
-          </div>
+      <div
+        className="container-xxl py-5 destination"
+        style={{ borderRadius: "8px", overflow: "hidden" }}
+      >
+        <div className="text-center wow fadeInUp" data-wow-delay="0.1s">
+          <h6
+            className="section-title bg-white text-center text-secondary px-3"
+            style={{
+              fontFamily:
+                "'Raleway', system-ui, Avenir, Helvetica, Arial, sans-serif",
+            }}
+          >
+            DESTINATIONS
+          </h6>
+          <h1
+            className="mb-5"
+            style={{
+              fontFamily:
+                "'Raleway', system-ui, Avenir, Helvetica, Arial, sans-serif",
+            }}
+          >
+            Popular Destinations
+          </h1>
         </div>
+        <Carousel interval={5000} pause={false}>
+          <Carousel.Item>
+            <img
+              className="d-block w-100"
+              src="assets/img/11013.jpg"
+              alt="Thailand"
+              style={{
+                height: "400px",
+                objectFit: "cover",
+                borderRadius: "8px",
+              }}
+            />
+            <Carousel.Caption
+              style={{
+                position: "absolute",
+                top: "50%",
+                left: "50%",
+                transform: "translate(-50%, -50%)",
+                width: "100%", // full width so text can be centered
+                textAlign: "center",
+                whiteSpace: "nowrap", // keeps text on one line
+                overflow: "hidden",
+                textOverflow: "ellipsis",
+                display: "flex",
+                justifyContent: "center",
+                alignItems: "center",
+                flexDirection: "column",
+              }}
+            >
+              <h1
+                className="carousel-title text-white"
+                style={{
+                  fontFamily: "Raleway",
+                  fontSize: "clamp(50px, 8vw, 100px)",
+                  lineHeight: "1.1",
+                  margin: 0,
+                }}
+              >
+                {" "}
+                Indonesia
+              </h1>
+            </Carousel.Caption>
+          </Carousel.Item>
+
+          <Carousel.Item>
+            <img
+              className="d-block w-100"
+              src="assets/img/666.jpg"
+              alt="Thailand"
+              style={{
+                height: "400px",
+                objectFit: "cover",
+                borderRadius: "8px",
+              }}
+            />
+
+            <Carousel.Caption
+              style={{
+                position: "absolute",
+                top: "50%",
+                left: "50%",
+                transform: "translate(-50%, -50%)",
+                width: "100%", // full width so text can be centered
+                textAlign: "center",
+                whiteSpace: "nowrap", // keeps text on one line
+                overflow: "hidden",
+                textOverflow: "ellipsis",
+                display: "flex",
+                justifyContent: "center",
+                alignItems: "center",
+                flexDirection: "column",
+              }}
+            >
+              <h1
+                className="text-white"
+                style={{
+                  fontFamily: "Raleway",
+                  fontSize: "clamp(50px, 8vw, 100px)",
+                  lineHeight: "1.1",
+                  margin: 0,
+                }}
+              >
+                {" "}
+                Singapore
+              </h1>
+            </Carousel.Caption>
+          </Carousel.Item>
+
+          <Carousel.Item>
+            <img
+              className="d-block w-100"
+              src="assets/img/17878885.jpg"
+              alt="Thailand"
+              style={{
+                height: "400px",
+                objectFit: "cover",
+                borderRadius: "8px",
+              }}
+            />
+
+            <Carousel.Caption
+              style={{
+                position: "absolute",
+                top: "50%",
+                left: "50%",
+                transform: "translate(-50%, -50%)",
+                width: "100%", // full width so text can be centered
+                textAlign: "center",
+                whiteSpace: "nowrap", // keeps text on one line
+                overflow: "hidden",
+                textOverflow: "ellipsis",
+                display: "flex",
+                justifyContent: "center",
+                alignItems: "center",
+                flexDirection: "column",
+              }}
+            >
+              <h1
+                className="text-white"
+                style={{
+                  fontFamily: "Raleway",
+                  fontSize: "100px",
+                  fontFamily: "Raleway",
+                  fontSize: "clamp(50px, 8vw, 100px)",
+                  lineHeight: "1.1",
+                  margin: 0,
+                }}
+              >
+                {" "}
+                Qatar
+              </h1>
+            </Carousel.Caption>
+          </Carousel.Item>
+
+          <Carousel.Item>
+            <img
+              className="d-block w-100"
+              src="assets/img/10880824.jpg"
+              alt="Thailand"
+              style={{
+                height: "400px",
+                objectFit: "cover",
+                borderRadius: "8px",
+              }}
+            />
+
+            <Carousel.Caption
+              style={{
+                position: "absolute",
+                top: "50%",
+                left: "50%",
+                transform: "translate(-50%, -50%)",
+                width: "100%", // full width so text can be centered
+                textAlign: "center",
+                whiteSpace: "nowrap", // keeps text on one line
+                overflow: "hidden",
+                textOverflow: "ellipsis",
+                display: "flex",
+                justifyContent: "center",
+                alignItems: "center",
+                flexDirection: "column",
+              }}
+            >
+              <h1
+                className="text-white"
+                style={{
+                  fontFamily: "Raleway",
+                  fontSize: "clamp(40px, 8vw, 100px)",
+                  lineHeight: "1.1",
+                  margin: 0,
+                }}
+              >
+                {" "}
+                South Africa
+              </h1>
+            </Carousel.Caption>
+          </Carousel.Item>
+          {/* Add other slides similarly */}
+        </Carousel>
       </div>
+
       {/* Destination End */}
+
       {/* Package Start */}
       <div className="container-xxl py-5">
         <div className="container">
@@ -428,167 +556,252 @@ export default function Home() {
               className="col-lg-4 col-md-6 wow fadeInUp"
               data-wow-delay="0.1s"
             >
-              <div className="package-item">
-                <div className="overflow-hidden">
+              <div
+                className="package-item overflow-hidden"
+                style={{
+                  borderRadius: "15px",
+                  height: "600px",
+                }}
+              >
+                <div
+                  className="overflow-hidden"
+                  style={{
+                    width: "100%", // makes it stretch full width of parent
+                    height: "250px", // set your preferred fixed height
+                    overflow: "hidden",
+                  }}
+                >
                   <img
-                    className="img-fluid"
-                    src="assets/img/package-1.jpg"
+                    className="img-fluid overflow-hidden"
+                    src="assets/img/Capetown summer.jpeg"
                     alt="Thailand Explorer"
+                    style={{
+                      width: "100%",
+                      height: "100%",
+                      objectFit: "cover",
+                    }}
                   />
                 </div>
                 <div className="d-flex border-bottom">
                   <small className="flex-fill text-center border-end py-2">
-                    <i className="fa fa-map-marker-alt text-primary me-2" />
-                    Thailand
+                    <i className="fa fa-map-marker-alt text-secondary me-2" />
+                    Capetown
                   </small>
                   <small className="flex-fill text-center border-end py-2">
-                    <i className="fa fa-calendar-alt text-primary me-2" />5 days
+                    <i className="fa fa-calendar-alt text-secondary me-2" />5
+                    Nights
                   </small>
                   <small className="flex-fill text-center py-2">
-                    <i className="fa fa-user text-primary me-2" />2 Persons
+                    <i className="fa fa-user text-secondary me-2" />1 Person
                   </small>
                 </div>
                 <div className="text-center p-4">
-                  <h3 className="mb-0">$499.00</h3>
+                  <h3 className="mb-0" style={{ fontFamily: "Raleway" }}>
+                    ₦509,999
+                  </h3>
                   <div className="mb-3">
-                    <small className="fa fa-star text-primary" />
-                    <small className="fa fa-star text-primary" />
-                    <small className="fa fa-star text-primary" />
-                    <small className="fa fa-star text-primary" />
-                    <small className="fa fa-star text-primary" />
+                    <small className="fa fa-star text-secondary" />
+                    <small className="fa fa-star text-secondary" />
+                    <small className="fa fa-star text-secondary" />
+                    <small className="fa fa-star text-secondary" />
+                    <small className="fa fa-star text-secondary" />
                   </div>
+
+                  <h5
+                    className="mt-4"
+                    style={{ fontFamily: "Raleway", color: "#175AA1" }}
+                  >
+                    CapeTown Summer Package
+                  </h5>
                   <p>
-                    Experience the vibrant culture, stunning beaches, and
-                    delicious cuisine of Thailand with our all-inclusive
-                    package.
+                    Cape Town is calling! From beaches to breathtaking views,
+                    this summer getaway is your ticket to relaxation, adventure,
+                    and endless sunshine.
                   </p>
                   <div className="d-flex justify-content-center mb-2">
-                    <a
-                      href="#"
-                      className="btn btn-sm btn-primary px-3 border-end"
-                      style={{ borderRadius: "30px 0 0 30px" }}
-                    >
-                      Read More
-                    </a>
-                    <a
-                      href="#"
-                      className="btn btn-sm btn-primary px-3"
-                      style={{ borderRadius: "0 30px 30px 0" }}
+                    <Link
+                      to="/booking"
+                      className="btn btn-sm btn-secondary px-5"
+                      style={{
+                        borderRadius: "12px",
+                        fontFamily: "Raleway",
+                        fontWeight: "800",
+                        outline: "none",
+                        border: "none",
+                      }}
                     >
                       Book Now
-                    </a>
+                    </Link>
                   </div>
                 </div>
               </div>
             </div>
+
             <div
               className="col-lg-4 col-md-6 wow fadeInUp"
-              data-wow-delay="0.3s"
+              data-wow-delay="0.1s"
+              style={{}}
             >
-              <div className="package-item">
-                <div className="overflow-hidden">
+              <div
+                className="package-item overflow-hidden"
+                style={{
+                  borderRadius: "15px",
+                  height: "600px",
+                }}
+              >
+                <div
+                  style={{
+                    width: "100%",
+                    height: "250px",
+                    overflow: "hidden",
+                  }}
+                >
                   <img
                     className="img-fluid"
-                    src="assets/img/package-2.jpg"
-                    alt="Indonesia Adventure"
+                    src="assets\img\Lagos bridge.jpeg"
+                    alt="Lagos Tour"
+                    style={{
+                      width: "100%",
+                      height: "100%",
+                      objectFit: "cover",
+                    }}
                   />
                 </div>
                 <div className="d-flex border-bottom">
                   <small className="flex-fill text-center border-end py-2">
-                    <i className="fa fa-map-marker-alt text-primary me-2" />
-                    Indonesia
+                    <i className="fa fa-map-marker-alt text-secondary me-2" />
+                    Lagos
                   </small>
                   <small className="flex-fill text-center border-end py-2">
-                    <i className="fa fa-calendar-alt text-primary me-2" />7 days
+                    <i className="fa fa-calendar-alt text-secondary me-2" />1
+                    Day
                   </small>
                   <small className="flex-fill text-center py-2">
-                    <i className="fa fa-user text-primary me-2" />2 Persons
+                    <i className="fa fa-user text-secondary me-2" />1 Person
                   </small>
                 </div>
                 <div className="text-center p-4">
-                  <h3 className="mb-0">$699.00</h3>
+                  <h3 className="mb-0" style={{ fontFamily: "Raleway" }}>
+                    $150.00
+                  </h3>
                   <div className="mb-3">
-                    <small className="fa fa-star text-primary" />
-                    <small className="fa fa-star text-primary" />
-                    <small className="fa fa-star text-primary" />
-                    <small className="fa fa-star text-primary" />
-                    <small className="fa fa-star text-primary" />
+                    <small className="fa fa-star text-secondary" />
+                    <small className="fa fa-star text-secondary" />
+                    <small className="fa fa-star text-secondary" />
+                    <small className="fa fa-star text-secondary" />
+                    <small className="fa fa-star text-secondary" />
                   </div>
+
+                  <h5
+                    className="mt-4"
+                    style={{ fontFamily: "Raleway", color: "#175AA1" }}
+                  >
+                    One Day Lagos City Tour
+                  </h5>
                   <p>
-                    Discover the magic of Bali and beyond with guided tours,
-                    island hopping, and cultural experiences.
+                    Discover the heartbeat of Nigeria in just one day!
+                    Experience the perfect mix of culture, art, food, and city
+                    life that makes Lagos unforgettable.
                   </p>
                   <div className="d-flex justify-content-center mb-2">
-                    <a
-                      href="#"
-                      className="btn btn-sm btn-primary px-3 border-end"
-                      style={{ borderRadius: "30px 0 0 30px" }}
-                    >
-                      Read More
-                    </a>
-                    <a
-                      href="#"
-                      className="btn btn-sm btn-primary px-3"
-                      style={{ borderRadius: "0 30px 30px 0" }}
+                    <Link
+                      to="/booking"
+                      className="btn btn-sm btn-secondary px-5"
+                      style={{
+                        borderRadius: "12px",
+                        fontFamily: "Raleway",
+                        fontWeight: "800",
+                        outline: "none",
+                        border: "none",
+                      }}
                     >
                       Book Now
-                    </a>
+                    </Link>
                   </div>
                 </div>
               </div>
             </div>
+
             <div
               className="col-lg-4 col-md-6 wow fadeInUp"
-              data-wow-delay="0.5s"
+              data-wow-delay="0.1s"
             >
-              <div className="package-item">
-                <div className="overflow-hidden">
+              <div
+                className="package-item overflow-hidden"
+                style={{
+                  borderRadius: "15px",
+                  height: "600px",
+                }}
+              >
+                <div
+                  className="overflow-hidden"
+                  style={{
+                    width: "100%",
+                    height: "250px",
+                    overflow: "hidden",
+                  }}
+                >
                   <img
-                    className="img-fluid"
-                    src="assets/img/package-3.jpg"
-                    alt="Malaysia City Lights"
+                    className="img-fluid overflow-hidden"
+                    src="assets\img\Así es el Banana Island Resort, el alojamiento de lujo en una isla en Doha.jpeg"
+                    alt="Thailand Explorer"
+                    style={{
+                      width: "100%",
+                      height: "100%",
+                      objectFit: "cover",
+                    }}
                   />
                 </div>
                 <div className="d-flex border-bottom">
                   <small className="flex-fill text-center border-end py-2">
-                    <i className="fa fa-map-marker-alt text-primary me-2" />
-                    Malaysia
+                    <i className="fa fa-map-marker-alt text-secondary me-2" />
+                    Qatar
                   </small>
                   <small className="flex-fill text-center border-end py-2">
-                    <i className="fa fa-calendar-alt text-primary me-2" />4 days
+                    <i className="fa fa-calendar-alt text-secondary me-2" />5
+                    Nights
                   </small>
                   <small className="flex-fill text-center py-2">
-                    <i className="fa fa-user text-primary me-2" />2 Persons
+                    <i className="fa fa-user text-secondary me-2" />1 Person
                   </small>
                 </div>
                 <div className="text-center p-4">
-                  <h3 className="mb-0">$399.00</h3>
+                  <h3 className="mb-0" style={{ fontFamily: "Raleway" }}>
+                    ₦6,800,000
+                  </h3>
                   <div className="mb-3">
-                    <small className="fa fa-star text-primary" />
-                    <small className="fa fa-star text-primary" />
-                    <small className="fa fa-star text-primary" />
-                    <small className="fa fa-star text-primary" />
-                    <small className="fa fa-star text-primary" />
+                    <small className="fa fa-star text-secondary" />
+                    <small className="fa fa-star text-secondary" />
+                    <small className="fa fa-star text-secondary" />
+                    <small className="fa fa-star text-secondary" />
+                    <small className="fa fa-star text-secondary" />
                   </div>
+
+                  <h5
+                    className="mt-4"
+                    style={{ fontFamily: "Raleway", color: "#175AA1" }}
+                  >
+                    Banana Island Luxury Package
+                  </h5>
                   <p>
-                    Enjoy the best of Kuala Lumpur and Penang with city tours,
-                    culinary delights, and shopping excursions.
+                    Escape to Banana Island, Qatar’s hidden paradise of luxury
+                    and tranquility. Indulge in five-star comfort, stunning
+                    ocean views, private beaches, and world-class dining.
                   </p>
                   <div className="d-flex justify-content-center mb-2">
-                    <a
-                      href="#"
-                      className="btn btn-sm btn-primary px-3 border-end"
-                      style={{ borderRadius: "30px 0 0 30px" }}
-                    >
-                      Read More
-                    </a>
-                    <a
-                      href="#"
-                      className="btn btn-sm btn-primary px-3"
-                      style={{ borderRadius: "0 30px 30px 0" }}
+                    <Link
+                      to="/booking"
+                      className="btn btn-sm btn-secondary px-5"
+                      style={{
+                        borderRadius: "12px",
+                        fontFamily: "Raleway",
+                        fontWeight: "800",
+                        outline: "none",
+                        border: "none",
+                      }}
                     >
                       Book Now
-                    </a>
+                    </Link>
                   </div>
                 </div>
               </div>
@@ -597,6 +810,374 @@ export default function Home() {
         </div>
       </div>
       {/* Package End */}
+
+      {/* Flash Sales Start */}
+      <div
+        className="container-xxl py-5 destination"
+        style={{ borderRadius: "8px", overflow: "hidden" }}
+      >
+        <div className="text-center wow fadeInUp" data-wow-delay="0.1s">
+          <h6
+            className="section-title bg-white text-center text-secondary px-3"
+            style={{
+              fontFamily:
+                "'Raleway', system-ui, Avenir, Helvetica, Arial, sans-serif",
+            }}
+          >
+            Flash Sales
+          </h6>
+          <h1
+            className="mb-5"
+            style={{
+              fontFamily:
+                "'Raleway', system-ui, Avenir, Helvetica, Arial, sans-serif",
+            }}
+          >
+            Exclusive Flash Offers
+          </h1>
+        </div>
+
+        <Carousel interval={4000} pause={false} className="flash-carousel">
+          {/* Slide 1 */}
+          <Carousel.Item>
+            <a
+              href="#"
+              className="position-relative d-block overflow-hidden"
+              style={{ borderRadius: "8px" }}
+            >
+              <img
+                className="d-block w-100"
+                src="assets/img/web flash sale 1.png"
+                alt="Flash Sale 1"
+               
+              />
+              <div
+                className="bg-white text-danger fw-bold position-absolute top-0 start-0 m-3 py-1 px-2 flash-title"
+                style={{
+                  borderRadius: "4px",
+                  fontFamily: "'Raleway', sans-serif",
+                  fontSize: "14px",
+                }}
+              >
+                Flash Sales
+              </div>
+            </a>
+          </Carousel.Item>
+
+          {/* Slide 2 */}
+          <Carousel.Item>
+            <a
+              href="#"
+              className="position-relative d-block overflow-hidden"
+              style={{ borderRadius: "8px" }}
+            >
+              <img
+                className="d-block w-100"
+                src="assets/img/web flash sale 2.png"
+                alt="Flash Sale 2"
+             
+              />
+              <div
+                className="bg-white text-danger fw-bold position-absolute top-0 start-0 m-3 py-1 px-2 flash-title"
+                style={{
+                  borderRadius: "4px",
+                  fontFamily: "'Raleway', sans-serif",
+                  fontSize: "14px",
+                }}
+              >
+                Flash Sales
+              </div>
+            </a>
+          </Carousel.Item>
+        </Carousel>
+      </div>
+      {/* Flash Sales End */}
+      
+
+      {/* Hotels Start */}
+      <div className="container-xxl py-5">
+        <div className="container">
+          <div className="text-center wow fadeInUp" data-wow-delay="0.1s">
+            <h6
+              className="section-title bg-white text-center text-primary px-3"
+              style={{
+                fontFamily:
+                  "'Raleway', system-ui, Avenir, Helvetica, Arial, sans-serif",
+              }}
+            >
+              Hotels
+            </h6>
+            <h1
+              className="mb-5"
+              style={{
+                fontFamily:
+                  "'Raleway', system-ui, Avenir, Helvetica, Arial, sans-serif",
+              }}
+            >
+              Featured Hotels
+            </h1>
+          </div>
+          <div className="row g-4 justify-content-center">
+            <div
+              className="col-lg-4 col-md-6 wow fadeInUp"
+              data-wow-delay="0.1s"
+            >
+              <div
+                className="package-item overflow-hidden"
+                style={{
+                  borderRadius: "15px",
+                  height: "600px",
+                }}
+              >
+                <div
+                  className="overflow-hidden"
+                  style={{
+                    width: "100%", // makes it stretch full width of parent
+                    height: "250px", // set your preferred fixed height
+                    overflow: "hidden",
+                  }}
+                >
+                  <img
+                    className="img-fluid overflow-hidden"
+                    src="assets/img/Capetown summer.jpeg"
+                    alt="Thailand Explorer"
+                    style={{
+                      width: "100%",
+                      height: "100%",
+                      objectFit: "cover",
+                    }}
+                  />
+                </div>
+                <div className="d-flex border-bottom">
+                  <small className="flex-fill text-center border-end py-2">
+                    <i className="fa fa-map-marker-alt text-secondary me-2" />
+                    Capetown
+                  </small>
+                  <small className="flex-fill text-center border-end py-2">
+                    <i className="fa fa-calendar-alt text-secondary me-2" />5
+                    Nights
+                  </small>
+                  <small className="flex-fill text-center py-2">
+                    <i className="fa fa-user text-secondary me-2" />1 Person
+                  </small>
+                </div>
+                <div className="text-center p-4">
+                  <h3 className="mb-0" style={{ fontFamily: "Raleway" }}>
+                    ₦509,999
+                  </h3>
+                  <div className="mb-3">
+                    <small className="fa fa-star text-secondary" />
+                    <small className="fa fa-star text-secondary" />
+                    <small className="fa fa-star text-secondary" />
+                    <small className="fa fa-star text-secondary" />
+                    <small className="fa fa-star text-secondary" />
+                  </div>
+
+                  <h5
+                    className="mt-4"
+                    style={{ fontFamily: "Raleway", color: "#175AA1" }}
+                  >
+                    CapeTown Summer Package
+                  </h5>
+                  <p>
+                    Cape Town is calling! From beaches to breathtaking views,
+                    this summer getaway is your ticket to relaxation, adventure,
+                    and endless sunshine.
+                  </p>
+                  <div className="d-flex justify-content-center mb-2">
+                    <Link
+                      to="/booking"
+                      className="btn btn-sm btn-secondary px-5"
+                      style={{
+                        borderRadius: "12px",
+                        fontFamily: "Raleway",
+                        fontWeight: "800",
+                        outline: "none",
+                        border: "none",
+                      }}
+                    >
+                      Book Now
+                    </Link>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <div
+              className="col-lg-4 col-md-6 wow fadeInUp"
+              data-wow-delay="0.1s"
+              style={{}}
+            >
+              <div
+                className="package-item overflow-hidden"
+                style={{
+                  borderRadius: "15px",
+                  height: "600px",
+                }}
+              >
+                <div
+                  style={{
+                    width: "100%",
+                    height: "250px",
+                    overflow: "hidden",
+                  }}
+                >
+                  <img
+                    className="img-fluid"
+                    src="assets\img\Lagos bridge.jpeg"
+                    alt="Lagos Tour"
+                    style={{
+                      width: "100%",
+                      height: "100%",
+                      objectFit: "cover",
+                    }}
+                  />
+                </div>
+                <div className="d-flex border-bottom">
+                  <small className="flex-fill text-center border-end py-2">
+                    <i className="fa fa-map-marker-alt text-secondary me-2" />
+                    Lagos
+                  </small>
+                  <small className="flex-fill text-center border-end py-2">
+                    <i className="fa fa-calendar-alt text-secondary me-2" />1
+                    Day
+                  </small>
+                  <small className="flex-fill text-center py-2">
+                    <i className="fa fa-user text-secondary me-2" />1 Person
+                  </small>
+                </div>
+                <div className="text-center p-4">
+                  <h3 className="mb-0" style={{ fontFamily: "Raleway" }}>
+                    $150.00
+                  </h3>
+                  <div className="mb-3">
+                    <small className="fa fa-star text-secondary" />
+                    <small className="fa fa-star text-secondary" />
+                    <small className="fa fa-star text-secondary" />
+                    <small className="fa fa-star text-secondary" />
+                    <small className="fa fa-star text-secondary" />
+                  </div>
+
+                  <h5
+                    className="mt-4"
+                    style={{ fontFamily: "Raleway", color: "#175AA1" }}
+                  >
+                    One Day Lagos City Tour
+                  </h5>
+                  <p>
+                    Discover the heartbeat of Nigeria in just one day!
+                    Experience the perfect mix of culture, art, food, and city
+                    life that makes Lagos unforgettable.
+                  </p>
+                  <div className="d-flex justify-content-center mb-2">
+                    <Link
+                      to="/booking"
+                      className="btn btn-sm btn-secondary px-5"
+                      style={{
+                        borderRadius: "12px",
+                        fontFamily: "Raleway",
+                        fontWeight: "800",
+                        outline: "none",
+                        border: "none",
+                      }}
+                    >
+                      Book Now
+                    </Link>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <div
+              className="col-lg-4 col-md-6 wow fadeInUp"
+              data-wow-delay="0.1s"
+            >
+              <div
+                className="package-item overflow-hidden"
+                style={{
+                  borderRadius: "15px",
+                  height: "600px",
+                }}
+              >
+                <div
+                  className="overflow-hidden"
+                  style={{
+                    width: "100%",
+                    height: "250px",
+                    overflow: "hidden",
+                  }}
+                >
+                  <img
+                    className="img-fluid overflow-hidden"
+                    src="assets\img\Así es el Banana Island Resort, el alojamiento de lujo en una isla en Doha.jpeg"
+                    alt="Thailand Explorer"
+                    style={{
+                      width: "100%",
+                      height: "100%",
+                      objectFit: "cover",
+                    }}
+                  />
+                </div>
+                <div className="d-flex border-bottom">
+                  <small className="flex-fill text-center border-end py-2">
+                    <i className="fa fa-map-marker-alt text-secondary me-2" />
+                    Qatar
+                  </small>
+                  <small className="flex-fill text-center border-end py-2">
+                    <i className="fa fa-calendar-alt text-secondary me-2" />5
+                    Nights
+                  </small>
+                  <small className="flex-fill text-center py-2">
+                    <i className="fa fa-user text-secondary me-2" />1 Person
+                  </small>
+                </div>
+                <div className="text-center p-4">
+                  <h3 className="mb-0" style={{ fontFamily: "Raleway" }}>
+                    ₦6,800,000
+                  </h3>
+                  <div className="mb-3">
+                    <small className="fa fa-star text-secondary" />
+                    <small className="fa fa-star text-secondary" />
+                    <small className="fa fa-star text-secondary" />
+                    <small className="fa fa-star text-secondary" />
+                    <small className="fa fa-star text-secondary" />
+                  </div>
+
+                  <h5
+                    className="mt-4"
+                    style={{ fontFamily: "Raleway", color: "#175AA1" }}
+                  >
+                    Banana Island Luxury Package
+                  </h5>
+                  <p>
+                    Escape to Banana Island, Qatar’s hidden paradise of luxury
+                    and tranquility. Indulge in five-star comfort, stunning
+                    ocean views, private beaches, and world-class dining.
+                  </p>
+                  <div className="d-flex justify-content-center mb-2">
+                    <Link
+                      to="/booking"
+                      className="btn btn-sm btn-secondary px-5"
+                      style={{
+                        borderRadius: "12px",
+                        fontFamily: "Raleway",
+                        fontWeight: "800",
+                        outline: "none",
+                        border: "none",
+                      }}
+                    >
+                      Book Now
+                    </Link>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+      {/* Hotels End */}
+
+
       {/* Booking Start */}
       <div className="container-xxl py-5 wow fadeInUp" data-wow-delay="0.1s">
         <div className="container">
