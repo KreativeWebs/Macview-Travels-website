@@ -2,6 +2,13 @@ import React from "react";
 import { Link } from "react-router-dom";
 import { useEffect } from "react";
 import { Carousel } from "react-bootstrap";
+import { Swiper, SwiperSlide } from "swiper/react";
+import { Navigation } from "swiper/modules";
+import "swiper/css";
+import "swiper/css/navigation";
+import VisaCatalogue from "./VisaCatalogue";
+import Testimonial from "./Testimonial";
+import Newsletter from "./Newsletter";
 
 export default function Home() {
   useEffect(() => {
@@ -849,7 +856,6 @@ export default function Home() {
                 className="d-block w-100"
                 src="assets/img/web flash sale 1.png"
                 alt="Flash Sale 1"
-               
               />
               <div
                 className="bg-white text-danger fw-bold position-absolute top-0 start-0 m-3 py-1 px-2 flash-title"
@@ -875,7 +881,6 @@ export default function Home() {
                 className="d-block w-100"
                 src="assets/img/web flash sale 2.png"
                 alt="Flash Sale 2"
-             
               />
               <div
                 className="bg-white text-danger fw-bold position-absolute top-0 start-0 m-3 py-1 px-2 flash-title"
@@ -892,7 +897,6 @@ export default function Home() {
         </Carousel>
       </div>
       {/* Flash Sales End */}
-      
 
       {/* Hotels Start */}
       <div className="container-xxl py-5">
@@ -900,416 +904,461 @@ export default function Home() {
           <div className="text-center wow fadeInUp" data-wow-delay="0.1s">
             <h6
               className="section-title bg-white text-center text-primary px-3"
-              style={{
-                fontFamily:
-                  "'Raleway', system-ui, Avenir, Helvetica, Arial, sans-serif",
-              }}
+              style={{ fontFamily: "Raleway", color: "#f1741e" }}
             >
               Hotels
             </h6>
-            <h1
-              className="mb-5"
-              style={{
-                fontFamily:
-                  "'Raleway', system-ui, Avenir, Helvetica, Arial, sans-serif",
-              }}
-            >
+            <h1 className="mb-5" style={{ fontFamily: "Raleway" }}>
               Featured Hotels
             </h1>
           </div>
-          <div className="row g-4 justify-content-center">
-            <div
-              className="col-lg-4 col-md-6 wow fadeInUp"
-              data-wow-delay="0.1s"
+
+          <div className="swiper-wrapper-container position-relative">
+            <Swiper
+              modules={[Navigation]}
+              spaceBetween={30}
+              slidesPerView={3}
+              navigation={{
+                prevEl: ".custom-prev",
+                nextEl: ".custom-next",
+              }}
+              breakpoints={{
+                0: { slidesPerView: 1 },
+                768: { slidesPerView: 2 },
+                1024: { slidesPerView: 3 },
+                1400: { slidesPerView: 4 },
+              }}
+              className="mySwiper"
+              style={{ paddingBottom: "50px" }}
             >
-              <div
-                className="package-item overflow-hidden"
-                style={{
-                  borderRadius: "15px",
-                  height: "600px",
-                }}
-              >
+              {/* Slide 1 */}
+              <SwiperSlide>
                 <div
-                  className="overflow-hidden"
-                  style={{
-                    width: "100%", // makes it stretch full width of parent
-                    height: "250px", // set your preferred fixed height
-                    overflow: "hidden",
-                  }}
+                  className="package-item overflow-hidden position-relative"
+                  style={{ borderRadius: "15px", height: "400px" }}
                 >
-                  <img
-                    className="img-fluid overflow-hidden"
-                    src="assets/img/Capetown summer.jpeg"
-                    alt="Thailand Explorer"
+                  {/* Image */}
+                  <div
                     style={{
                       width: "100%",
                       height: "100%",
-                      objectFit: "cover",
+                      overflow: "hidden",
                     }}
-                  />
-                </div>
-                <div className="d-flex border-bottom">
-                  <small className="flex-fill text-center border-end py-2">
-                    <i className="fa fa-map-marker-alt text-secondary me-2" />
-                    Capetown
-                  </small>
-                  <small className="flex-fill text-center border-end py-2">
-                    <i className="fa fa-calendar-alt text-secondary me-2" />5
-                    Nights
-                  </small>
-                  <small className="flex-fill text-center py-2">
-                    <i className="fa fa-user text-secondary me-2" />1 Person
-                  </small>
-                </div>
-                <div className="text-center p-4">
-                  <h3 className="mb-0" style={{ fontFamily: "Raleway" }}>
-                    ₦509,999
-                  </h3>
-                  <div className="mb-3">
-                    <small className="fa fa-star text-secondary" />
-                    <small className="fa fa-star text-secondary" />
-                    <small className="fa fa-star text-secondary" />
-                    <small className="fa fa-star text-secondary" />
-                    <small className="fa fa-star text-secondary" />
+                  >
+                    <img
+                      src="assets/img/Mövenpick Hotel West Bay Doha.jpeg"
+                      alt="Qatar"
+                      className="img-fluid"
+                      style={{
+                        width: "100%",
+                        height: "100%",
+                        objectFit: "cover",
+                      }}
+                    />
                   </div>
 
-                  <h5
-                    className="mt-4"
-                    style={{ fontFamily: "Raleway", color: "#175AA1" }}
+                  {/* <div
+                  className="position-absolute top-0 start-0 w-100 h-100"
+                  style={{
+                    backgroundColor: "rgba(0, 0, 0, 0.3)",
+                    borderRadius: "15px",
+                    zIndex: 1,
+                  }}
+                ></div> */}
+
+                  <div
+                    className="position-absolute top-50 start-50 translate-middle text-center text-white"
+                    style={{ zIndex: 2 }}
                   >
-                    CapeTown Summer Package
-                  </h5>
-                  <p>
-                    Cape Town is calling! From beaches to breathtaking views,
-                    this summer getaway is your ticket to relaxation, adventure,
-                    and endless sunshine.
-                  </p>
-                  <div className="d-flex justify-content-center mb-2">
-                    <Link
-                      to="/booking"
-                      className="btn btn-sm btn-secondary px-5"
+                    <h1
                       style={{
-                        borderRadius: "12px",
                         fontFamily: "Raleway",
-                        fontWeight: "800",
-                        outline: "none",
-                        border: "none",
+                        fontWeight: "700",
+                        color: "#ffffff",
                       }}
                     >
-                      Book Now
-                    </Link>
-                  </div>
-                </div>
-              </div>
-            </div>
-
-            <div
-              className="col-lg-4 col-md-6 wow fadeInUp"
-              data-wow-delay="0.1s"
-              style={{}}
-            >
-              <div
-                className="package-item overflow-hidden"
-                style={{
-                  borderRadius: "15px",
-                  height: "600px",
-                }}
-              >
-                <div
-                  style={{
-                    width: "100%",
-                    height: "250px",
-                    overflow: "hidden",
-                  }}
-                >
-                  <img
-                    className="img-fluid"
-                    src="assets\img\Lagos bridge.jpeg"
-                    alt="Lagos Tour"
-                    style={{
-                      width: "100%",
-                      height: "100%",
-                      objectFit: "cover",
-                    }}
-                  />
-                </div>
-                <div className="d-flex border-bottom">
-                  <small className="flex-fill text-center border-end py-2">
-                    <i className="fa fa-map-marker-alt text-secondary me-2" />
-                    Lagos
-                  </small>
-                  <small className="flex-fill text-center border-end py-2">
-                    <i className="fa fa-calendar-alt text-secondary me-2" />1
-                    Day
-                  </small>
-                  <small className="flex-fill text-center py-2">
-                    <i className="fa fa-user text-secondary me-2" />1 Person
-                  </small>
-                </div>
-                <div className="text-center p-4">
-                  <h3 className="mb-0" style={{ fontFamily: "Raleway" }}>
-                    $150.00
-                  </h3>
-                  <div className="mb-3">
-                    <small className="fa fa-star text-secondary" />
-                    <small className="fa fa-star text-secondary" />
-                    <small className="fa fa-star text-secondary" />
-                    <small className="fa fa-star text-secondary" />
-                    <small className="fa fa-star text-secondary" />
-                  </div>
-
-                  <h5
-                    className="mt-4"
-                    style={{ fontFamily: "Raleway", color: "#175AA1" }}
-                  >
-                    One Day Lagos City Tour
-                  </h5>
-                  <p>
-                    Discover the heartbeat of Nigeria in just one day!
-                    Experience the perfect mix of culture, art, food, and city
-                    life that makes Lagos unforgettable.
-                  </p>
-                  <div className="d-flex justify-content-center mb-2">
-                    <Link
-                      to="/booking"
-                      className="btn btn-sm btn-secondary px-5"
-                      style={{
-                        borderRadius: "12px",
-                        fontFamily: "Raleway",
-                        fontWeight: "800",
-                        outline: "none",
-                        border: "none",
-                      }}
-                    >
-                      Book Now
-                    </Link>
-                  </div>
-                </div>
-              </div>
-            </div>
-
-            <div
-              className="col-lg-4 col-md-6 wow fadeInUp"
-              data-wow-delay="0.1s"
-            >
-              <div
-                className="package-item overflow-hidden"
-                style={{
-                  borderRadius: "15px",
-                  height: "600px",
-                }}
-              >
-                <div
-                  className="overflow-hidden"
-                  style={{
-                    width: "100%",
-                    height: "250px",
-                    overflow: "hidden",
-                  }}
-                >
-                  <img
-                    className="img-fluid overflow-hidden"
-                    src="assets\img\Así es el Banana Island Resort, el alojamiento de lujo en una isla en Doha.jpeg"
-                    alt="Thailand Explorer"
-                    style={{
-                      width: "100%",
-                      height: "100%",
-                      objectFit: "cover",
-                    }}
-                  />
-                </div>
-                <div className="d-flex border-bottom">
-                  <small className="flex-fill text-center border-end py-2">
-                    <i className="fa fa-map-marker-alt text-secondary me-2" />
-                    Qatar
-                  </small>
-                  <small className="flex-fill text-center border-end py-2">
-                    <i className="fa fa-calendar-alt text-secondary me-2" />5
-                    Nights
-                  </small>
-                  <small className="flex-fill text-center py-2">
-                    <i className="fa fa-user text-secondary me-2" />1 Person
-                  </small>
-                </div>
-                <div className="text-center p-4">
-                  <h3 className="mb-0" style={{ fontFamily: "Raleway" }}>
-                    ₦6,800,000
-                  </h3>
-                  <div className="mb-3">
-                    <small className="fa fa-star text-secondary" />
-                    <small className="fa fa-star text-secondary" />
-                    <small className="fa fa-star text-secondary" />
-                    <small className="fa fa-star text-secondary" />
-                    <small className="fa fa-star text-secondary" />
-                  </div>
-
-                  <h5
-                    className="mt-4"
-                    style={{ fontFamily: "Raleway", color: "#175AA1" }}
-                  >
-                    Banana Island Luxury Package
-                  </h5>
-                  <p>
-                    Escape to Banana Island, Qatar’s hidden paradise of luxury
-                    and tranquility. Indulge in five-star comfort, stunning
-                    ocean views, private beaches, and world-class dining.
-                  </p>
-                  <div className="d-flex justify-content-center mb-2">
-                    <Link
-                      to="/booking"
-                      className="btn btn-sm btn-secondary px-5"
-                      style={{
-                        borderRadius: "12px",
-                        fontFamily: "Raleway",
-                        fontWeight: "800",
-                        outline: "none",
-                        border: "none",
-                      }}
-                    >
-                      Book Now
-                    </Link>
-                  </div>
-                </div>
-              </div>
-            </div>
-          </div>
-        </div>
-      </div>
-      {/* Hotels End */}
-
-
-      {/* Booking Start */}
-      <div className="container-xxl py-5 wow fadeInUp" data-wow-delay="0.1s">
-        <div className="container">
-          <div className="booking p-5">
-            <div className="row g-5 align-items-center">
-              <div className="col-md-6 text-white">
-                <h6
-                  className="text-white text-uppercase"
-                  style={{
-                    fontFamily:
-                      "'Raleway', system-ui, Avenir, Helvetica, Arial, sans-serif",
-                  }}
-                >
-                  Booking
-                </h6>
-                <h1
-                  className="text-white mb-4"
-                  style={{
-                    fontFamily:
-                      "'Raleway', system-ui, Avenir, Helvetica, Arial, sans-serif",
-                  }}
-                >
-                  Book Your Next Adventure
-                </h1>
-                <p className="mb-4">
-                  Ready to travel? Fill out our booking form and let our experts
-                  handle the rest. We’ll customize your trip to fit your
-                  preferences and budget.
-                </p>
-                <p className="mb-4">
-                  Enjoy peace of mind with our flexible booking policies and
-                  dedicated support team. Your dream vacation is just a click
-                  away!
-                </p>
-                <a className="btn btn-outline-light py-3 px-5 mt-2" href="">
-                  Read More
-                </a>
-              </div>
-              <div className="col-md-6">
-                <h1
-                  className="text-white mb-4"
-                  style={{
-                    fontFamily:
-                      "'Raleway', system-ui, Avenir, Helvetica, Arial, sans-serif",
-                  }}
-                >
-                  Book A Tour
-                </h1>
-                <form>
-                  <div className="row g-3">
-                    <div className="col-md-6">
-                      <div className="form-floating">
-                        <input
-                          type="text"
-                          className="form-control bg-transparent"
-                          id="name"
-                          placeholder="Your Name"
-                        />
-                        <label htmlFor="name">Your Name</label>
-                      </div>
-                    </div>
-                    <div className="col-md-6">
-                      <div className="form-floating">
-                        <input
-                          type="email"
-                          className="form-control bg-transparent"
-                          id="email"
-                          placeholder="Your Email"
-                        />
-                        <label htmlFor="email">Your Email</label>
-                      </div>
-                    </div>
-                    <div className="col-md-6">
-                      <div
-                        className="form-floating date"
-                        id="date3"
-                        data-target-input="nearest"
-                      >
-                        <input
-                          type="text"
-                          className="form-control bg-transparent datetimepicker-input"
-                          id="datetime"
-                          placeholder="Date & Time"
-                          data-target="#date3"
-                          data-toggle="datetimepicker"
-                        />
-                        <label htmlFor="datetime">Date &amp; Time</label>
-                      </div>
-                    </div>
-                    <div className="col-md-6">
-                      <div className="form-floating">
-                        <select
-                          className="form-select bg-transparent"
-                          id="select1"
-                        >
-                          <option value={1}>Thailand</option>
-                          <option value={2}>Indonesia</option>
-                          <option value={3}>Malaysia</option>
-                        </select>
-                        <label htmlFor="select1">Destination</label>
-                      </div>
-                    </div>
-                    <div className="col-12">
-                      <div className="form-floating">
-                        <textarea
-                          className="form-control bg-transparent"
-                          placeholder="Special Request"
-                          id="message"
-                          style={{ height: 100 }}
-                          defaultValue={""}
-                        />
-                        <label htmlFor="message">Special Request</label>
-                      </div>
-                    </div>
-                    <div className="col-12">
-                      <button
-                        className="btn btn-outline-light w-100 py-3"
-                        type="submit"
+                      Qatar
+                    </h1>
+                    <div className="d-flex justify-content-center mb-2">
+                      <Link
+                        to="/booking"
+                        className="btn btn-sm btn-secondary px-5"
+                        style={{
+                          borderRadius: "12px",
+                          fontFamily: "Raleway",
+                          fontWeight: "800",
+                          outline: "none",
+                          border: "none",
+                          whiteSpace: "nowrap",
+                        }}
                       >
                         Book Now
-                      </button>
+                      </Link>
                     </div>
                   </div>
-                </form>
-              </div>
+                </div>
+              </SwiperSlide>
+
+              {/* Slide 2 */}
+              <SwiperSlide>
+                {" "}
+                <div
+                  className="package-item overflow-hidden position-relative"
+                  style={{ borderRadius: "15px", height: "400px" }}
+                >
+                  {/* Image */}
+                  <div
+                    style={{
+                      width: "100%",
+                      height: "100%",
+                      overflow: "hidden",
+                    }}
+                  >
+                    <img
+                      src="assets/img/download (71).jpeg"
+                      alt="Tanzania"
+                      className="img-fluid"
+                      style={{
+                        width: "100%",
+                        height: "100%",
+                        objectFit: "cover",
+                      }}
+                    />
+                  </div>
+
+                  <div
+                    className="position-absolute top-0 start-0 w-100 h-100"
+                    style={{
+                      backgroundColor: "rgba(0, 0, 0, 0.3)",
+                      borderRadius: "15px",
+                      zIndex: 1,
+                    }}
+                  ></div>
+
+                  <div
+                    className="position-absolute top-50 start-50 translate-middle text-center text-white"
+                    style={{ zIndex: 2 }}
+                  >
+                    <h1
+                      style={{
+                        fontFamily: "Raleway",
+                        fontWeight: "700",
+                        color: "#ffffff",
+                      }}
+                    >
+                      Tanzania
+                    </h1>
+                    <div className="d-flex justify-content-center mb-2">
+                      <Link
+                        to="/booking"
+                        className="btn btn-sm btn-secondary px-5"
+                        style={{
+                          borderRadius: "12px",
+                          fontFamily: "Raleway",
+                          fontWeight: "800",
+                          outline: "none",
+                          border: "none",
+                          whiteSpace: "nowrap",
+                        }}
+                      >
+                        Book Now
+                      </Link>
+                    </div>
+                  </div>
+                </div>
+              </SwiperSlide>
+
+              {/* Slide 3 */}
+              <SwiperSlide>
+                <div
+                  className="package-item overflow-hidden position-relative"
+                  style={{ borderRadius: "15px", height: "400px" }}
+                >
+                  {/* Image */}
+                  <div
+                    style={{
+                      width: "100%",
+                      height: "100%",
+                      overflow: "hidden",
+                    }}
+                  >
+                    <img
+                      src="assets/img/Villa Rosa Kempinski 5 Star Hotel Nairobi.jpeg"
+                      alt="Kenya"
+                      className="img-fluid"
+                      style={{
+                        width: "100%",
+                        height: "100%",
+                        objectFit: "cover",
+                      }}
+                    />
+                  </div>
+
+                  <div
+                    className="position-absolute top-0 start-0 w-100 h-100"
+                    style={{
+                      backgroundColor: "rgba(0, 0, 0, 0.3)",
+                      borderRadius: "15px",
+                      zIndex: 1,
+                    }}
+                  ></div>
+
+                  <div
+                    className="position-absolute top-50 start-50 translate-middle text-center text-white"
+                    style={{ zIndex: 2 }}
+                  >
+                    <h1
+                      style={{
+                        fontFamily: "Raleway",
+                        fontWeight: "700",
+                        color: "#ffffff",
+                      }}
+                    >
+                      Kenya
+                    </h1>
+                    <div className="d-flex justify-content-center mb-2">
+                      <Link
+                        to="/booking"
+                        className="btn btn-sm btn-secondary px-5"
+                        style={{
+                          borderRadius: "12px",
+                          fontFamily: "Raleway",
+                          fontWeight: "800",
+                          outline: "none",
+                          border: "none",
+                          whiteSpace: "nowrap",
+                        }}
+                      >
+                        Book Now
+                      </Link>
+                    </div>
+                  </div>
+                </div>
+              </SwiperSlide>
+              {/* Slide 3 */}
+              <SwiperSlide>
+                <div
+                  className="package-item overflow-hidden position-relative"
+                  style={{ borderRadius: "15px", height: "400px" }}
+                >
+                  {/* Image */}
+                  <div
+                    style={{
+                      width: "100%",
+                      height: "100%",
+                      overflow: "hidden",
+                    }}
+                  >
+                    <img
+                      src="assets/img/Eko Hotels.jpeg"
+                      alt="Lagos"
+                      className="img-fluid"
+                      style={{
+                        width: "100%",
+                        height: "100%",
+                        objectFit: "cover",
+                      }}
+                    />
+                  </div>
+
+                  <div
+                    className="position-absolute top-0 start-0 w-100 h-100"
+                    style={{
+                      backgroundColor: "rgba(0, 0, 0, 0.3)",
+                      borderRadius: "15px",
+                      zIndex: 1,
+                    }}
+                  ></div>
+
+                  <div
+                    className="position-absolute top-50 start-50 translate-middle text-center text-white"
+                    style={{ zIndex: 2 }}
+                  >
+                    <h1
+                      style={{
+                        fontFamily: "Raleway",
+                        fontWeight: "700",
+                        color: "#ffffff",
+                      }}
+                    >
+                      Lagos
+                    </h1>
+                    <div className="d-flex justify-content-center mb-2">
+                      <Link
+                        to="/booking"
+                        className="btn btn-sm btn-secondary px-5"
+                        style={{
+                          borderRadius: "12px",
+                          fontFamily: "Raleway",
+                          fontWeight: "800",
+                          outline: "none",
+                          border: "none",
+                          whiteSpace: "nowrap",
+                        }}
+                      >
+                        Book Now
+                      </Link>
+                    </div>
+                  </div>
+                </div>
+              </SwiperSlide>
+
+              {/* Slide 3 */}
+              <SwiperSlide>
+                <div
+                  className="package-item overflow-hidden position-relative"
+                  style={{ borderRadius: "15px", height: "400px" }}
+                >
+                  {/* Image */}
+                  <div
+                    style={{
+                      width: "100%",
+                      height: "100%",
+                      overflow: "hidden",
+                    }}
+                  >
+                    <img
+                      src="assets/img/Mövenpick Hotel West Bay Doha.jpeg"
+                      alt="Qatar"
+                      className="img-fluid"
+                      style={{
+                        width: "100%",
+                        height: "100%",
+                        objectFit: "cover",
+                      }}
+                    />
+                  </div>
+
+                  {/* <div
+                  className="position-absolute top-0 start-0 w-100 h-100"
+                  style={{
+                    backgroundColor: "rgba(0, 0, 0, 0.3)",
+                    borderRadius: "15px",
+                    zIndex: 1,
+                  }}
+                ></div> */}
+
+                  <div
+                    className="position-absolute top-50 start-50 translate-middle text-center text-white"
+                    style={{ zIndex: 2 }}
+                  >
+                    <h1
+                      style={{
+                        fontFamily: "Raleway",
+                        fontWeight: "700",
+                        color: "#ffffff",
+                      }}
+                    >
+                      Qatar
+                    </h1>
+                    <div className="d-flex justify-content-center mb-2">
+                      <Link
+                        to="/booking"
+                        className="btn btn-sm btn-secondary px-5"
+                        style={{
+                          borderRadius: "12px",
+                          fontFamily: "Raleway",
+                          fontWeight: "800",
+                          outline: "none",
+                          border: "none",
+                          whiteSpace: "nowrap",
+                        }}
+                      >
+                        Book Now
+                      </Link>
+                    </div>
+                  </div>
+                </div>
+              </SwiperSlide>
+
+              {/* Slide 3 */}
+              <SwiperSlide>
+                <div
+                  className="package-item overflow-hidden position-relative"
+                  style={{ borderRadius: "15px", height: "400px" }}
+                >
+                  {/* Image */}
+                  <div
+                    style={{
+                      width: "100%",
+                      height: "100%",
+                      overflow: "hidden",
+                    }}
+                  >
+                    <img
+                      src="assets/img/Mövenpick Hotel West Bay Doha.jpeg"
+                      alt="Qatar"
+                      className="img-fluid"
+                      style={{
+                        width: "100%",
+                        height: "100%",
+                        objectFit: "cover",
+                      }}
+                    />
+                  </div>
+
+                  {/* <div
+                  className="position-absolute top-0 start-0 w-100 h-100"
+                  style={{
+                    backgroundColor: "rgba(0, 0, 0, 0.3)",
+                    borderRadius: "15px",
+                    zIndex: 1,
+                  }}
+                ></div> */}
+
+                  <div
+                    className="position-absolute top-50 start-50 translate-middle text-center text-white"
+                    style={{ zIndex: 2 }}
+                  >
+                    <h1
+                      style={{
+                        fontFamily: "Raleway",
+                        fontWeight: "700",
+                        color: "#ffffff",
+                      }}
+                    >
+                      Qatar
+                    </h1>
+                    <div className="d-flex justify-content-center mb-2">
+                      <Link
+                        to="/booking"
+                        className="btn btn-sm btn-secondary px-5"
+                        style={{
+                          borderRadius: "12px",
+                          fontFamily: "Raleway",
+                          fontWeight: "800",
+                          outline: "none",
+                          border: "none",
+                          whiteSpace: "nowrap",
+                        }}
+                      >
+                        Book Now
+                      </Link>
+                    </div>
+                  </div>
+                </div>
+              </SwiperSlide>
+
+              {/* Add more slides here */}
+            </Swiper>
+
+            {/* Custom Navigation Buttons */}
+            <div className="d-none d-lg-flex justify-content-between position-absolute top-50 start-0 end-0 px-3">
+              <button className="custom-prev">
+                <i className="fa fa-chevron-left"></i>
+              </button>
+              <button className="custom-next">
+                <i className="fa fa-chevron-right"></i>
+              </button>
             </div>
           </div>
         </div>
       </div>
-      {/* Booking End */}
+
+      <VisaCatalogue />
+
       {/* Process Start */}
-      <div className="container-xxl py-5">
+      {/* <div className="container-xxl py-5">
         <div className="container">
           <div className="text-center pb-4 wow fadeInUp" data-wow-delay="0.1s">
             <h6
@@ -1418,289 +1467,11 @@ export default function Home() {
             </div>
           </div>
         </div>
-      </div>
+      </div> */}
       {/* Process End */}
-      {/* Team Start */}
-      <div className="container-xxl py-5">
-        <div className="container">
-          <div className="text-center wow fadeInUp" data-wow-delay="0.1s">
-            <h6
-              className="section-title bg-white text-center text-primary px-3"
-              style={{
-                fontFamily:
-                  "'Raleway', system-ui, Avenir, Helvetica, Arial, sans-serif",
-              }}
-            >
-              Travel Guides
-            </h6>
-            <h1
-              className="mb-5"
-              style={{
-                fontFamily:
-                  "'Raleway', system-ui, Avenir, Helvetica, Arial, sans-serif",
-              }}
-            >
-              Meet Our Experts
-            </h1>
-          </div>
-          <div className="row g-4">
-            <div
-              className="col-lg-3 col-md-6 wow fadeInUp"
-              data-wow-delay="0.1s"
-            >
-              <div className="team-item">
-                <div className="overflow-hidden">
-                  <img
-                    className="img-fluid"
-                    src="assets/img/20801.jpg"
-                    alt="Guide 1"
-                  />
-                </div>
-                <div
-                  className="position-relative d-flex justify-content-center"
-                  style={{ marginTop: "-19px" }}
-                >
-                  <a className="btn btn-square mx-1" href="">
-                    <i className="fab fa-facebook-f" />
-                  </a>
-                  <a className="btn btn-square mx-1" href="">
-                    <i className="fab fa-twitter" />
-                  </a>
-                  <a className="btn btn-square mx-1" href="">
-                    <i className="fab fa-instagram" />
-                  </a>
-                </div>
-                <div className="text-center p-4">
-                  <h5 className="mb-0">Emily Carter</h5>
-                  <small>Asia Specialist</small>
-                </div>
-              </div>
-            </div>
-            <div
-              className="col-lg-3 col-md-6 wow fadeInUp"
-              data-wow-delay="0.3s"
-            >
-              <div className="team-item">
-                <div className="overflow-hidden">
-                  <img
-                    className="img-fluid"
-                    src="assets/img/team-1.jpg"
-                    alt="Guide 2"
-                  />
-                </div>
-                <div
-                  className="position-relative d-flex justify-content-center"
-                  style={{ marginTop: "-19px" }}
-                >
-                  <a className="btn btn-square mx-1" href="">
-                    <i className="fab fa-facebook-f" />
-                  </a>
-                  <a className="btn btn-square mx-1" href="">
-                    <i className="fab fa-twitter" />
-                  </a>
-                  <a className="btn btn-square mx-1" href="">
-                    <i className="fab fa-instagram" />
-                  </a>
-                </div>
-                <div className="text-center p-4">
-                  <h5 className="mb-0">Michael Lee</h5>
-                  <small>Adventure Expert</small>
-                </div>
-              </div>
-            </div>
-            <div
-              className="col-lg-3 col-md-6 wow fadeInUp"
-              data-wow-delay="0.5s"
-            >
-              <div className="team-item">
-                <div className="overflow-hidden">
-                  <img
-                    className="img-fluid"
-                    src="assets/img/team-2.jpg"
-                    alt="Guide 3"
-                  />
-                </div>
-                <div
-                  className="position-relative d-flex justify-content-center"
-                  style={{ marginTop: "-19px" }}
-                >
-                  <a className="btn btn-square mx-1" href="">
-                    <i className="fab fa-facebook-f" />
-                  </a>
-                  <a className="btn btn-square mx-1" href="">
-                    <i className="fab fa-twitter" />
-                  </a>
-                  <a className="btn btn-square mx-1" href="">
-                    <i className="fab fa-instagram" />
-                  </a>
-                </div>
-                <div className="text-center p-4">
-                  <h5 className="mb-0">Sophia Martinez</h5>
-                  <small>Luxury Travel Advisor</small>
-                </div>
-              </div>
-            </div>
-            <div
-              className="col-lg-3 col-md-6 wow fadeInUp"
-              data-wow-delay="0.7s"
-            >
-              <div className="team-item">
-                <div className="overflow-hidden">
-                  <img
-                    className="img-fluid"
-                    src="assets/img/1427.jpg"
-                    alt="Guide 4"
-                  />
-                </div>
-                <div
-                  className="position-relative d-flex justify-content-center"
-                  style={{ marginTop: "-19px" }}
-                >
-                  <a className="btn btn-square mx-1" href="">
-                    <i className="fab fa-facebook-f" />
-                  </a>
-                  <a className="btn btn-square mx-1" href="">
-                    <i className="fab fa-twitter" />
-                  </a>
-                  <a className="btn btn-square mx-1" href="">
-                    <i className="fab fa-instagram" />
-                  </a>
-                </div>
-                <div className="text-center p-4">
-                  <h5 className="mb-0">David Kim</h5>
-                  <small>Wildlife Specialist</small>
-                </div>
-              </div>
-            </div>
-          </div>
-        </div>
-      </div>
-      {/* Team End */}
-      {/* Testimonial Start */}
-      <div className="container-xxl py-5 wow fadeInUp" data-wow-delay="0.1s">
-        <div className="container">
-          <div className="text-center">
-            <h6
-              className="section-title bg-white text-center text-primary px-3"
-              style={{
-                fontFamily:
-                  "'Raleway', system-ui, Avenir, Helvetica, Arial, sans-serif",
-              }}
-            >
-              Testimonials
-            </h6>
-            <h1
-              className="mb-5"
-              style={{
-                fontFamily:
-                  "'Raleway', system-ui, Avenir, Helvetica, Arial, sans-serif",
-              }}
-            >
-              What Our Clients Say
-            </h1>
-          </div>
-          <div className="row justify-content-center">
-            <div className="col-md-6 col-lg-3 mb-4">
-              <div className="testimonial-item bg-white text-center border p-4">
-                <img
-                  className="bg-white rounded-circle shadow p-1 mx-auto mb-3"
-                  src="assets/img/testimonial-1.jpg"
-                  style={{ width: 80, height: 80 }}
-                  alt="Sarah Johnson"
-                />
-                <h5
-                  className="mb-0"
-                  style={{
-                    fontFamily:
-                      "'Raleway', system-ui, Avenir, Helvetica, Arial, sans-serif",
-                  }}
-                >
-                  Sarah Johnson
-                </h5>
-                <p>London, UK</p>
-                <p className="mb-0">
-                  "Macview Travels made our honeymoon in Bali absolutely
-                  perfect. Every detail was taken care of, and the guides were
-                  fantastic!"
-                </p>
-              </div>
-            </div>
-            <div className="col-md-6 col-lg-3 mb-4">
-              <div className="testimonial-item bg-white text-center border p-4">
-                <img
-                  className="bg-white rounded-circle shadow p-1 mx-auto mb-3"
-                  src="assets/img/testimonial-2.jpg"
-                  style={{ width: 80, height: 80 }}
-                  alt="Rajesh Patel"
-                />
-                <h5
-                  className="mb-0"
-                  style={{
-                    fontFamily:
-                      "'Raleway', system-ui, Avenir, Helvetica, Arial, sans-serif",
-                  }}
-                >
-                  Rajesh Patel
-                </h5>
-                <p>Mumbai, India</p>
-                <p className="mt-2 mb-0">
-                  "Our family trip to Australia was unforgettable. The itinerary
-                  was well-planned and the service was top-notch."
-                </p>
-              </div>
-            </div>
-            <div className="col-md-6 col-lg-3 mb-4">
-              <div className="testimonial-item bg-white text-center border p-4">
-                <img
-                  className="bg-white rounded-circle shadow p-1 mx-auto mb-3"
-                  src="assets/img/testimonial-4.jpg"
-                  style={{ width: 80, height: 80 }}
-                  alt="Linda Chen"
-                />
-                <h5
-                  className="mb-0"
-                  style={{
-                    fontFamily:
-                      "'Raleway', system-ui, Avenir, Helvetica, Arial, sans-serif",
-                  }}
-                >
-                  Linda Chen
-                </h5>
-                <p>Singapore</p>
-                <p className="mt-2 mb-0">
-                  "Highly recommend Macview Travels! They helped us organize a
-                  corporate retreat in Malaysia and everything went smoothly."
-                </p>
-              </div>
-            </div>
-            <div className="col-md-6 col-lg-3 mb-4">
-              <div className="testimonial-item bg-white text-center border p-4">
-                <img
-                  className="bg-white rounded-circle shadow p-1 mx-auto mb-3"
-                  src="assets/img/testimonial-3.jpg"
-                  style={{ width: 80, height: 80 }}
-                  alt="Carlos Rivera"
-                />
-                <h5
-                  className="mb-0"
-                  style={{
-                    fontFamily:
-                      "'Raleway', system-ui, Avenir, Helvetica, Arial, sans-serif",
-                  }}
-                >
-                  Carlos Rivera
-                </h5>
-                <p>Mexico City, Mexico</p>
-                <p className="mt-2 mb-0">
-                  "The adventure tour in Indonesia was thrilling! Great guides,
-                  amazing locations, and excellent value."
-                </p>
-              </div>
-            </div>
-          </div>
-        </div>
-      </div>
-      {/* Testimonial End */}
+
+      <Testimonial />
+      <Newsletter />
     </div>
   );
 }

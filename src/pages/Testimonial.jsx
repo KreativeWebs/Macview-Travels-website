@@ -1,112 +1,106 @@
-import React from 'react'
+import React from "react";
+
+const testimonials = [
+  {
+    img: "assets/img/testimonial-1.jpg",
+    name: "Sarah Johnson",
+    location: "London, UK",
+    text: "Macview Travels made our honeymoon in Bali absolutely perfect. Every detail was taken care of, and the guides were fantastic!",
+  },
+  {
+    img: "assets/img/testimonial-2.jpg",
+    name: "Rajesh Patel",
+    location: "Mumbai, India",
+    text: "Our family trip to Australia was unforgettable. The itinerary was well-planned and the service was top-notch.",
+  },
+  {
+    img: "assets/img/testimonial-4.jpg",
+    name: "Linda Chen",
+    location: "Singapore",
+    text: "Highly recommend Macview Travels! They helped us organize a corporate retreat in Malaysia and everything went smoothly.",
+  },
+  {
+    img: "assets/img/testimonial-3.jpg",
+    name: "Carlos Rivera",
+    location: "Mexico City, Mexico",
+    text: "The adventure tour in Indonesia was thrilling! Great guides, amazing locations, and excellent value.",
+  },
+];
 
 function Testimonial() {
   return (
-    <div>
-      <div className="container-fluid bg-primary py-5 mb-5 hero-header">
-        <div className="container py-5">
-          <div className="row justify-content-center py-5">
-            <div className="col-lg-10 pt-lg-5 mt-lg-5 text-center">
-              <h1 className="display-3 text-white animated slideInDown">
-                Testimonial
-              </h1>
-              <nav aria-label="breadcrumb">
-                <ol className="breadcrumb justify-content-center">
-                  <li className="breadcrumb-item">
-                    <a href="/">Home</a>
-                  </li>
-                  <li
-                    className="breadcrumb-item text-white active"
-                    aria-current="page"
-                  >
-                    Testimonial
-                  </li>
-                </ol>
-              </nav>
+    <div className="py-5 wow fadeInUp" data-wow-delay="0.1s">
+      {/* Section Title inside container */}
+      <div className="container text-center mb-5">
+        <h6
+          className="section-title text-primary px-3"
+          style={{ fontFamily: "'Raleway', sans-serif", color: "#f1741e" }}
+        >
+          Testimonials
+        </h6>
+        <h1 style={{ fontFamily: "'Raleway', sans-serif" }}>
+          What Our Clients Say
+        </h1>
+      </div>
+
+      {/* Full-width marquee */}
+      <div
+        className="testimonial-marquee"
+        style={{
+          overflow: "hidden",
+          width: "100vw",
+
+        }}
+      >
+        <div
+          className="testimonial-track"
+          style={{
+            display: "flex",
+            width: "max-content",
+            animation: "scroll 20s linear infinite",
+          }}
+        >
+          {[...testimonials, ...testimonials].map((t, index) => (
+            <div
+              key={index}
+              className="testimonial-item bg-white text-center border p-4 mx-3"
+              style={{
+                minWidth: "300px",
+                maxWidth: "400px",
+                flex: "0 0 auto",
+                borderRadius: "8px",
+              }}
+            >
+              <img
+                className="bg-white rounded-circle shadow p-1 mx-auto mb-3"
+                src={t.img}
+                style={{ width: 80, height: 80 }}
+                alt={t.name}
+              />
+              <h5
+                className="mb-0"
+                style={{ fontFamily: "'Raleway', sans-serif" }}
+              >
+                {t.name}
+              </h5>
+              <p>{t.location}</p>
+              <p className="mt-2 mb-0">{t.text}</p>
             </div>
-          </div>
+          ))}
         </div>
       </div>
-      {/* Testimonial Start */}
-      <div className="container-xxl py-5 wow fadeInUp" data-wow-delay="0.1s">
-        <div className="container">
-          <div className="text-center">
-            <h6 className="section-title bg-white text-center text-primary px-3">
-              Testimonial
-            </h6>
-            <h1 className="mb-5">Our Clients Say!!!</h1>
-          </div>
-          <div className="row justify-content-center">
-            <div className="col-md-6 col-lg-3 mb-4">
-              <div className="testimonial-item bg-white text-center border p-4">
-                <img
-                  alt="testimonial 1"
-                  className="bg-white rounded-circle shadow p-1 mx-auto mb-3"
-                  src="assets/img/testimonial-1.jpg"
-                  style={{ width: 80, height: 80 }}
-                />
-                <h5 className="mb-0">Sarah Johnson</h5>
-                <p>London, UK</p>
-                <p className="mb-0">
-                  "Diamond Travels made our honeymoon in Bali absolutely perfect.
-                  Every detail was taken care of, and the guides were fantastic!"
-                </p>
-              </div>
-            </div>
-            <div className="col-md-6 col-lg-3 mb-4">
-              <div className="testimonial-item bg-white text-center border p-4">
-                <img
-                  alt="testimonial 2"
-                  className="bg-white rounded-circle shadow p-1 mx-auto mb-3"
-                  src="assets/img/testimonial-2.jpg"
-                  style={{ width: 80, height: 80 }}
-                />
-                <h5 className="mb-0">Rajesh Patel</h5>
-                <p>Mumbai, India</p>
-                <p className="mt-2 mb-0">
-                  "Our family trip to Australia was unforgettable. The itinerary
-                  was well-planned and the service was top-notch."
-                </p>
-              </div>
-            </div>
-            <div className="col-md-6 col-lg-3 mb-4">
-              <div className="testimonial-item bg-white text-center border p-4">
-                <img
-                  alt="testimonial 3"
-                  className="bg-white rounded-circle shadow p-1 mx-auto mb-3"
-                  src="assets/img/testimonial-4.jpg"
-                  style={{ width: 80, height: 80 }}
-                />
-                <h5 className="mb-0">Linda Chen</h5>
-                <p>Singapore</p>
-                <p className="mt-2 mb-0">
-                  "Highly recommend Diamond Travels! They helped us organize a
-                  corporate retreat in Malaysia and everything went smoothly."
-                </p>
-              </div>
-            </div>
-            <div className="col-md-6 col-lg-3 mb-4">
-              <div className="testimonial-item bg-white text-center border p-4">
-                <img
-                  alt="testimonial 4"
-                  className="bg-white rounded-circle shadow p-1 mx-auto mb-3"
-                  src="assets/img/testimonial-3.jpg"
-                  style={{ width: 80, height: 80 }}
-                />
-                <h5 className="mb-0">Carlos Rivera</h5>
-                <p>Mexico City, Mexico</p>
-                <p className="mt-2 mb-0">
-                  "The adventure tour in Indonesia was thrilling! Great guides,
-                  amazing locations, and excellent value."
-                </p>
-              </div>
-            </div>
-          </div>
-        </div>
-      </div>
-      {/* Testimonial End */}
+
+      {/* CSS for scrolling */}
+      <style>
+        {`
+          @keyframes scroll {
+            0% { transform: translateX(0); }
+            100% { transform: translateX(-50%); }
+          }
+        `}
+      </style>
     </div>
-  )
+  );
 }
 
-export default Testimonial
+export default Testimonial;

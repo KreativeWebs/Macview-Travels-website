@@ -155,6 +155,116 @@ body {
   }
 }
 
+.swiper-wrapper-container {
+  position: relative; /* this ensures arrows stay inside the carousel */
+}
+
+.mySwiper {
+  position: relative;
+}
+
+.custom-prev,
+.custom-next {
+  position: absolute;
+  top: 50%;
+  transform: translateY(-50%);
+  z-index: 10;
+  background: rgba(0, 0, 0, 0.5);
+  color: white;
+  width: 45px;
+  height: 45px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  transition: background 0.3s ease;
+  border: none;
+}
+
+.custom-prev:hover,
+.custom-next:hover {
+  background: rgba(255, 255, 255, 0.8);
+  color: #000;
+}
+
+/* Positioning left and right */
+.custom-prev {
+  left: 15px;
+}
+
+.custom-next {
+  right: 15px;
+}
+
+/* Optional: Adjust on mobile */
+@media (max-width: 768px) {
+  .custom-prev,
+  .custom-next {
+    width: 35px;
+    height: 35px;
+    top: 45%;
+  }
+}
+
+
+
+/* Visa carousel */
+
+.swiper-wrapper-container {
+  position: relative; /* this ensures arrows stay inside the carousel */
+}
+
+.visa-swiper {
+  position: relative;
+}
+
+.visa-prev,
+.visa-next {
+  position: absolute;
+  top: 50%;
+  transform: translateY(-50%);
+  z-index: 10;
+  background: rgba(0, 0, 0, 0.5);
+  color: white;
+  width: 45px;
+  height: 45px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  transition: background 0.3s ease;
+  border: none;
+}
+
+.visa-prev:hover,
+.visa-next:hover {
+  background: rgba(255, 255, 255, 0.8);
+  color: #000;
+}
+
+/* Positioning left and right */
+.visa-prev {
+  left: 15px;
+}
+
+.visa-next {
+  right: 15px;
+}
+
+/* Optional: Adjust on mobile */
+@media (max-width: 768px) {
+  .visa-prev,
+  .visa-next {
+    width: 35px;
+    height: 35px;
+    top: 45%;
+  }
+}
+
+
+
 @media (min-width: 992px) {
   .navbar-light {
     position: absolute;
