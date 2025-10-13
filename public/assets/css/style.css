@@ -43,6 +43,16 @@ body {
   opacity: 1;
 }
 
+
+.whatsapp-label {
+  background-color: #25D366;
+  color: white;
+  padding: 8px 12px;
+  border-radius: 20px;
+  font-size: 14px;
+  white-space: nowrap;
+}
+
 /*** Button ***/
 .btn {
   font-family: "Nunito", sans-serif;

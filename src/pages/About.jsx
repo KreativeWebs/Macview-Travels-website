@@ -1,4 +1,5 @@
 import React from 'react'
+import { Link } from "react-router-dom";
 
 function About() {
   return (
@@ -8,27 +9,15 @@ function About() {
         <div className="container py-5">
           <div className="row justify-content-center py-5">
             <div className="col-lg-10 pt-lg-5 mt-lg-5 text-center">
-              <h1 className="display-3 text-white animated slideInDown">
+              <h1 className="display-3 text-white animated slideInDown" style={{fontFamily: "Raleway"}}>
                 About Us
               </h1>
-              <nav aria-label="breadcrumb">
-                <ol className="breadcrumb justify-content-center">
-                  <li className="breadcrumb-item">
-                    <a href="/">Home</a>
-                  </li>
-                  <li
-                    className="breadcrumb-item text-white active"
-                    aria-current="page"
-                  >
-                    About
-                  </li>
-                </ol>
-              </nav>
+             
             </div>
           </div>
         </div>
       </div>
-      {/* About Start */}
+       {/* About Start */}
       <div className="container-xxl py-5">
         <div className="container">
           <div className="row g-5">
@@ -40,66 +29,103 @@ function About() {
               <div className="position-relative h-100">
                 <img
                   className="img-fluid position-absolute w-100 h-100"
-                  src="assets/img/about.jpg"
+                  src="assets/img/passport-flight-businessman-standing-airport-checking-departure-times-schedule-travel-work-trip-professional-african-male-waiting-by-terminal-with-his-ticket-board-plane.jpg"
                   alt="Travelers enjoying a scenic view"
-                  style={{ objectFit: "cover" }}
+                  style={{ objectFit: "cover", borderRadius: "8px" }}
                 />
               </div>
             </div>
             <div className="col-lg-6 wow fadeInUp" data-wow-delay="0.3s">
-              <h6 className="section-title bg-white text-start text-primary pe-3">
+              <h6
+                className="section-title bg-white text-start text-secondary pe-3"
+                style={{
+                  fontFamily:
+                    "'Raleway', system-ui, Avenir, Helvetica, Arial, sans-serif",
+                }}
+              >
                 About Us
               </h6>
-              <h1 className="mb-4">
-                Welcome to <span className="text-primary">Diamond Travels</span>
+              <h1
+                className="mb-4"
+                style={{
+                  fontFamily:
+                    "'Raleway', system-ui, Avenir, Helvetica, Arial, sans-serif",
+                  fontWeight: "400",
+                  fontSize: "40px",
+                }}
+              >
+                Welcome to{" "}
+                <span
+                  className="text"
+                  style={{ fontWeight: "600", color: "#1A5EA7" }}
+                >
+                  Macview Travels
+                </span>
               </h1>
-              <p className="mb-4">
-                Diamond Travels is a leading travel agency dedicated to helping you explore the world with ease and excitement. With years of experience, we offer expertly crafted travel packages, personalized itineraries, and exceptional customer service.
+              <p className="mb-4 text-darkblack">
+                Macview Travels is your trusted partner for exploring the globe.
+                With over a decade of experience, we specialize in crafting
+                personalized travel packages, luxury escapes, and adventure
+                tours for every kind of traveler.
               </p>
-              <p className="mb-4">
-                Whether you’re seeking adventure, relaxation, or cultural immersion, our team is here to make your dream vacation a reality. We partner with top airlines, hotels, and local guides to ensure every journey is safe, memorable, and tailored to your needs.
+              <p className="mb-4 text-black">
+                Our dedicated team ensures seamless planning, exclusive deals,
+                and 24/7 support, so you can focus on making memories. Whether
+                you dream of relaxing on tropical beaches, discovering vibrant
+                cities, or embarking on cultural journeys, we make it happen.
               </p>
               <div className="row gy-2 gx-4 mb-4">
                 <div className="col-sm-6">
                   <p className="mb-0">
-                    <i className="fa fa-arrow-right text-primary me-2" />
+                    <i className="fa fa-arrow-right text-secondary me-2" />
                     Luxury Flights & Transfers
                   </p>
                 </div>
                 <div className="col-sm-6">
                   <p className="mb-0">
-                    <i className="fa fa-arrow-right text-primary me-2" />
+                    <i className="fa fa-arrow-right text-secondary me-2" />
                     Handpicked Hotels & Resorts
                   </p>
                 </div>
                 <div className="col-sm-6">
                   <p className="mb-0">
-                    <i className="fa fa-arrow-right text-primary me-2" />
+                    <i className="fa fa-arrow-right text-secondary me-2" />
                     Tailored Itineraries
                   </p>
                 </div>
                 <div className="col-sm-6">
                   <p className="mb-0">
-                    <i className="fa fa-arrow-right text-primary me-2" />
+                    <i className="fa fa-arrow-right text-secondary me-2" />
                     Private Guided Tours
                   </p>
                 </div>
                 <div className="col-sm-6">
                   <p className="mb-0">
-                    <i className="fa fa-arrow-right text-primary me-2" />
+                    <i className="fa fa-arrow-right text-secondary me-2" />
                     Adventure & Wellness Packages
                   </p>
                 </div>
                 <div className="col-sm-6">
                   <p className="mb-0">
-                    <i className="fa fa-arrow-right text-primary me-2" />
+                    <i className="fa fa-arrow-right text-secondary me-2" />
                     24/7 Concierge Service
                   </p>
                 </div>
               </div>
-              <a className="btn btn-primary py-3 px-5 mt-2" href="/contact">
-                Contact Us
-              </a>
+              <Link
+                to="/about"
+                className="btn btn-secondary py-3 px-5 mt-4"
+                style={{
+                  fontFamily:
+                    "'Raleway', system-ui, Avenir, Helvetica, Arial, sans-serif",
+                  fontWeight: "600",
+                  outline: "none",
+                  border: "none",
+                  borderRadius: "4px",
+                }}
+              >
+                Learn More
+              </Link>
             </div>
           </div>
         </div>
@@ -109,7 +135,7 @@ function About() {
       <div className="container-xxl py-5">
         <div className="container">
           <div className="text-center wow fadeInUp" data-wow-delay="0.1s">
-            <h6 className="section-title bg-white text-center text-primary px-3">
+            <h6 className="section-title bg-white text-center text-primary px-3" style={{color: "#f1741e"}}>
               Travel Guides
             </h6>
             <h1 className="mb-5">Meet Our Team</h1>
@@ -118,7 +144,7 @@ function About() {
             <div className="col-lg-3 col-md-6 wow fadeInUp" data-wow-delay="0.1s">
               <div className="team-item">
                 <div className="overflow-hidden">
-                  <img className="img-fluid" src="assets/img/20801.jpg" alt="Emily Carter" />
+                  <img className="img-fluid" src="assets/img/CEO.jpg" alt="Emily Carter" />
                 </div>
                 <div
                   className="position-relative d-flex justify-content-center"
@@ -135,15 +161,15 @@ function About() {
                   </a>
                 </div>
                 <div className="text-center p-4">
-                  <h5 className="mb-0">Emily Carter</h5>
-                  <small>Asia Specialist</small>
+                  <h5 className="mb-0">Mademoye Balogun. J</h5>
+                  <small>MD/CEO</small>
                 </div>
               </div>
             </div>
             <div className="col-lg-3 col-md-6 wow fadeInUp" data-wow-delay="0.3s">
               <div className="team-item">
                 <div className="overflow-hidden">
-                  <img className="img-fluid" src="assets/img/team-1.jpg" alt="Michael Lee" />
+                  <img className="img-fluid" src="assets/img/CCO.jpg" alt="Michael Lee" />
                 </div>
                 <div
                   className="position-relative d-flex justify-content-center"

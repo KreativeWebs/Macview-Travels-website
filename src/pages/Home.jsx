@@ -9,6 +9,7 @@ import "swiper/css/navigation";
 import VisaCatalogue from "./VisaCatalogue";
 import Testimonial from "./Testimonial";
 import Newsletter from "./Newsletter";
+import VisaProcessing from "./VisaProcessing";
 
 export default function Home() {
   useEffect(() => {
@@ -204,27 +205,29 @@ export default function Home() {
               className="col-lg-3 col-sm-6 wow fadeInUp"
               data-wow-delay="0.1s"
             >
-              <div
-                className="service-item pt-3"
-                style={{ border: "1px #dee2e6", borderRadius: "8px" }}
-              >
-                <div className="p-4">
-                  <i className="fa fa-3x fa-passport text-secondary mb-4" />
-                  <h5
-                    style={{
-                      fontFamily:
-                        "'Raleway', system-ui, Avenir, Helvetica, Arial, sans-serif",
-                      color: "#175aa1",
-                    }}
-                  >
-                    Visa Processing
-                  </h5>
-                  <p>
-                    Explore top destinations across continents with expertly
-                    guided tours and exclusive experiences.
-                  </p>
+             
+                <div
+                  className="service-item pt-3"
+                  style={{ border: "1px #dee2e6", borderRadius: "8px" }}
+                >
+                  <div className="p-4">
+                    <i className="fa fa-3x fa-passport text-secondary mb-4" />
+                    <h5
+                      style={{
+                        fontFamily:
+                          "'Raleway', system-ui, Avenir, Helvetica, Arial, sans-serif",
+                        color: "#175aa1",
+                      }}
+                    >
+                      Visa Processing
+                    </h5>
+                    <p>
+                      Explore top destinations across continents with expertly
+                      guided tours and exclusive experiences.
+                    </p>
+                  </div>
                 </div>
-              </div>
+              
             </div>
 
             <div
