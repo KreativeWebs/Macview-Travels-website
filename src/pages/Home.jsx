@@ -6,19 +6,28 @@ import { Swiper, SwiperSlide } from "swiper/react";
 import { Navigation } from "swiper/modules";
 import "swiper/css";
 import "swiper/css/navigation";
+import Hero from "./Hero";
+import About from "./About";
 import VisaCatalogue from "./VisaCatalogue";
 import Testimonial from "./Testimonial";
 import Newsletter from "./Newsletter";
 import VisaProcessing from "./VisaProcessing";
+import AboutUs from "./AboutUs";
 
 export default function Home() {
   useEffect(() => {
     const carouselEl = document.getElementById("destinationCarousel");
-    const carousel = new bootstrap.Carousel(carouselEl, {
-      interval: 3000, // 3 seconds
-      ride: "carousel", // start automatically
-      pause: "hover", // optional: pause on hover
-    });
+
+    // ✅ Check if the element exists and bootstrap is loaded
+    if (carouselEl && window.bootstrap) {
+      new window.bootstrap.Carousel(carouselEl, {
+        interval: 3000,
+        ride: "carousel",
+        pause: "hover",
+      });
+    } else {
+      console.warn("Carousel element not found or Bootstrap not loaded yet.");
+    }
   }, []);
 
   return (
@@ -28,155 +37,9 @@ export default function Home() {
           "'Raleway', system-ui, Avenir, Helvetica, Arial, sans-serif",
       }}
     >
-      {/* Hero Section */}
-      <div className="container-fluid bg-primary py-5 mb-5 hero-header">
-        <div className="container py-5">
-          <div className="row justify-content-center py-5">
-            <div className="col-lg-10 pt-lg-5 mt-lg-5 text-center">
-              <h1
-                className="display-3 fw-light text-white mb-3 animated slideInDown"
-                style={{ fontFamily: "'Raleway', system-ui, Avenir" }}
-              >
-                Discover the World with{" "}
-                <span className="fw-bold"> Macview Travels</span>
-              </h1>
 
-              <p className="fs-4 text-white mb-4 animated slideInDown">
-                Explore breathtaking destinations, curated tours, and
-                unforgettable experiences. Your journey begins here!
-              </p>
-              <div className="position-relative w-75 mx-auto animated slideInDown">
-                <input
-                  className="form-control border-0 rounded-pill w-100 py-3 ps-4 pe-5"
-                  type="text"
-                  placeholder="Search destinations (e.g., Bali, Paris, Dubai)"
-                />
-                <button
-                  type="button"
-                  className="btn btn-secondary rounded-pill py-2 px-4 position-absolute top-0 end-0 me-2"
-                  style={{ marginTop: 7, outline: "none", border: "none" }}
-                >
-                  Search
-                </button>
-              </div>
-            </div>
-          </div>
-        </div>
-      </div>
-      {/* About Start */}
-      <div className="container-xxl py-5">
-        <div className="container">
-          <div className="row g-5">
-            <div
-              className="col-lg-6 wow fadeInUp"
-              data-wow-delay="0.1s"
-              style={{ minHeight: 400 }}
-            >
-              <div className="position-relative h-100">
-                <img
-                  className="img-fluid position-absolute w-100 h-100"
-                  src="assets/img/passport-flight-businessman-standing-airport-checking-departure-times-schedule-travel-work-trip-professional-african-male-waiting-by-terminal-with-his-ticket-board-plane.jpg"
-                  alt="Travelers enjoying a scenic view"
-                  style={{ objectFit: "cover", borderRadius: "8px" }}
-                />
-              </div>
-            </div>
-            <div className="col-lg-6 wow fadeInUp" data-wow-delay="0.3s">
-              <h6
-                className="section-title bg-white text-start text-secondary pe-3"
-                style={{
-                  fontFamily:
-                    "'Raleway', system-ui, Avenir, Helvetica, Arial, sans-serif",
-                }}
-              >
-                About Us
-              </h6>
-              <h1
-                className="mb-4"
-                style={{
-                  fontFamily:
-                    "'Raleway', system-ui, Avenir, Helvetica, Arial, sans-serif",
-                  fontWeight: "400",
-                  fontSize: "40px",
-                }}
-              >
-                Welcome to{" "}
-                <span
-                  className="text"
-                  style={{ fontWeight: "600", color: "#1A5EA7" }}
-                >
-                  Macview Travels
-                </span>
-              </h1>
-              <p className="mb-4 text-darkblack">
-                Macview Travels is your trusted partner for exploring the globe.
-                With over a decade of experience, we specialize in crafting
-                personalized travel packages, luxury escapes, and adventure
-                tours for every kind of traveler.
-              </p>
-              <p className="mb-4 text-black">
-                Our dedicated team ensures seamless planning, exclusive deals,
-                and 24/7 support, so you can focus on making memories. Whether
-                you dream of relaxing on tropical beaches, discovering vibrant
-                cities, or embarking on cultural journeys, we make it happen.
-              </p>
-              <div className="row gy-2 gx-4 mb-4">
-                <div className="col-sm-6">
-                  <p className="mb-0">
-                    <i className="fa fa-arrow-right text-secondary me-2" />
-                    Luxury Flights & Transfers
-                  </p>
-                </div>
-                <div className="col-sm-6">
-                  <p className="mb-0">
-                    <i className="fa fa-arrow-right text-secondary me-2" />
-                    Handpicked Hotels & Resorts
-                  </p>
-                </div>
-                <div className="col-sm-6">
-                  <p className="mb-0">
-                    <i className="fa fa-arrow-right text-secondary me-2" />
-                    Tailored Itineraries
-                  </p>
-                </div>
-                <div className="col-sm-6">
-                  <p className="mb-0">
-                    <i className="fa fa-arrow-right text-secondary me-2" />
-                    Private Guided Tours
-                  </p>
-                </div>
-                <div className="col-sm-6">
-                  <p className="mb-0">
-                    <i className="fa fa-arrow-right text-secondary me-2" />
-                    Adventure & Wellness Packages
-                  </p>
-                </div>
-                <div className="col-sm-6">
-                  <p className="mb-0">
-                    <i className="fa fa-arrow-right text-secondary me-2" />
-                    24/7 Concierge Service
-                  </p>
-                </div>
-              </div>
-              <Link
-                to="/about"
-                className="btn btn-secondary py-3 px-5 mt-4"
-                style={{
-                  fontFamily:
-                    "'Raleway', system-ui, Avenir, Helvetica, Arial, sans-serif",
-                  fontWeight: "600",
-                  outline: "none",
-                  border: "none",
-                  borderRadius: "4px",
-                }}
-              >
-                Learn More
-              </Link>
-            </div>
-          </div>
-        </div>
-      </div>
-      {/* About End */}
+      <Hero />
+      <About />
       {/* Service Start */}
       <div className="container-xxl py-5">
         <div className="container">
@@ -461,9 +324,9 @@ export default function Home() {
                 top: "50%",
                 left: "50%",
                 transform: "translate(-50%, -50%)",
-                width: "100%", // full width so text can be centered
+                width: "100%", 
                 textAlign: "center",
-                whiteSpace: "nowrap", // keeps text on one line
+                whiteSpace: "nowrap", 
                 overflow: "hidden",
                 textOverflow: "ellipsis",
                 display: "flex",

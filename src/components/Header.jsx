@@ -126,7 +126,7 @@ function Header() {
               </Link>
 
               <Link
-                to="/About"
+                to="/AboutUs"
                 className="nav-item nav-link"
                 style={{
                   fontFamily: "'Raleway', sans-serif",
@@ -135,39 +135,6 @@ function Header() {
               >
                 About Us
               </Link>
-
-              {/* <div className="nav-item dropdown" style={{ fontFamily: "'Raleway', sans-serif" }}>
-              <Link
-                to="#"
-                className="nav-link dropdown-toggle"
-                data-bs-toggle="dropdown" style={{ fontFamily: "'Raleway', sans-serif" }}
-              >
-                Services
-              </Link>
-              <div className="dropdown-menu m-0">
-                 <Link to="/Destination" className="dropdown-item" style={{ fontFamily: "'Raleway', sans-serif" }}>
-                  Visa
-                </Link>
-                <Link to="/Destination" className="dropdown-item" style={{ fontFamily: "'Raleway', sans-serif" }}>
-                  Flights
-                </Link>
-                <Link to="/Booking" className="dropdown-item" style={{ fontFamily: "'Raleway', sans-serif" }}>
-                  Hotels
-                </Link>
-                <Link to="/Team" className="dropdown-item" style={{ fontFamily: "'Raleway', sans-serif" }}>
-                  Rides
-                </Link>
-                <Link to="/Testimonial" className="dropdown-item" style={{ fontFamily: "'Raleway', sans-serif" }}>
-                  Study Abroad
-                </Link>
-                <Link to="/Testimonial" className="dropdown-item" style={{ fontFamily: "'Raleway', sans-serif" }}>
-                  Protocol
-                </Link>
-                <Link to="/Testimonial" className="dropdown-item" style={{ fontFamily: "'Raleway', sans-serif" }}>
-                  Travel Insurance  
-                </Link>
-              </div>
-            </div> */}
 
               <Link
                 to="/Services"
@@ -217,7 +184,6 @@ function Header() {
           </div>
         </nav>
       </div>
-      {/* Navbar & Hero End */}
     </div>
   );
 }
