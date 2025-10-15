@@ -476,8 +476,6 @@ export default function Home() {
                 className="text-white"
                 style={{
                   fontFamily: "Raleway",
-                  fontSize: "100px",
-                  fontFamily: "Raleway",
                   fontSize: "clamp(50px, 8vw, 100px)",
                   lineHeight: "1.1",
                   margin: 0,
@@ -960,15 +958,6 @@ export default function Home() {
                     />
                   </div>
 
-                  {/* <div
-                  className="position-absolute top-0 start-0 w-100 h-100"
-                  style={{
-                    backgroundColor: "rgba(0, 0, 0, 0.3)",
-                    borderRadius: "15px",
-                    zIndex: 1,
-                  }}
-                ></div> */}
-
                   <div
                     className="position-absolute top-50 start-50 translate-middle text-center text-white"
                     style={{ zIndex: 2 }}
@@ -1232,14 +1221,6 @@ export default function Home() {
                     />
                   </div>
 
-                  {/* <div
-                  className="position-absolute top-0 start-0 w-100 h-100"
-                  style={{
-                    backgroundColor: "rgba(0, 0, 0, 0.3)",
-                    borderRadius: "15px",
-                    zIndex: 1,
-                  }}
-                ></div> */}
 
                   <div
                     className="position-absolute top-50 start-50 translate-middle text-center text-white"
@@ -1300,15 +1281,6 @@ export default function Home() {
                     />
                   </div>
 
-                  {/* <div
-                  className="position-absolute top-0 start-0 w-100 h-100"
-                  style={{
-                    backgroundColor: "rgba(0, 0, 0, 0.3)",
-                    borderRadius: "15px",
-                    zIndex: 1,
-                  }}
-                ></div> */}
-
                   <div
                     className="position-absolute top-50 start-50 translate-middle text-center text-white"
                     style={{ zIndex: 2 }}
@@ -1360,119 +1332,7 @@ export default function Home() {
 
       <VisaCatalogue />
 
-      {/* Process Start */}
-      {/* <div className="container-xxl py-5">
-        <div className="container">
-          <div className="text-center pb-4 wow fadeInUp" data-wow-delay="0.1s">
-            <h6
-              className="section-title bg-white text-center text-primary px-3"
-              style={{
-                fontFamily:
-                  "'Raleway', system-ui, Avenir, Helvetica, Arial, sans-serif",
-              }}
-            >
-              Process
-            </h6>
-            <h1
-              className="mb-5"
-              style={{
-                fontFamily:
-                  "'Raleway', system-ui, Avenir, Helvetica, Arial, sans-serif",
-              }}
-            >
-              How It Works
-            </h1>
-          </div>
-          <div className="row gy-5 gx-4 justify-content-center">
-            <div
-              className="col-lg-4 col-sm-6 text-center pt-4 wow fadeInUp"
-              data-wow-delay="0.1s"
-            >
-              <div className="position-relative border border-primary pt-5 pb-4 px-4">
-                <div
-                  className="d-inline-flex align-items-center justify-content-center bg-primary rounded-circle position-absolute top-0 start-50 translate-middle shadow"
-                  style={{ width: 100, height: 100 }}
-                >
-                  <i className="fa fa-globe fa-3x text-white" />
-                </div>
-                <h5
-                  className="mt-4"
-                  style={{
-                    fontFamily:
-                      "'Raleway', system-ui, Avenir, Helvetica, Arial, sans-serif",
-                  }}
-                >
-                  Choose Your Destination
-                </h5>
-                <hr className="w-25 mx-auto bg-primary mb-1" />
-                <hr className="w-50 mx-auto bg-primary mt-0" />
-                <p className="mb-0">
-                  Browse our packages and select the destination that excites
-                  you most.
-                </p>
-              </div>
-            </div>
-            <div
-              className="col-lg-4 col-sm-6 text-center pt-4 wow fadeInUp"
-              data-wow-delay="0.3s"
-            >
-              <div className="position-relative border border-primary pt-5 pb-4 px-4">
-                <div
-                  className="d-inline-flex align-items-center justify-content-center bg-primary rounded-circle position-absolute top-0 start-50 translate-middle shadow"
-                  style={{ width: 100, height: 100 }}
-                >
-                  <i className="fa fa-dollar-sign fa-3x text-white" />
-                </div>
-                <h5
-                  className="mt-4"
-                  style={{
-                    fontFamily:
-                      "'Raleway', system-ui, Avenir, Helvetica, Arial, sans-serif",
-                  }}
-                >
-                  Book & Pay Securely
-                </h5>
-                <hr className="w-25 mx-auto bg-primary mb-1" />
-                <hr className="w-50 mx-auto bg-primary mt-0" />
-                <p className="mb-0">
-                  Reserve your spot and pay online with our secure payment
-                  system.
-                </p>
-              </div>
-            </div>
-            <div
-              className="col-lg-4 col-sm-6 text-center pt-4 wow fadeInUp"
-              data-wow-delay="0.5s"
-            >
-              <div className="position-relative border border-primary pt-5 pb-4 px-4">
-                <div
-                  className="d-inline-flex align-items-center justify-content-center bg-primary rounded-circle position-absolute top-0 start-50 translate-middle shadow"
-                  style={{ width: 100, height: 100 }}
-                >
-                  <i className="fa fa-plane fa-3x text-white" />
-                </div>
-                <h5
-                  className="mt-4"
-                  style={{
-                    fontFamily:
-                      "'Raleway', system-ui, Avenir, Helvetica, Arial, sans-serif",
-                  }}
-                >
-                  Travel & Enjoy
-                </h5>
-                <hr className="w-25 mx-auto bg-primary mb-1" />
-                <hr className="w-50 mx-auto bg-primary mt-0" />
-                <p className="mb-0">
-                  Pack your bags and get ready for an amazing adventure with
-                  Macview Travels!
-                </p>
-              </div>
-            </div>
-          </div>
-        </div>
-      </div> */}
-      {/* Process End */}
-
+      
       <Testimonial />
       <Newsletter />
     </div>
