@@ -1,5 +1,6 @@
 import React from "react";
 import { Link } from "react-router-dom";
+import ServicesCard from "./ServicesCard";
 
 function WhatWeOffer() {
   return (
@@ -25,101 +26,47 @@ function WhatWeOffer() {
             What We Offer
           </h1>
         </div>
+
         <div className="row g-4">
           <div className="col-lg-3 col-sm-6 wow fadeInUp" data-wow-delay="0.1s">
-            <div
-              className="service-item pt-3"
-              style={{ border: "1px #dee2e6", borderRadius: "8px" }}
-            >
-              <div className="p-4">
-                <i className="fa fa-3x fa-passport text-secondary mb-4" />
-                <h5
-                  style={{
-                    fontFamily:
-                      "'Raleway', system-ui, Avenir, Helvetica, Arial, sans-serif",
-                    color: "#175aa1",
-                  }}
-                >
-                  Visa Processing
-                </h5>
-                <p>
-                  Explore top destinations across continents with expertly
-                  guided tours and exclusive experiences.
-                </p>
-              </div>
-            </div>
+            <ServicesCard
+              icon="fa-passport"
+              title="Visa Processing"
+              description="Simplify your travel plans with our fast and reliable visa processing services for top destinations around the world."
+              link="/visaprocessing"
+            />
           </div>
 
           <div className="col-lg-3 col-sm-6 wow fadeInUp" data-wow-delay="0.1s">
-            <div
-              className="service-item pt-3"
-              style={{ border: "1px #dee2e6", borderRadius: "8px" }}
-            >
-              <div className="p-4">
-                <i className="fa fa-3x fa-plane text-secondary mb-4" />
-                <h5
-                  style={{
-                    fontFamily:
-                      "'Raleway', system-ui, Avenir, Helvetica, Arial, sans-serif",
-                    color: "#175aa1",
-                  }}
-                >
-                  Flight Booking
-                </h5>
-                <p>
-                  Explore top destinations across continents with expertly
-                  guided tours and exclusive experiences.
-                </p>
-              </div>
-            </div>
+            <ServicesCard
+              icon="fa-plane"
+              title="Flight Booking"
+              description="Book affordable flights to your favorite destinations with ease and flexibility, connecting you to the world, one trip at a time."
+              link="/flightbooking"
+            />
           </div>
 
           <div className="col-lg-3 col-sm-6 wow fadeInUp" data-wow-delay="0.1s">
-            <div
-              className="service-item pt-3"
-              style={{ border: "1px #dee2e6", borderRadius: "8px" }}
-            >
-              <div className="p-4">
-                <i className="fa fa-3x fa-bed text-secondary mb-4" />
-                <h5
-                  style={{
-                    fontFamily:
-                      "'Raleway', system-ui, Avenir, Helvetica, Arial, sans-serif",
-                    color: "#175aa1",
-                  }}
-                >
-                  Hotel Booking
-                </h5>
-                <p>
-                  Explore top destinations across continents with expertly
-                  guided tours and exclusive experiences.
-                </p>
-              </div>
-            </div>
+            <ServicesCard
+              icon="fa-bed"
+              title="Hotel Booking"
+              description="Find and book the perfect stay that matches your comfort,
+              style, and budget, from luxury resorts to cozy city hotels."
+              link="/hotelbooking"
+            />
           </div>
+
           <div className="col-lg-3 col-sm-6 wow fadeInUp" data-wow-delay="0.1s">
-            <div
-              className="service-item pt-3"
-              style={{ border: "1px #dee2e6", borderRadius: "8px" }}
-            >
-              <div className="p-4">
-                <i className="fa fa-3x fa-graduation-cap text-secondary mb-4" />
-                <h5
-                  style={{
-                    fontFamily:
-                      "'Raleway', system-ui, Avenir, Helvetica, Arial, sans-serif",
-                    color: "#175aa1",
-                  }}
-                >
-                  Study Abroad Programs
-                </h5>
-                <p>
-                  Explore top destinations across continents with expertly
-                  guided tours and exclusive experiences.
-                </p>
-              </div>
-            </div>
+             <ServicesCard
+              icon="fa-graduation-cap"
+              title="Study Abroad Programs"
+              description="Begin your academic journey overseas with trusted guidance
+              on admissions, visas, turning your study dreams into
+              reality."
+              link="/studyabroadprograms"
+            />
           </div>
+
           <div className="text-center mt-5">
             <Link
               to="/services"
