@@ -8,7 +8,11 @@ function Header() {
       <div className="container-fluid position-relative p-0">
         <nav
           className="navbar navbar-expand-lg navbar-light sticky-top px-4 px-lg-5 py-3 py-lg-0"
-          style={{ alignItems: "center", justifyItems: "center", boxShadow: "0 2px 4px rgba(0, 0, 0, 0.1)" }}
+          style={{
+            alignItems: "center",
+            justifyItems: "center",
+            boxShadow: "0 2px 4px rgba(0, 0, 0, 0.1)",
+          }}
         >
           <Link
             to="/"
@@ -47,9 +51,10 @@ function Header() {
                 className="nav-item nav-link"
                 style={{
                   fontFamily: "'Raleway', sans-serif",
-                  fontWeight: "600",
+                  fontWeight: "500",
                 }}
               >
+                <i class="fa fa-home pe-2"></i>
                 Home
               </Link>
 
@@ -58,9 +63,10 @@ function Header() {
                 className="nav-item nav-link"
                 style={{
                   fontFamily: "'Raleway', sans-serif",
-                  fontWeight: "600",
+                  fontWeight: "500",
                 }}
               >
+                <i class="fa fa-users pe-2"></i>
                 About Us
               </Link>
 
@@ -69,24 +75,34 @@ function Header() {
                 className="nav-item nav-link"
                 style={{
                   fontFamily: "'Raleway', sans-serif",
-                  fontWeight: "600",
+                  fontWeight: "500",
                 }}
               >
+                <i class="fa fa-briefcase pe-2"></i>
                 Services
               </Link>
+
               <Link
                 to="/Packages"
                 className="nav-item nav-link"
-                style={{ fontFamily: "'Raleway', sans-serif" }}
+                style={{
+                  fontFamily: "'Raleway', sans-serif",
+                  fontWeight: "500",
+                }}
               >
+                <i class="fa fa-suitcase pe-2"></i>
                 Packages
               </Link>
 
               <Link
                 to="/Contact"
                 className="nav-item nav-link"
-                style={{ fontFamily: "'Raleway', sans-serif" }}
+                style={{
+                  fontFamily: "'Raleway', sans-serif",
+                  fontWeight: "500",
+                }}
               >
+                <i class="fa fa-envelope pe-2"></i>
                 Contact Us
               </Link>
 
