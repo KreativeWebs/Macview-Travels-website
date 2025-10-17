@@ -10,7 +10,7 @@ function ServicesCard({ icon, title, description, link }) {
           style={{ border: "1px #dee2e6", borderRadius: "8px" }}
         >
           <div className="p-4">
-            <i className={`fa fa-3x ${icon} text-secondary mb-4`}/>
+            <i className={`fa fa-3x ${icon} text-secondary mb-4`} />
             <h5
               style={{
                 fontFamily:
@@ -18,11 +18,9 @@ function ServicesCard({ icon, title, description, link }) {
                 color: "#175aa1",
               }}
             >
-             {title}
+              {title}
             </h5>
-            <p style={{ color: "#4e4c4cff" }}>
-              {description}
-            </p>
+            <p style={{ color: "#4e4c4cff" }}>{description}</p>
           </div>
         </div>
       </Link>
