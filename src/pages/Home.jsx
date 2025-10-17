@@ -9,6 +9,7 @@ import Testimonial from "./Testimonial";
 import Newsletter from "./Newsletter";
 import FeaturedHotels from "./FeaturedHotels";
 
+
 export default function Home() {
   return (
     <div

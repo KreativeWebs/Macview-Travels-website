@@ -4,68 +4,11 @@ import { Link } from "react-router-dom";
 function Header() {
   return (
     <div>
-      {/* Topbar Start */}
-      <div className="container-fluid bg-dark px-5 d-none d-lg-block">
-        <div className="row gx-0">
-          <div className="col-lg-8 text-center text-lg-start mb-2 mb-lg-0">
-            <div
-              className="d-inline-flex align-items-center"
-              style={{ height: 45 }}
-            >
-              <small className="me-3 text-light">
-                <i className="fa fa-map-marker-alt me-2" />
-                Suite 436, Ikeja Plaza, Lagos, Nigeria
-              </small>
-              <small className="me-3 text-light">
-                <i className="fa fa-phone-alt me-2" />
-                +234 911 011 1120, +234 816 905 6956
-              </small>
-              <small className="text-light">
-                <i className="fa fa-envelope-open me-2" />
-                info@macviewtravel.com
-              </small>
-            </div>
-          </div>
-          <div className="col-lg-4 text-center text-lg-end">
-            <div
-              className="d-inline-flex align-items-center"
-              style={{ height: 45 }}
-            >
-  
-              <a
-                className="btn btn-sm btn-outline-light btn-sm-square rounded-circle me-2"
-                to=""
-              >
-                <i className="fab fa-facebook-f fw-normal" />
-              </a>
-              <a
-                className="btn btn-sm btn-outline-light btn-sm-square rounded-circle me-2"
-                to=""
-              >
-                <i className="fab fa-linkedin-in fw-normal" />
-              </a>
-              <a
-                className="btn btn-sm btn-outline-light btn-sm-square rounded-circle me-2"
-                to=""
-              >
-                <i className="fab fa-instagram fw-normal" />
-              </a>
-              <a
-                className="btn btn-sm btn-outline-light btn-sm-square rounded-circle"
-                to=""
-              >
-                <i className="fab fa-youtube fw-normal" />
-              </a>
-            </div>
-          </div>
-        </div>
-      </div>
-      {/* Topbar End */}
-      {/* Navbar & Hero Start */}
+      {/* Navbar */}
       <div className="container-fluid position-relative p-0">
         <nav
           className="navbar navbar-expand-lg navbar-light sticky-top px-4 px-lg-5 py-3 py-lg-0"
-          style={{ alignItems: "center", justifyItems: "center"}}
+          style={{ alignItems: "center", justifyItems: "center", boxShadow: "0 2px 4px rgba(0, 0, 0, 0.1)" }}
         >
           <Link
             to="/"
@@ -147,24 +90,22 @@ function Header() {
                 Contact Us
               </Link>
 
-                <Link
-                  to="/"
-                  className="btn btn-secondary py-2 px-4 signin"
-                  style={{
-                    width: "120px",
-                    height: "30px",
-                    fontFamily: "Raleway",
-                    display: "flex",
-                    alignItems: "center",
-                    justifyContent: "center",
-                    borderRadius: "8px",
-                    border: "none"
-              
-                  }}
-                >
-                  Login
-                </Link>
-           
+              <Link
+                to="/"
+                className="btn btn-secondary py-2 px-4 signin"
+                style={{
+                  width: "120px",
+                  height: "30px",
+                  fontFamily: "Raleway",
+                  display: "flex",
+                  alignItems: "center",
+                  justifyContent: "center",
+                  borderRadius: "8px",
+                  border: "none",
+                }}
+              >
+                Login
+              </Link>
             </div>
           </div>
         </nav>

@@ -43,9 +43,8 @@ body {
   opacity: 1;
 }
 
-
 .whatsapp-label {
-  background-color: #25D366;
+  background-color: #25d366;
   color: white;
   padding: 8px 12px;
   border-radius: 20px;
@@ -117,15 +116,13 @@ body {
 }
 
 .navbar .btn.btn-primary {
-    display: flex;
+  display: flex;
   justify-content: center;
   align-items: center;
-
 }
 .sticky-top.navbar .navbar-nav .nav-link {
   padding: 20px 0;
   color: var(--dark) !important;
-  
 }
 
 .navbar-light .navbar-nav .nav-link:hover,
@@ -217,8 +214,6 @@ body {
   }
 }
 
-
-
 /* Visa carousel */
 
 .swiper-wrapper-container {
@@ -273,8 +268,6 @@ body {
   }
 }
 
-
-
 @media (min-width: 992px) {
   .navbar-light {
     position: absolute;
@@ -312,7 +305,6 @@ body {
   }
 }
 
-
 /* Hero header for the section pages */
 .hero-header {
   background: linear-gradient(rgba(20, 20, 31, 0.7), rgba(20, 20, 31, 0.7)),
@@ -321,7 +313,6 @@ body {
   background-repeat: no-repeat;
   background-size: cover;
 }
-
 
 /* Flash Sales Carousel Container */
 .flash-carousel {
@@ -369,7 +360,7 @@ body {
 .flash-title {
   border-radius: 4px;
   font-size: 14px;
-  font-family: 'Raleway', sans-serif;
+  font-family: "Raleway", sans-serif;
 }
 
 /* Tablet view */
@@ -386,29 +377,29 @@ body {
     display: none;
   }
 
-    /* Carousel control buttons */
-.flash-carousel .carousel-control-prev,
-.flash-carousel .carousel-control-next {
-  position: absolute !important;
-  top: 25% !important;
-  transform: translateY(-50%) !important;
-  bottom: auto !important;
-  z-index: 5;
-  height: auto;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-}
+  /* Carousel control buttons */
+  .flash-carousel .carousel-control-prev,
+  .flash-carousel .carousel-control-next {
+    position: absolute !important;
+    top: 25% !important;
+    transform: translateY(-50%) !important;
+    bottom: auto !important;
+    z-index: 5;
+    height: auto;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
 
-/* Control icons */
-.flash-carousel .carousel-control-prev-icon,
-.flash-carousel .carousel-control-next-icon {
-  width: 35px;
-  height: 35px;
-  background-size: 60% 60%;
-  background-color: rgba(0, 0, 0, 0.4); /* Subtle background circle */
-  border-radius: 50%;
-}
+  /* Control icons */
+  .flash-carousel .carousel-control-prev-icon,
+  .flash-carousel .carousel-control-next-icon {
+    width: 35px;
+    height: 35px;
+    background-size: 60% 60%;
+    background-color: rgba(0, 0, 0, 0.4); /* Subtle background circle */
+    border-radius: 50%;
+  }
 }
 
 /* Mobile view */
@@ -427,30 +418,29 @@ body {
   }
 
   /* Carousel control buttons */
-.flash-carousel .carousel-control-prev,
-.flash-carousel .carousel-control-next {
-  position: absolute !important;
-  top: 20% !important;
-  transform: translateY(-50%) !important;
-  bottom: auto !important;
-  z-index: 5;
-  height: auto;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-}
+  .flash-carousel .carousel-control-prev,
+  .flash-carousel .carousel-control-next {
+    position: absolute !important;
+    top: 20% !important;
+    transform: translateY(-50%) !important;
+    bottom: auto !important;
+    z-index: 5;
+    height: auto;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
 
-/* Control icons */
-.flash-carousel .carousel-control-prev-icon,
-.flash-carousel .carousel-control-next-icon {
-  width: 35px;
-  height: 35px;
-  background-size: 60% 60%;
-  background-color: rgba(0, 0, 0, 0.4); /* Subtle background circle */
-  border-radius: 50%;
+  /* Control icons */
+  .flash-carousel .carousel-control-prev-icon,
+  .flash-carousel .carousel-control-next-icon {
+    width: 35px;
+    height: 35px;
+    background-size: 60% 60%;
+    background-color: rgba(0, 0, 0, 0.4); /* Subtle background circle */
+    border-radius: 50%;
+  }
 }
-}
-
 
 /*** Section Title ***/
 .section-title {
@@ -609,7 +599,6 @@ body {
     width: 300px;
   }
 }
-
 
 .testimonial-carousel .owl-item .testimonial-item,
 .testimonial-carousel .owl-item.center .testimonial-item * {

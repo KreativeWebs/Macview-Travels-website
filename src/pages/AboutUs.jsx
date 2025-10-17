@@ -136,15 +136,15 @@ function AboutUs() {
         <div className="container">
           <div className="text-center wow fadeInUp" data-wow-delay="0.1s">
             <h6 className="section-title bg-white text-center text-primary px-3" style={{color: "#f1741e"}}>
-              Travel Guides
+              Travel Experts
             </h6>
             <h1 className="mb-5">Meet Our Team</h1>
           </div>
           <div className="row g-4">
             <div className="col-lg-3 col-md-6 wow fadeInUp" data-wow-delay="0.1s">
               <div className="team-item">
-                <div className="overflow-hidden">
-                  <img className="img-fluid" src="assets/img/CEO.jpg" alt="Emily Carter" />
+                <div className="overflow-hidden" style={{objectFit: "cover"}}>
+                  <img className="img-fluid" src="assets\img\mr jerry.png" style={{width: ""}} alt="Mr Jerry" />
                 </div>
                 <div
                   className="position-relative d-flex justify-content-center"
@@ -154,7 +154,7 @@ function AboutUs() {
                     <i className="fab fa-facebook-f" />
                   </a>
                   <a className="btn btn-square mx-1" href="#">
-                    <i className="fab fa-twitter" />
+                    <i className="fab fa-linkedin" />
                   </a>
                   <a className="btn btn-square mx-1" href="#">
                     <i className="fab fa-instagram" />
@@ -169,7 +169,7 @@ function AboutUs() {
             <div className="col-lg-3 col-md-6 wow fadeInUp" data-wow-delay="0.3s">
               <div className="team-item">
                 <div className="overflow-hidden">
-                  <img className="img-fluid" src="assets/img/CCO.jpg" alt="Michael Lee" />
+                  <img className="img-fluid" src="assets/img/mr godwin.png" alt="Mr Godwin" />
                 </div>
                 <div
                   className="position-relative d-flex justify-content-center"
@@ -179,22 +179,22 @@ function AboutUs() {
                     <i className="fab fa-facebook-f" />
                   </a>
                   <a className="btn btn-square mx-1" href="#">
-                    <i className="fab fa-twitter" />
+                    <i className="fab fa-linkedin" />
                   </a>
                   <a className="btn btn-square mx-1" href="#">
                     <i className="fab fa-instagram" />
                   </a>
                 </div>
                 <div className="text-center p-4">
-                  <h5 className="mb-0">Michael Lee</h5>
-                  <small>Adventure Expert</small>
+                  <h5 className="mb-0">Mr Noah Godwin</h5>
+                  <small>CCO</small>
                 </div>
               </div>
             </div>
             <div className="col-lg-3 col-md-6 wow fadeInUp" data-wow-delay="0.5s">
               <div className="team-item">
                 <div className="overflow-hidden">
-                  <img className="img-fluid" src="assets/img/team-2.jpg" alt="Sophia Martinez" />
+                  <img className="img-fluid" src="assets\img\fadekemi.png" alt="fadekemi" />
                 </div>
                 <div
                   className="position-relative d-flex justify-content-center"
@@ -204,22 +204,22 @@ function AboutUs() {
                     <i className="fab fa-facebook-f" />
                   </a>
                   <a className="btn btn-square mx-1" href="#">
-                    <i className="fab fa-twitter" />
+                    <i className="fab fa-linkedin" />
                   </a>
                   <a className="btn btn-square mx-1" href="#">
                     <i className="fab fa-instagram" />
                   </a>
                 </div>
                 <div className="text-center p-4">
-                  <h5 className="mb-0">Sophia Martinez</h5>
-                  <small>Luxury Travel Advisor</small>
+                  <h5 className="mb-0">Lateef Fadekemi</h5>
+                  <small>Head of Ticketing</small>
                 </div>
               </div>
             </div>
             <div className="col-lg-3 col-md-6 wow fadeInUp" data-wow-delay="0.7s">
               <div className="team-item">
                 <div className="overflow-hidden">
-                  <img className="img-fluid" src="assets/img/1427.jpg" alt="David Kim" />
+                  <img className="img-fluid" src="assets/img/ridwan.png" alt="David Kim" />
                 </div>
                 <div
                   className="position-relative d-flex justify-content-center"
@@ -229,15 +229,15 @@ function AboutUs() {
                     <i className="fab fa-facebook-f" />
                   </a>
                   <a className="btn btn-square mx-1" href="#">
-                    <i className="fab fa-twitter" />
+                    <i className="fab fa-linkedin" />
                   </a>
                   <a className="btn btn-square mx-1" href="#">
                     <i className="fab fa-instagram" />
                   </a>
                 </div>
                 <div className="text-center p-4">
-                  <h5 className="mb-0">David Kim</h5>
-                  <small>Wildlife Specialist</small>
+                  <h5 className="mb-0">ABDULJELEEL RIDWAN</h5>
+                  <small>Visa Assistant Manager</small>
                 </div>
               </div>
             </div>
