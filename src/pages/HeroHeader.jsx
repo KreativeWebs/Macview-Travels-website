@@ -6,10 +6,14 @@ function HeroHeader({ heroheadertitle, heroheaderdesc, pageName, heroheaderbg })
       <div
         className="container-fluid bg-primary py-5 mb-5"
         style={{
+          display: "flex",
+          alignItems: "center",
+          justifyContent: "center",
           background: `linear-gradient(rgba(20, 20, 31, 0.7), rgba(20, 20, 31, 0.83)), url(${heroheaderbg})`,
           backgroundPosition: "center center",
           backgroundRepeat: "no-repeat",
           backgroundSize: "cover",
+          height: "70vh",
         }}
       >
         <div className="container py-5">

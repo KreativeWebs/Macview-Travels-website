@@ -1,23 +1,23 @@
-import React from 'react'
+import React from "react";
 import { Link } from "react-router-dom";
+import HeroHeader from "./HeroHeader";
 
 function AboutUs() {
   return (
-    <div style={{ fontFamily: "'Raleway', system-ui, Avenir, Helvetica, Arial, sans-serif" }}>
-      {/* Hero Section */}
-      <div className="container-fluid bg-primary py-5 mb-5 hero-header">
-        <div className="container py-5">
-          <div className="row justify-content-center py-5">
-            <div className="col-lg-10 pt-lg-5 mt-lg-5 text-center">
-              <h1 className="display-3 text-white animated slideInDown" style={{fontFamily: "Raleway"}}>
-                About Us
-              </h1>
-             
-            </div>
-          </div>
-        </div>
-      </div>
-       {/* About Start */}
+    <div
+      style={{
+        fontFamily:
+          "'Raleway', system-ui, Avenir, Helvetica, Arial, sans-serif",
+      }}
+    >
+      <HeroHeader
+        heroheadertitle="About Us"
+        heroheaderbg="assets/img/7626.jpg"
+        heroheaderdesc="Our mission is to meet all your travel needs while delivering exceptional value for your money."
+        pageName="About Us"
+      />
+
+      {/* About Start */}
       <div className="container-xxl py-5">
         <div className="container">
           <div className="row g-5">
@@ -112,39 +112,75 @@ function AboutUs() {
                   </p>
                 </div>
               </div>
-              <Link
-                to="/about"
-                className="btn btn-secondary py-3 px-5 mt-4"
-                style={{
-                  fontFamily:
-                    "'Raleway', system-ui, Avenir, Helvetica, Arial, sans-serif",
-                  fontWeight: "600",
-                  outline: "none",
-                  border: "none",
-                  borderRadius: "4px",
-                }}
-              >
-                Learn More
-              </Link>
             </div>
           </div>
         </div>
       </div>
       {/* About End */}
+
+      <div className="container text-center wow fadeInUp" data-wow-delay="0.1s">
+        <div
+          className="d-flex flex-column flex-md-row justify-content-center align-items-center mt-4 position-relative"
+          style={{ gap: "2rem" }}
+        >
+          {/* Vision */}
+          <div className="flex-fill">
+            <i
+              class="fa fa-eye"
+              style={{ fontSize: "100px", color: "#f1741e" }}
+            ></i>
+
+            <h1 className="mb-4" style={{ fontFamily: "Raleway", color: "#175aa1" }}>
+              Vision
+            </h1>
+            <p>
+              To be the Preferred "Travel Management <br /> Company" in Nigeria
+            </p>
+          </div>
+
+          {/* Mission */}
+          <div className="flex-fill" style={{ fontFamily: "Raleway" }}>
+            <i
+              class="fa fa-bullseye"
+              style={{ fontSize: "100px", color: "#f1741e" }}
+            ></i>
+
+            <h1 className="mb-4" style={{ fontFamily: "Raleway", color: "#175aa1"  }}>
+              Mission
+            </h1>
+            <p>
+              To cover all your travel needs and <br /> giving value for your
+              money
+            </p>
+          </div>
+        </div>
+      </div>
+
       {/* Team Start */}
-      <div className="container-xxl py-5">
+      <div className="container-xxl py-5" style={{fontFamily: "Raleway", marginTop: "40px" }}>
         <div className="container">
           <div className="text-center wow fadeInUp" data-wow-delay="0.1s">
-            <h6 className="section-title bg-white text-center text-primary px-3" style={{color: "#f1741e"}}>
+            <h6
+              className="section-title bg-white text-center text-primary px-3"
+              style={{ color: "#f1741e", fontFamily: "Raleway" }}
+            >
               Travel Experts
             </h6>
-            <h1 className="mb-5">Meet Our Team</h1>
+            <h1 className="mb-5" style={{fontFamily: "Raleway" }}>Meet Our Team</h1>
           </div>
           <div className="row g-4">
-            <div className="col-lg-3 col-md-6 wow fadeInUp" data-wow-delay="0.1s">
+            <div
+              className="col-lg-3 col-md-6 wow fadeInUp"
+              data-wow-delay="0.1s"
+            >
               <div className="team-item">
-                <div className="overflow-hidden" style={{objectFit: "cover"}}>
-                  <img className="img-fluid" src="assets\img\mr jerry.png" style={{width: ""}} alt="Mr Jerry" />
+                <div className="overflow-hidden" style={{ objectFit: "cover" }}>
+                  <img
+                    className="img-fluid"
+                    src="assets\img\mr jerry.png"
+                    style={{ width: "" }}
+                    alt="Mr Jerry"
+                  />
                 </div>
                 <div
                   className="position-relative d-flex justify-content-center"
@@ -161,15 +197,22 @@ function AboutUs() {
                   </a>
                 </div>
                 <div className="text-center p-4">
-                  <h5 className="mb-0">Mademoye Balogun. J</h5>
+                  <h5 className="mb-0" style={{fontFamily: "Raleway" }}>Mademoye Balogun. J</h5>
                   <small>MD/CEO</small>
                 </div>
               </div>
             </div>
-            <div className="col-lg-3 col-md-6 wow fadeInUp" data-wow-delay="0.3s">
+            <div
+              className="col-lg-3 col-md-6 wow fadeInUp"
+              data-wow-delay="0.3s"
+            >
               <div className="team-item">
                 <div className="overflow-hidden">
-                  <img className="img-fluid" src="assets/img/mr godwin.png" alt="Mr Godwin" />
+                  <img
+                    className="img-fluid"
+                    src="assets/img/mr godwin.png"
+                    alt="Mr Godwin"
+                  />
                 </div>
                 <div
                   className="position-relative d-flex justify-content-center"
@@ -186,15 +229,22 @@ function AboutUs() {
                   </a>
                 </div>
                 <div className="text-center p-4">
-                  <h5 className="mb-0">Mr Noah Godwin</h5>
+                  <h5 className="mb-0" style={{fontFamily: "Raleway" }}>Mr Noah Godwin</h5>
                   <small>CCO</small>
                 </div>
               </div>
             </div>
-            <div className="col-lg-3 col-md-6 wow fadeInUp" data-wow-delay="0.5s">
+            <div
+              className="col-lg-3 col-md-6 wow fadeInUp"
+              data-wow-delay="0.5s"
+            >
               <div className="team-item">
                 <div className="overflow-hidden">
-                  <img className="img-fluid" src="assets\img\fadekemi.png" alt="fadekemi" />
+                  <img
+                    className="img-fluid"
+                    src="assets\img\fadekemi.png"
+                    alt="fadekemi"
+                  />
                 </div>
                 <div
                   className="position-relative d-flex justify-content-center"
@@ -211,15 +261,22 @@ function AboutUs() {
                   </a>
                 </div>
                 <div className="text-center p-4">
-                  <h5 className="mb-0">Lateef Fadekemi</h5>
+                  <h5 className="mb-0" style={{fontFamily: "Raleway" }}>Lateef Fadekemi</h5>
                   <small>Head of Ticketing</small>
                 </div>
               </div>
             </div>
-            <div className="col-lg-3 col-md-6 wow fadeInUp" data-wow-delay="0.7s">
+            <div
+              className="col-lg-3 col-md-6 wow fadeInUp"
+              data-wow-delay="0.7s"
+            >
               <div className="team-item">
                 <div className="overflow-hidden">
-                  <img className="img-fluid" src="assets/img/ridwan.png" alt="David Kim" />
+                  <img
+                    className="img-fluid"
+                    src="assets/img/ridwan.png"
+                    alt="David Kim"
+                  />
                 </div>
                 <div
                   className="position-relative d-flex justify-content-center"
@@ -236,7 +293,7 @@ function AboutUs() {
                   </a>
                 </div>
                 <div className="text-center p-4">
-                  <h5 className="mb-0">ABDULJELEEL RIDWAN</h5>
+                  <h5 className="mb-0" style={{fontFamily: "Raleway" }}>ABDULJELEEL RIDWAN</h5>
                   <small>Visa Assistant Manager</small>
                 </div>
               </div>
@@ -246,7 +303,7 @@ function AboutUs() {
       </div>
       {/* Team End */}
     </div>
-  )
+  );
 }
 
-export default AboutUs
+export default AboutUs;
