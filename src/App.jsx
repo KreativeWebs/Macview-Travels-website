@@ -15,6 +15,9 @@ import Booking from './pages/Booking'
 import Team from './pages/Team'
 import Testimonial from './pages/Testimonial'
 import Contact from './pages/Contact'
+import Signup from './pages/Signup'
+import Login from './pages/Login'
+
 
 
 export default function App() {
@@ -35,6 +38,8 @@ export default function App() {
         <Route path='/team' element={<Team/>}/>
         <Route path='/testimonial' element={<Testimonial/>}/>
         <Route path='/contact' element={<Contact/>}/>
+        <Route path='/signup' element={<Signup/>}/>
+        <Route path='/login' element={<Login/>}/>
         </Routes>
         <Footer />
     </div>

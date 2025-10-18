@@ -1,9 +1,14 @@
 import React from "react";
 import { Link } from "react-router-dom";
+import Signup from "../pages/signup";
+import Login from "../pages/Login";
+
 
 function Header() {
   return (
     <div>
+       <Signup />
+       <Login />
       {/* Navbar */}
       <div className="container-fluid position-relative p-0">
         <nav
@@ -109,6 +114,8 @@ function Header() {
               <Link
                 to="/"
                 className="btn btn-secondary py-2 px-4 signin"
+                data-bs-toggle="modal"
+                data-bs-target="#loginModal"
                 style={{
                   width: "120px",
                   height: "30px",
