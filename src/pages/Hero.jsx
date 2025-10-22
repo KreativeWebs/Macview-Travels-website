@@ -20,7 +20,7 @@ function Hero() {
               <input
                 className="form-control border-0 rounded-pill w-100 py-3 ps-4 pe-5"
                 type="text"
-                placeholder="Search destinations (e.g., Bali, Paris, Dubai)"
+                placeholder="Search destinations"
               />
               <button
                 type="button"

@@ -5,6 +5,36 @@ import { useState } from "react";
 
 function Signup() {
   const [showPassword, setShowPassword] = useState(false);
+
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
+  const [message, setMessage] = useState("");
+
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+
+    try {
+      const res = await fetch("http://localhost:5000/api/auth/signup", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ email, password }),
+      });
+
+      const data = await res.json();
+      setMessage(data.message);
+
+      if (res.ok) {
+        console.log("✅ User created successfully");
+        // Optional: redirect to login modal here
+      } else {
+        console.log("⚠️ Error:", data.message);
+      }
+    } catch (err) {
+      console.error("❌ Error:", err);
+      setMessage("Server error");
+    }
+  };
+
   return (
     <div
       className="modal fade"
@@ -89,12 +119,14 @@ function Signup() {
             >
               Your next experience starts with an account.
             </p>
-            <form>
+            <form onSubmit={handleSubmit}>
               <div className="mb-3">
                 <label className="form-label">Email address</label>
                 <input
                   type="email"
                   className="form-control"
+                  value={email}
+                  onChange={(e) => setEmail(e.target.value)}
                   style={{
                     borderRadius: "4px",
                     boxShadow: "none",
@@ -108,6 +140,8 @@ function Signup() {
                 <input
                   type={showPassword ? "text" : "password"}
                   className="form-control"
+                  value={password}
+                  onChange={(e) => setPassword(e.target.value)}
                   style={{
                     borderRadius: "4px",
                     boxShadow: "none",
@@ -190,6 +224,8 @@ function Signup() {
                 <Link style={{ color: "#175aa1" }}>Terms and Conditions</Link>{" "}
                 and <Link style={{ color: "#175aa1" }}>Privacy Policy</Link>{" "}
               </p>
+
+               {message && <p>{message}</p>}
             </form>
           </div>
         </div>

@@ -22,7 +22,7 @@ function Header() {
           <Link
             to="/"
             className="navbar-brand p-0"
-            style={{ display: "flex", alignItems: "center" }}
+            style={{ display: "flex", alignItems: "center",  }}
           >
             <img
               src="/assets/img/logo macview.png"
@@ -52,11 +52,12 @@ function Header() {
           <div className="collapse navbar-collapse" id="navbarCollapse">
             <div className="navbar-nav ms-auto py-0 d-flex align-items-lg-center">
               <Link
-                to="/"
+                to="/"  
                 className="nav-item nav-link"
                 style={{
                   fontFamily: "'Raleway', sans-serif",
                   fontWeight: "500",
+                  fontSize: "15px"
                 }}
               >
                 <i class="fa fa-home pe-2"></i>
@@ -69,6 +70,7 @@ function Header() {
                 style={{
                   fontFamily: "'Raleway', sans-serif",
                   fontWeight: "500",
+                  fontSize: "15px"
                 }}
               >
                 <i class="fa fa-users pe-2"></i>
@@ -81,6 +83,7 @@ function Header() {
                 style={{
                   fontFamily: "'Raleway', sans-serif",
                   fontWeight: "500",
+                  fontSize: "15px"
                 }}
               >
                 <i class="fa fa-briefcase pe-2"></i>
@@ -93,10 +96,28 @@ function Header() {
                 style={{
                   fontFamily: "'Raleway', sans-serif",
                   fontWeight: "500",
+                  fontSize: "15px"
                 }}
               >
                 <i class="fa fa-suitcase pe-2"></i>
                 Packages
+              </Link>
+
+                <Link
+                to="/login"
+                className="nav-item nav-link"
+                   data-bs-toggle="modal"
+                  data-bs-target="#loginModal"
+                  data-bs-dismiss="modal"
+                style={{
+                  fontFamily: "'Raleway', sans-serif",
+                  fontWeight: "500",
+                  fontSize: "15px"
+                  
+                }}
+              >
+                <i class="fa fa-plane pe-2"></i>
+                Manage My Bookings
               </Link>
 
               <Link
@@ -105,6 +126,7 @@ function Header() {
                 style={{
                   fontFamily: "'Raleway', sans-serif",
                   fontWeight: "500",
+                  fontSize: "15px"
                 }}
               >
                 <i class="fa fa-envelope pe-2"></i>
