@@ -7,6 +7,7 @@ import ErrorBoundary from "./pages/ErrorBoundary.jsx";
 
 
 
+
 createRoot(document.getElementById("root")).render(
   <StrictMode>
     <BrowserRouter>

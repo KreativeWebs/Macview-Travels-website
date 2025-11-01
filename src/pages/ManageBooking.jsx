@@ -1,6 +1,6 @@
 import React from 'react'
 
-function Booking() {
+function ManageBooking() {
   return (
     <div>
       {/* Hero Section */}
@@ -175,4 +175,4 @@ function Booking() {
   )
 }
 
-export default Booking
+export default ManageBooking;

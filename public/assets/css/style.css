@@ -258,6 +258,28 @@ body {
   right: 15px;
 }
 
+
+.tripType input[type="radio"] {
+  appearance: none;
+  width: 18px;
+  height: 18px;
+  border: 2px solid orange;
+  border-radius: 50%;
+  cursor: pointer;
+  position: relative;
+}
+
+.tripType input[type="radio"]:checked::before {
+  content: "";
+  width: 10px;
+  height: 10px;
+  background-color: orange;
+  border-radius: 50%;
+  position: absolute;
+  top: 3px;
+  left: 3px;
+}
+
 /* Optional: Adjust on mobile */
 @media (max-width: 768px) {
   .visa-prev,

@@ -1,14 +1,66 @@
 import React from "react";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import Signup from "../pages/signup";
 import Login from "../pages/Login";
-
+import { useAuthStore } from "../store/authStore";
+import Modal from "bootstrap/js/dist/modal";
 
 function Header() {
+  const { user, logout } = useAuthStore();
+  const navigate = useNavigate();
+
+  const getInitialsFromEmail = (email) => {
+    if (!email) return "";
+    const namePart = email.split("@")[0];
+    const parts = namePart.split(/[._]/); // split on . or _
+    if (parts.length >= 2) {
+      return (parts[0][0] + parts[1][0]).toUpperCase();
+    }
+    return namePart.slice(0, 2).toUpperCase();
+  };
+
+  const initials = user ? getInitialsFromEmail(user.email) : "";
+
+  const handleLogout = async () => {
+    // Clean up any open modals
+    document.querySelectorAll(".modal-backdrop").forEach((el) => el.remove());
+    document.body.classList.remove("modal-open");
+    document.body.style.overflow = "";
+    document.body.style.paddingRight = "";
+
+    await logout();
+    navigate("/");
+  };
+
+  const handleOpenLogin = (e) => {
+    e.preventDefault();
+    const loginModalElement = document.getElementById("loginModal");
+    if (loginModalElement) {
+      const loginModal = Modal.getOrCreateInstance(loginModalElement);
+      loginModal.show();
+    }
+  };
+
+  const handleManageBookings = (e) => {
+    e.preventDefault();
+    
+    if (user) {
+      // User is logged in, navigate to bookings page
+      navigate("/managebooking");
+    } else {
+      // User not logged in, show login modal
+      const loginModalElement = document.getElementById("loginModal");
+      if (loginModalElement) {
+        const loginModal = Modal.getOrCreateInstance(loginModalElement);
+        loginModal.show();
+      }
+    }
+  };
+
   return (
     <div>
-       <Signup />
-       <Login />
+      <Signup />
+      <Login />
       {/* Navbar */}
       <div className="container-fluid position-relative p-0">
         <nav
@@ -22,7 +74,7 @@ function Header() {
           <Link
             to="/"
             className="navbar-brand p-0"
-            style={{ display: "flex", alignItems: "center",  }}
+            style={{ display: "flex", alignItems: "center" }}
           >
             <img
               src="/assets/img/logo macview.png"
@@ -52,15 +104,15 @@ function Header() {
           <div className="collapse navbar-collapse" id="navbarCollapse">
             <div className="navbar-nav ms-auto py-0 d-flex align-items-lg-center">
               <Link
-                to="/"  
+                to="/"
                 className="nav-item nav-link"
                 style={{
                   fontFamily: "'Raleway', sans-serif",
                   fontWeight: "500",
-                  fontSize: "15px"
+                  fontSize: "15px",
                 }}
               >
-                <i class="fa fa-home pe-2"></i>
+                <i className="fa fa-home pe-2"></i>
                 Home
               </Link>
 
@@ -70,10 +122,10 @@ function Header() {
                 style={{
                   fontFamily: "'Raleway', sans-serif",
                   fontWeight: "500",
-                  fontSize: "15px"
+                  fontSize: "15px",
                 }}
               >
-                <i class="fa fa-users pe-2"></i>
+                <i className="fa fa-users pe-2"></i>
                 About Us
               </Link>
 
@@ -83,10 +135,10 @@ function Header() {
                 style={{
                   fontFamily: "'Raleway', sans-serif",
                   fontWeight: "500",
-                  fontSize: "15px"
+                  fontSize: "15px",
                 }}
               >
-                <i class="fa fa-briefcase pe-2"></i>
+                <i className="fa fa-briefcase pe-2"></i>
                 Services
               </Link>
 
@@ -96,29 +148,27 @@ function Header() {
                 style={{
                   fontFamily: "'Raleway', sans-serif",
                   fontWeight: "500",
-                  fontSize: "15px"
+                  fontSize: "15px",
                 }}
               >
-                <i class="fa fa-suitcase pe-2"></i>
+                <i className="fa fa-suitcase pe-2"></i>
                 Packages
               </Link>
 
-                <Link
-                to="/login"
+              <a
+                href="#"
+                onClick={handleManageBookings}
                 className="nav-item nav-link"
-                   data-bs-toggle="modal"
-                  data-bs-target="#loginModal"
-                  data-bs-dismiss="modal"
                 style={{
                   fontFamily: "'Raleway', sans-serif",
                   fontWeight: "500",
-                  fontSize: "15px"
-                  
+                  fontSize: "15px",
+                  cursor: "pointer",
                 }}
               >
-                <i class="fa fa-plane pe-2"></i>
+                <i className="fa fa-plane pe-2"></i>
                 Manage My Bookings
-              </Link>
+              </a>
 
               <Link
                 to="/Contact"
@@ -126,31 +176,81 @@ function Header() {
                 style={{
                   fontFamily: "'Raleway', sans-serif",
                   fontWeight: "500",
-                  fontSize: "15px"
+                  fontSize: "15px",
                 }}
               >
-                <i class="fa fa-envelope pe-2"></i>
+                <i className="fa fa-envelope pe-2"></i>
                 Contact Us
               </Link>
 
-              <Link
-                to="/"
-                className="btn btn-secondary py-2 px-4 signin"
-                data-bs-toggle="modal"
-                data-bs-target="#loginModal"
-                style={{
-                  width: "120px",
-                  height: "30px",
-                  fontFamily: "Raleway",
-                  display: "flex",
-                  alignItems: "center",
-                  justifyContent: "center",
-                  borderRadius: "8px",
-                  border: "none",
-                }}
-              >
-                Login
-              </Link>
+              <div className="d-flex align-items-center ms-1 me-3">
+                <div
+                  style={{
+                    width: "30px",
+                    height: "30px",
+                    borderRadius: "50%",
+                    backgroundColor: user ? "#f1741e" : "#000000",
+                    color: "white",
+                    display: "flex",
+                    alignItems: "center",
+                    justifyContent: "center",
+                    fontWeight: "bold",
+                    fontSize: "14px",
+                    marginRight: "10px",
+                  }}
+                >
+                  {user ? initials : <i className="fa fa-user"></i>}
+                </div>
+              </div>
+
+              {!user ? (
+                <a
+                  href="#"
+                  onClick={handleOpenLogin}
+                  className="btn btn-secondary py-2 px-4 signin"
+                  style={{
+                    width: "120px",
+                    height: "30px",
+                    fontFamily: "Raleway",
+                    display: "flex",
+                    alignItems: "center",
+                    justifyContent: "center",
+                    borderRadius: "8px",
+                    border: "none",
+                    cursor: "pointer",
+                  }}
+                >
+                  Login
+                </a>
+              ) : (
+                <div
+                  style={{
+                    display: "flex",
+                    justifyContent: "center",
+                    alignItems: "center",
+                    gap: "10px",
+                  }}
+                >
+                  <button
+                    onClick={handleLogout}
+                    className="btn py-2 px-4 text-white"
+                    style={{
+                      width: "120px",
+                      height: "30px",
+                      fontFamily: "Raleway",
+                      display: "flex",
+                      backgroundColor: "#f1741e",
+                      alignItems: "center",
+                      justifyContent: "center",
+                      borderRadius: "8px",
+                      border: "none",
+                      cursor: "pointer",
+                    }}
+                  >
+                    Logout
+                  </button>
+                </div>
+              )}
             </div>
           </div>
         </nav>

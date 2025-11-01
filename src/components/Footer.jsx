@@ -53,19 +53,19 @@ export default function Footer() {
               <div className="d-flex pt-2">
                 <a
                   className="btn btn-outline-light btn-social"
-                  href="https://facebook.com/diamondtravels"
+                  href="https://facebook.com/macviewtravels"
                 >
                   <i className="fab fa-facebook-f" />
                 </a>
                 <a
                   className="btn btn-outline-light btn-social"
-                  href="https://instagram.com/diamondtravels"
+                  href="https://instagram.com/macviewtravels"
                 >
                   <i className="fab fa-instagram" />
                 </a>
                 <a
                   className="btn btn-outline-light btn-social"
-                  href="https://linkedin.com/company/diamondtravels"
+                  href="https://linkedin.com/company/macviewtravels"
                 >
                   <i className="fab fa-linkedin-in" />
                 </a>
