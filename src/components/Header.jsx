@@ -43,7 +43,7 @@ function Header() {
 
   const handleManageBookings = (e) => {
     e.preventDefault();
-    
+
     if (user) {
       // User is logged in, navigate to bookings page
       navigate("/managebooking");
@@ -63,197 +63,222 @@ function Header() {
       <Login />
       {/* Navbar */}
       <div className="container-fluid position-relative p-0">
-        <nav
-          className="navbar navbar-expand-lg navbar-light sticky-top px-4 px-lg-5 py-3 py-lg-0"
+       <nav
+  className="navbar navbar-expand-lg navbar-light sticky-top px-4 px-lg-5 py-3 py-lg-0"
+  style={{
+    alignItems: "center",
+    justifyItems: "center",
+    boxShadow: "0 2px 4px rgba(0, 0, 0, 0.1)",
+  }}
+>
+  <Link
+    to="/"
+    className="navbar-brand p-0"
+    style={{ display: "flex", alignItems: "center" }}
+  >
+    <img
+      src="/assets/img/logo macview.png"
+      style={{ width: "60px" }}
+      alt="Macview Travels Logo"
+    ></img>
+    <h1
+      className="text-primary m-0"
+      style={{
+        fontSize: "1rem",
+        paddingLeft: "10px",
+        fontFamily:
+          "'Raleway', system-ui, Avenir, Helvetica, Arial, sans-serif",
+      }}
+    >
+      Macview Travels
+    </h1>
+  </Link>
+
+  {/* Avatar beside hamburger on mobile */}
+  <div className="d-flex align-items-center d-lg-none ms-auto me-2">
+    <div
+      style={{
+        width: "30px",
+        height: "30px",
+        borderRadius: "50%",
+        backgroundColor: user ? "#f1741e" : "#000000",
+        color: "white",
+        display: "flex",
+        alignItems: "center",
+        justifyContent: "center",
+        fontWeight: "bold",
+        fontSize: "14px",
+        marginRight: "10px",
+      }}
+    >
+      {user ? initials : <i className="fa fa-user"></i>}
+    </div>
+  </div>
+
+  <button
+    className="navbar-toggler"
+    type="button"
+    data-bs-toggle="collapse"
+    data-bs-target="#navbarCollapse"
+  >
+    <span className="fa fa-bars" />
+  </button>
+
+  <div className="collapse navbar-collapse" id="navbarCollapse">
+    <div className="navbar-nav ms-auto py-0 d-flex align-items-lg-center">
+      <Link
+        to="/"
+        className="nav-item nav-link"
+        style={{
+          fontFamily: "'Raleway', sans-serif",
+          fontWeight: "500",
+          fontSize: "15px",
+        }}
+      >
+        <i className="fa fa-home pe-2"></i>
+        Home
+      </Link>
+
+      <Link
+        to="/AboutUs"
+        className="nav-item nav-link"
+        style={{
+          fontFamily: "'Raleway', sans-serif",
+          fontWeight: "500",
+          fontSize: "15px",
+        }}
+      >
+        <i className="fa fa-users pe-2"></i>
+        About Us
+      </Link>
+
+      <Link
+        to="/Services"
+        className="nav-item nav-link"
+        style={{
+          fontFamily: "'Raleway', sans-serif",
+          fontWeight: "500",
+          fontSize: "15px",
+        }}
+      >
+        <i className="fa fa-briefcase pe-2"></i>
+        Services
+      </Link>
+
+      <Link
+        to="/Packages"
+        className="nav-item nav-link"
+        style={{
+          fontFamily: "'Raleway', sans-serif",
+          fontWeight: "500",
+          fontSize: "15px",
+        }}
+      >
+        <i className="fa fa-suitcase pe-2"></i>
+        Packages
+      </Link>
+
+      <a
+        href="#"
+        onClick={handleManageBookings}
+        className="nav-item nav-link"
+        style={{
+          fontFamily: "'Raleway', sans-serif",
+          fontWeight: "500",
+          fontSize: "15px",
+          cursor: "pointer",
+        }}
+      >
+        <i className="fa fa-plane pe-2"></i>
+        Manage My Bookings
+      </a>
+
+      <Link
+        to="/Contact"
+        className="nav-item nav-link"
+        style={{
+          fontFamily: "'Raleway', sans-serif",
+          fontWeight: "500",
+          fontSize: "15px",
+        }}
+      >
+        <i className="fa fa-envelope pe-2"></i>
+        Contact Us
+      </Link>
+
+      {/* Avatar stays in place on desktop */}
+      <div className="d-none d-lg-flex align-items-center ms-1 me-3">
+        <div
           style={{
+            width: "30px",
+            height: "30px",
+            borderRadius: "50%",
+            backgroundColor: user ? "#f1741e" : "#000000",
+            color: "white",
+            display: "flex",
             alignItems: "center",
-            justifyItems: "center",
-            boxShadow: "0 2px 4px rgba(0, 0, 0, 0.1)",
+            justifyContent: "center",
+            fontWeight: "bold",
+            fontSize: "14px",
+            marginRight: "10px",
           }}
         >
-          <Link
-            to="/"
-            className="navbar-brand p-0"
-            style={{ display: "flex", alignItems: "center" }}
-          >
-            <img
-              src="/assets/img/logo macview.png"
-              style={{ width: "60px" }}
-              alt="Macview Travels Logo"
-            ></img>
-            <h1
-              className="text-primary m-0"
-              style={{
-                fontSize: "1rem",
-                paddingLeft: "10px",
-                fontFamily:
-                  "'Raleway', system-ui, Avenir, Helvetica, Arial, sans-serif",
-              }}
-            >
-              Macview Travels
-            </h1>
-          </Link>
+          {user ? initials : <i className="fa fa-user"></i>}
+        </div>
+      </div>
+
+      {!user ? (
+        <a
+          href="#"
+          onClick={handleOpenLogin}
+          className="btn btn-secondary py-2 px-4 signin"
+          style={{
+            width: "120px",
+            height: "30px",
+            fontFamily: "Raleway",
+            display: "flex",
+            alignItems: "center",
+            justifyContent: "center",
+            borderRadius: "8px",
+            border: "none",
+            cursor: "pointer",
+          }}
+        >
+          Login
+        </a>
+      ) : (
+        <div
+          style={{
+            display: "flex",
+            justifyContent: "center",
+            alignItems: "center",
+            gap: "10px",
+          }}
+        >
           <button
-            className="navbar-toggler"
-            type="button"
-            data-bs-toggle="collapse"
-            data-bs-target="#navbarCollapse"
+            onClick={handleLogout}
+            className="btn py-2 px-4 text-white"
+            style={{
+              width: "120px",
+              height: "30px",
+              fontFamily: "Raleway",
+              display: "flex",
+              backgroundColor: "#f1741e",
+              alignItems: "center",
+              justifyContent: "center",
+              borderRadius: "8px",
+              border: "none",
+              cursor: "pointer",
+            }}
           >
-            <span className="fa fa-bars" />
+            Logout
           </button>
-          <div className="collapse navbar-collapse" id="navbarCollapse">
-            <div className="navbar-nav ms-auto py-0 d-flex align-items-lg-center">
-              <Link
-                to="/"
-                className="nav-item nav-link"
-                style={{
-                  fontFamily: "'Raleway', sans-serif",
-                  fontWeight: "500",
-                  fontSize: "15px",
-                }}
-              >
-                <i className="fa fa-home pe-2"></i>
-                Home
-              </Link>
+        </div>
+      )}
+    </div>
+  </div>
+</nav>
 
-              <Link
-                to="/AboutUs"
-                className="nav-item nav-link"
-                style={{
-                  fontFamily: "'Raleway', sans-serif",
-                  fontWeight: "500",
-                  fontSize: "15px",
-                }}
-              >
-                <i className="fa fa-users pe-2"></i>
-                About Us
-              </Link>
-
-              <Link
-                to="/Services"
-                className="nav-item nav-link"
-                style={{
-                  fontFamily: "'Raleway', sans-serif",
-                  fontWeight: "500",
-                  fontSize: "15px",
-                }}
-              >
-                <i className="fa fa-briefcase pe-2"></i>
-                Services
-              </Link>
-
-              <Link
-                to="/Packages"
-                className="nav-item nav-link"
-                style={{
-                  fontFamily: "'Raleway', sans-serif",
-                  fontWeight: "500",
-                  fontSize: "15px",
-                }}
-              >
-                <i className="fa fa-suitcase pe-2"></i>
-                Packages
-              </Link>
-
-              <a
-                href="#"
-                onClick={handleManageBookings}
-                className="nav-item nav-link"
-                style={{
-                  fontFamily: "'Raleway', sans-serif",
-                  fontWeight: "500",
-                  fontSize: "15px",
-                  cursor: "pointer",
-                }}
-              >
-                <i className="fa fa-plane pe-2"></i>
-                Manage My Bookings
-              </a>
-
-              <Link
-                to="/Contact"
-                className="nav-item nav-link"
-                style={{
-                  fontFamily: "'Raleway', sans-serif",
-                  fontWeight: "500",
-                  fontSize: "15px",
-                }}
-              >
-                <i className="fa fa-envelope pe-2"></i>
-                Contact Us
-              </Link>
-
-              <div className="d-flex align-items-center ms-1 me-3">
-                <div
-                  style={{
-                    width: "30px",
-                    height: "30px",
-                    borderRadius: "50%",
-                    backgroundColor: user ? "#f1741e" : "#000000",
-                    color: "white",
-                    display: "flex",
-                    alignItems: "center",
-                    justifyContent: "center",
-                    fontWeight: "bold",
-                    fontSize: "14px",
-                    marginRight: "10px",
-                  }}
-                >
-                  {user ? initials : <i className="fa fa-user"></i>}
-                </div>
-              </div>
-
-              {!user ? (
-                <a
-                  href="#"
-                  onClick={handleOpenLogin}
-                  className="btn btn-secondary py-2 px-4 signin"
-                  style={{
-                    width: "120px",
-                    height: "30px",
-                    fontFamily: "Raleway",
-                    display: "flex",
-                    alignItems: "center",
-                    justifyContent: "center",
-                    borderRadius: "8px",
-                    border: "none",
-                    cursor: "pointer",
-                  }}
-                >
-                  Login
-                </a>
-              ) : (
-                <div
-                  style={{
-                    display: "flex",
-                    justifyContent: "center",
-                    alignItems: "center",
-                    gap: "10px",
-                  }}
-                >
-                  <button
-                    onClick={handleLogout}
-                    className="btn py-2 px-4 text-white"
-                    style={{
-                      width: "120px",
-                      height: "30px",
-                      fontFamily: "Raleway",
-                      display: "flex",
-                      backgroundColor: "#f1741e",
-                      alignItems: "center",
-                      justifyContent: "center",
-                      borderRadius: "8px",
-                      border: "none",
-                      cursor: "pointer",
-                    }}
-                  >
-                    Logout
-                  </button>
-                </div>
-              )}
-            </div>
-          </div>
-        </nav>
       </div>
     </div>
   );

@@ -5,12 +5,16 @@ const flightBookingSchema = new mongoose.Schema(
     fullName: { type: String, required: true },
     email: { type: String, required: true },
     phoneNumber: { type: String, required: true },
-    gender: { type: String },
-    dob: { type: String },
+    gender: { type: String, required: true },
+    dob: { type: String, required: true },
 
-    tripType: { type: String, required: true, enum: ["one-way", "round-trip", "multi-city"] },
+    tripType: {
+      type: String,
+      required: true,
+      enum: ["one-way", "round-trip", "multi-city"],
+    },
 
-    // ✅ Conditionally required (only if NOT multi-city)
+    //Conditionally required (only if NOT multi-city)
     departureCity: {
       type: String,
       required: function () {
@@ -31,7 +35,7 @@ const flightBookingSchema = new mongoose.Schema(
     },
     returnDate: { type: String },
 
-    // ✅ Multi-city array (each object can have from, to, date)
+    //Multi-city array (each object can have from, to, date)
     multiCityFlights: [
       {
         from: { type: String, required: true },

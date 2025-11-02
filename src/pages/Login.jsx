@@ -327,6 +327,18 @@ function Login() {
                 )}
               </button>
 
+                <a
+                  href="#"
+                  onClick={handleSwitchToSignup}
+                  style={{
+                    color: "#175aa1",
+                    cursor: "pointer",
+                    textDecoration: "none",
+                    marginTop: "15px"
+                  }}
+                >
+                  Forgot password
+                </a>
               <p
                 style={{
                   textAlign: "center",

@@ -17,6 +17,7 @@ import ManageBooking from "./pages/ManageBooking";
 import Team from "./pages/Team";
 import Testimonial from "./pages/Testimonial";
 import Contact from "./pages/Contact";
+import FlightSuccess from "./pages/FlightSuccess.jsx";
 import { useAuthStore } from "./store/authStore";
 
 export default function App() {
@@ -48,6 +49,7 @@ export default function App() {
         <Route path="/team" element={<Team />} />
         <Route path="/testimonial" element={<Testimonial />} />
         <Route path="/contact" element={<Contact />} />
+        <Route path="/flight-success" element={<FlightSuccess />} />
       </Routes>
       <Footer />
       <ToastContainer position="top-right" autoClose={3000} hideProgressBar={false} />

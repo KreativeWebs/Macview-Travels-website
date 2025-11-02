@@ -1,10 +1,13 @@
 import { useState } from "react";
+import { useNavigate } from "react-router-dom";
 
 function FlightBooking() {
   const [tripType, setTripType] = useState("");
   const [multiCityFlights, setMultiCityFlights] = useState([
     { from: "", to: "", date: "" },
   ]);
+
+  const navigate = useNavigate();
 
   const [formData, setFormData] = useState({
     fullName: "",
@@ -47,70 +50,71 @@ function FlightBooking() {
   };
 
   // Submit handler
-const handleSubmit = async (e) => {
-  e.preventDefault();
+  const handleSubmit = async (e) => {
+    e.preventDefault();
 
-  const payload = {
-    fullName: formData.fullName,
-    email: formData.email,
-    phoneNumber: formData.phoneNumber,
-    gender: formData.gender || "",
-    dob: formData.dob || "",
-    tripType,
-    departureCity: formData.departureCity,
-    destinationCity: formData.destinationCity,
-    departureDate: formData.departureDate,
-    returnDate: tripType === "round-trip" ? formData.returnDate : "",
-    multiCityFlights: tripType === "multi-city" ? multiCityFlights : [],
-    preferredAirline: formData.preferredAirline || "",
-    travelClass: formData.travelClass,
-    adults: Number(formData.adults || 1),
-    children: Number(formData.children || 0),
-    infants: Number(formData.infants || 0),
-    notes: formData.notes || "",
+    const payload = {
+      fullName: formData.fullName,
+      email: formData.email,
+      phoneNumber: formData.phoneNumber,
+      gender: formData.gender || "",
+      dob: formData.dob || "",
+      tripType,
+      departureCity: formData.departureCity,
+      destinationCity: formData.destinationCity,
+      departureDate: formData.departureDate,
+      returnDate: tripType === "round-trip" ? formData.returnDate : "",
+      multiCityFlights: tripType === "multi-city" ? multiCityFlights : [],
+      preferredAirline: formData.preferredAirline || "",
+      travelClass: formData.travelClass,
+      adults: Number(formData.adults || 1),
+      children: Number(formData.children || 0),
+      infants: Number(formData.infants || 0),
+      notes: formData.notes || "",
+    };
+
+    try {
+      const response = await fetch(
+        `${import.meta.env.VITE_API_URL}/flight-bookings`,
+        {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify(payload),
+        }
+      );
+
+      if (!response.ok) throw new Error("Failed to submit booking");
+
+      //Redirect to success page with name
+      navigate("/flight-success", {
+        state: { name: formData.fullName },
+      });
+
+      // Reset form
+      setFormData({
+        fullName: "",
+        email: "",
+        phoneNumber: "",
+        gender: "",
+        dob: "",
+        departureCity: "",
+        destinationCity: "",
+        departureDate: "",
+        returnDate: "",
+        preferredAirline: "",
+        travelClass: "",
+        adults: "",
+        children: "",
+        infants: "",
+        notes: "",
+      });
+      setTripType("");
+      setMultiCityFlights([{ from: "", to: "", date: "" }]);
+    } catch (err) {
+      console.error(err);
+      alert("❌ Error submitting form. Please try again.");
+    }
   };
-
-  try {
-    const response = await fetch(
-      `${import.meta.env.VITE_API_URL}/flight-bookings`,
-      {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify(payload),
-      }
-    );
-
-    if (!response.ok) throw new Error("Failed to submit booking");
-
-    alert("✅ Flight booking submitted successfully!");
-    console.log("Booking submitted:", payload);
-
-    // Reset form
-    setFormData({
-      fullName: "",
-      email: "",
-      phoneNumber: "",
-      gender: "",
-      dob: "",
-      departureCity: "",
-      destinationCity: "",
-      departureDate: "",
-      returnDate: "",
-      preferredAirline: "",
-      travelClass: "",
-      adults: "",
-      children: "",
-      infants: "",
-      notes: "",
-    });
-    setTripType("");
-    setMultiCityFlights([{ from: "", to: "", date: "" }]);
-  } catch (err) {
-    console.error(err);
-    alert("❌ Error submitting form. Please try again.");
-  }
-};
-
 
   return (
     <div className="container-xxl" style={{ paddingTop: "150px" }}>
@@ -161,7 +165,7 @@ const handleSubmit = async (e) => {
               }}
             />
 
-            <label className="form-label mt-3">Phone Number</label>
+            <label className="form-label mt-3">Whatsapp Number</label>
             <input
               type="tel"
               name="phoneNumber"
@@ -178,11 +182,12 @@ const handleSubmit = async (e) => {
 
             <div className="mb-3 mt-3">
               <label htmlFor="gender" className="form-label">
-                Gender <small className="text-muted">(optional)</small>
+                Gender
               </label>
               <select
                 id="gender"
                 name="gender"
+                required
                 value={formData.gender}
                 onChange={handleInputChange}
                 className="form-select"
@@ -200,12 +205,11 @@ const handleSubmit = async (e) => {
               </select>
             </div>
 
-            <label className="form-label mt-3">
-              Date of Birth <small className="text-muted">(optional)</small>
-            </label>
+            <label className="form-label mt-3">Date of Birth</label>
             <input
               type="date"
               name="dob"
+              required
               value={formData.dob}
               onChange={handleInputChange}
               className="form-control"
@@ -432,48 +436,54 @@ const handleSubmit = async (e) => {
             )}
 
             {/* Additional Fields */}
-            <label className="form-label mt-3">
-              Preferred Airline <small className="text-muted">(optional)</small>
-            </label>
-            <input
-              type="text"
-              name="preferredAirline"
-              value={formData.preferredAirline}
-              onChange={handleInputChange}
-              className="form-control"
-              style={{
-                borderRadius: "4px",
-                boxShadow: "none",
-                borderColor: "#c9b5b5ff",
-              }}
-            />
-
-            <div className="mb-3 mt-3">
-              <label htmlFor="travelClass" className="form-label">
-                Travel Class
+            <div>
+              <label className="form-label mt-3">
+                Preferred Airline{" "}
+                <small className="text-muted">(optional)</small>
               </label>
-              <select
-                id="travelClass"
-                name="travelClass"
-                value={formData.travelClass}
+              <input
+                type="text"
+                name="preferredAirline"
+                value={formData.preferredAirline}
                 onChange={handleInputChange}
-                className="form-select"
-                aria-label="Travel Class"
-                required
+                className="form-control"
                 style={{
                   borderRadius: "4px",
                   boxShadow: "none",
                   borderColor: "#c9b5b5ff",
                 }}
-              >
-                <option value=""></option>
-                <option value="economy">Economy</option>
-                <option value="business">Business</option>
-                <option value="first_class">First Class</option>
-              </select>
+              />
+
+              <div className="mb-3 mt-3">
+                <label htmlFor="travelClass" className="form-label">
+                  Travel Class
+                </label>
+                <select
+                  id="travelClass"
+                  name="travelClass"
+                  value={formData.travelClass}
+                  onChange={handleInputChange}
+                  className="form-select"
+                  aria-label="Travel Class"
+                  required
+                  style={{
+                    borderRadius: "4px",
+                    boxShadow: "none",
+                    borderColor: "#c9b5b5ff",
+                  }}
+                >
+                  <option value=""></option>
+                  <option value="economy">Economy</option>
+                  <option value="premium">Premium</option>
+                  <option value="business">Business</option>
+                  <option value="first_class">First Class</option>
+                </select>
+              </div>
             </div>
 
-            <label className="form-label mt-3">Number of Adults</label>
+            <label className="form-label mt-3">
+              Number of Adults (12yrs +)
+            </label>
             <input
               type="number"
               name="adults"
@@ -488,7 +498,9 @@ const handleSubmit = async (e) => {
               }}
             />
 
-            <label className="form-label mt-3">Number of Children</label>
+            <label className="form-label mt-3">
+              Number of Children (2yrs - 12yrs)
+            </label>
             <input
               type="number"
               name="children"
@@ -502,7 +514,9 @@ const handleSubmit = async (e) => {
               }}
             />
 
-            <label className="form-label mt-3">Number of Infants</label>
+            <label className="form-label mt-3">
+              Number of Infants (Below 2yrs)
+            </label>
             <input
               type="number"
               name="infants"
