@@ -3,6 +3,7 @@ import flightBookingRoutes from "./routes/flightbookingRoutes.js";
 import path from "path";
 import { fileURLToPath } from "url";
 
+
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
 
@@ -14,6 +15,7 @@ import express from "express";
 import { connectToDB } from "./config/db.js";
 import cookieParser from "cookie-parser";
 import authRouter from "./routes/authRoutes.js";
+import visaRoutes from "./routes/visaRoutes.js";
 import cors from "cors";
 
 const PORT = process.env.PORT || 5000;
@@ -31,6 +33,7 @@ app.use(cookieParser());
 // ✅ auth routes
 app.use("/api", authRouter);
 app.use("/api/flight-bookings", flightBookingRoutes);
+app.use("/api/visa", visaRoutes);
 
 // ✅ IMPORTANT — connect to DB BEFORE starting server
 connectToDB().then(() => {

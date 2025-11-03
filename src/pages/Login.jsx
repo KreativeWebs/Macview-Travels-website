@@ -327,9 +327,9 @@ function Login() {
                 )}
               </button>
 
-              <Link to="/forgot-password" className="text-primary mt-2">
+              {/* <Link to="/forgot-password" className="text-primary mt-2">
                 Forgot your password?
-              </Link>
+              </Link> */}
               <p
                 style={{
                   textAlign: "center",

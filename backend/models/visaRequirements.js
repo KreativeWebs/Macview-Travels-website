@@ -8,7 +8,7 @@ const requirementSchema = new mongoose.Schema({
 });
 
 const visaRequirementSchema = new mongoose.Schema({
-  country: { type: String, required: true },     // e.g. "Kenya"
+  country: { type: String, required: true },     // e.g. "Kenya"    
   visaTypes: [{
     name: { type: String, required: true },      // "tourist", "business"
     fee: { type: Number, default: 0 },
