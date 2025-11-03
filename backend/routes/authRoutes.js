@@ -9,10 +9,13 @@ const __dirname = path.dirname(__filename);
 dotenv.config({ path: path.join(__dirname, '..', '..', '.env') });
 
 import express from "express";
+import crypto from "crypto";
 import bcryptjs from "bcryptjs";
 import jwt from "jsonwebtoken";
 import User from "../models/User.js";
 import admin from 'firebase-admin';
+import PasswordResetToken from "../models/PasswordResetToken.js";
+import { sendPasswordResetEmail } from "../Utils/sendEmail.js";
 
 const router = express.Router();
 
@@ -29,24 +32,21 @@ try {
   console.error("❌ Firebase Admin initialization failed:", error.message);
 }
 
-
-
-
-// Create Access Token (15m)
+// ===============================
+// JWT HELPERS
+// ===============================
 const createAccessToken = (userId) => {
   return jwt.sign({ id: userId }, process.env.ACCESS_TOKEN_SECRET, {
     expiresIn: "15m",
   });
 };
 
-// Create Refresh Token (7 days)
 const createRefreshToken = (userId) => {
   return jwt.sign({ id: userId }, process.env.REFRESH_TOKEN_SECRET, {
     expiresIn: "7d",
   });
 };
 
-// Set Refresh Token as cookie
 const setRefreshCookie = (res, token) => {
   res.cookie("refreshToken", token, {
     httpOnly: true,
@@ -89,7 +89,6 @@ router.post("/signup", async (req, res) => {
   }
 });
 
-
 /* ================================
    LOGIN
 ================================ */
@@ -118,7 +117,7 @@ router.post("/login", async (req, res) => {
 });
 
 /* ================================
-   REFRESH TOKEN ROUTE
+   REFRESH TOKEN
 ================================ */
 router.post("/refresh", async (req, res) => {
   const token = req.cookies.refreshToken;
@@ -152,7 +151,6 @@ router.get("/fetchuser", async (req, res) => {
   }
 });
 
-
 /* ================================
    GOOGLE LOGIN
 ================================ */
@@ -160,30 +158,24 @@ router.post("/google-login", async (req, res) => {
   const { idToken, email } = req.body;
   
   try {
-    // Verify the Firebase token
     const decodedToken = await admin.auth().verifyIdToken(idToken);
-    
     if (decodedToken.email !== email) {
       return res.status(400).json({ message: "Email mismatch" });
     }
-    
-    // Find or create user
+
     let user = await User.findOne({ email });
-    
     if (!user) {
-      // Create new user for Google auth (no password needed)
       user = await User.create({ 
         email,
-        password: await bcryptjs.hash(Math.random().toString(36), 10), // random password
+        password: await bcryptjs.hash(Math.random().toString(36), 10),
         authProvider: 'google'
       });
     }
-    
+
     const accessToken = createAccessToken(user._id);
     const refreshToken = createRefreshToken(user._id);
-    
     setRefreshCookie(res, refreshToken);
-    
+
     res.status(200).json({
       user,
       accessToken,
@@ -195,14 +187,102 @@ router.post("/google-login", async (req, res) => {
   }
 });
 
-
-
 /* ================================
    LOGOUT
 ================================ */
 router.post("/logout", (req, res) => {
   res.clearCookie("refreshToken");
   res.json({ message: "Logged out successfully" });
+});
+
+
+/* ================================
+ FORGOT PASSWORD
+================================ */
+router.post("/auth/forgot-password", async (req, res) => {
+  const { email } = req.body;
+
+  try {
+    const user = await User.findOne({ email });
+    if (!user) return res.status(404).json({ message: "User not found" });
+
+    // Delete existing reset tokens for the user (if any)
+    await PasswordResetToken.deleteMany({ userId: user._id });
+
+    // Generate a new token
+    const resetToken = crypto.randomBytes(32).toString("hex");
+    const hashedToken = crypto.createHash("sha256").update(resetToken).digest("hex");
+
+    // Save token to DB
+    await PasswordResetToken.create({
+      userId: user._id,
+      token: hashedToken,
+    });
+
+    // Reset link for frontend
+    const resetURL = `${process.env.CLIENT_URL}/reset-password/${user._id}/${resetToken}`;
+
+    // ✅ Send email using reusable helper
+    await sendPasswordResetEmail(user.email, user.name, resetURL);
+
+    res.json({ message: "Password reset email sent successfully" });
+  } catch (error) {
+    console.error("Forgot password error:", error);
+    res.status(500).json({ message: "Server error. Please try again." });
+  }
+});
+
+
+
+
+/* ================================
+  RESET PASSWORD
+================================== */
+router.post("/reset-password/:userId/:token", async (req, res) => {
+  try {
+    const { userId, token } = req.params;
+    const { password } = req.body;
+
+    if (!password || password.length < 6) {
+      return res.status(400).json({ 
+        success: false,
+        message: "Password must be at least 6 characters" 
+      });
+    }
+
+    // Hash the token from URL to compare with stored hash
+    const hashedToken = crypto.createHash("sha256").update(token).digest("hex");
+    
+    const resetToken = await PasswordResetToken.findOne({ 
+      userId, 
+      token: hashedToken 
+    });
+
+    if (!resetToken) {
+      return res.status(400).json({ 
+        success: false,
+        message: "Invalid or expired password reset link" 
+      });
+    }
+
+    // Update password
+    const hashedPassword = await bcryptjs.hash(password, 10);
+    await User.findByIdAndUpdate(userId, { password: hashedPassword });
+    
+    // Delete the used token
+    await PasswordResetToken.deleteOne({ userId });
+
+    res.json({ 
+      success: true,
+      message: "Password reset successful! You can now login." 
+    });
+  } catch (error) {
+    console.error("Reset password error:", error);
+    res.status(500).json({ 
+      success: false,
+      message: "Server error. Please try again." 
+    });
+  }
 });
 
 export default router;

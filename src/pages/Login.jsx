@@ -6,6 +6,7 @@ import { Carousel } from "react-bootstrap";
 import { useAuthStore } from "../store/authStore";
 import Modal from "bootstrap/js/dist/modal";
 import { toast } from "react-toastify";
+import { Link } from "react-router-dom";
 
 function Login() {
   const [showPassword, setShowPassword] = useState(false);
@@ -36,13 +37,13 @@ function Login() {
     };
 
     const clearFormOnShow = () => {
-    setEmail("");
-    setPassword("");
-    setShowPassword(false);
-  };
+      setEmail("");
+      setPassword("");
+      setShowPassword(false);
+    };
 
     modalElement.addEventListener("hidden.bs.modal", cleanupOnHide);
-     modalElement.addEventListener("show.bs.modal", clearFormOnShow);
+    modalElement.addEventListener("show.bs.modal", clearFormOnShow);
 
     return () => {
       if (modalInstanceRef.current) {
@@ -50,7 +51,7 @@ function Login() {
         modalInstanceRef.current = null;
       }
       modalElement.removeEventListener("hidden.bs.modal", cleanupOnHide);
-       modalElement.removeEventListener("show.bs.modal", clearFormOnShow);
+      modalElement.removeEventListener("show.bs.modal", clearFormOnShow);
       cleanupOnHide();
     };
   }, []);
@@ -277,8 +278,9 @@ function Login() {
                   style={{ cursor: "pointer", top: "50px" }}
                   onClick={() => setShowPassword(!showPassword)}
                 >
-                 <i className={`fa ${showPassword ? "fa-eye" : "fa-eye-slash"}`}></i>
-
+                  <i
+                    className={`fa ${showPassword ? "fa-eye" : "fa-eye-slash"}`}
+                  ></i>
                 </span>
               </div>
 
@@ -299,8 +301,6 @@ function Login() {
                   "Log in"
                 )}
               </button>
-
-              
 
               <button
                 type="button"
@@ -327,18 +327,9 @@ function Login() {
                 )}
               </button>
 
-                <a
-                  href="#"
-                  onClick={handleSwitchToSignup}
-                  style={{
-                    color: "#175aa1",
-                    cursor: "pointer",
-                    textDecoration: "none",
-                    marginTop: "15px"
-                  }}
-                >
-                  Forgot password
-                </a>
+              <Link to="/forgot-password" className="text-primary mt-2">
+                Forgot your password?
+              </Link>
               <p
                 style={{
                   textAlign: "center",
