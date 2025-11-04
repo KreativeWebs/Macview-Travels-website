@@ -1,36 +1,14 @@
-import dotenv from "dotenv";
-import path from "path";
-import { fileURLToPath } from "url";
-
-const __filename = fileURLToPath(import.meta.url);
-const __dirname = path.dirname(__filename);
-
-// ✅ Load .env from root (go up two levels: routes -> backend -> root)
-dotenv.config({ path: path.join(__dirname, '..', '..', '.env') });
-
 import express from "express";
 import crypto from "crypto";
 import bcryptjs from "bcryptjs";
 import jwt from "jsonwebtoken";
 import User from "../models/User.js";
-import admin from 'firebase-admin';
+import admin from "../config/firebase.js";
 import PasswordResetToken from "../models/PasswordResetToken.js";
-import { sendPasswordResetEmail } from "../Utils/sendEmail.js";
+import { sendPasswordResetEmail } from "../utils/sendEmail.js";
 
 const router = express.Router();
 
-try {
-  admin.initializeApp({
-    credential: admin.credential.cert({
-      projectId: process.env.FIREBASE_PROJECT_ID,
-      clientEmail: process.env.FIREBASE_CLIENT_EMAIL,
-      privateKey: process.env.FIREBASE_PRIVATE_KEY?.replace(/\\n/g, '\n'),
-    })
-  });
-  console.log("✅ Firebase Admin initialized successfully");
-} catch (error) {
-  console.error("❌ Firebase Admin initialization failed:", error.message);
-}
 
 // ===============================
 // JWT HELPERS
@@ -156,7 +134,7 @@ router.get("/fetchuser", async (req, res) => {
 ================================ */
 router.post("/google-login", async (req, res) => {
   const { idToken, email } = req.body;
-  
+
   try {
     const decodedToken = await admin.auth().verifyIdToken(idToken);
     if (decodedToken.email !== email) {
@@ -165,10 +143,10 @@ router.post("/google-login", async (req, res) => {
 
     let user = await User.findOne({ email });
     if (!user) {
-      user = await User.create({ 
+      user = await User.create({
         email,
         password: await bcryptjs.hash(Math.random().toString(36), 10),
-        authProvider: 'google'
+        authProvider: "google",
       });
     }
 
@@ -195,7 +173,6 @@ router.post("/logout", (req, res) => {
   res.json({ message: "Logged out successfully" });
 });
 
-
 /* ================================
  FORGOT PASSWORD
 ================================ */
@@ -211,7 +188,10 @@ router.post("/auth/forgot-password", async (req, res) => {
 
     // Generate a new token
     const resetToken = crypto.randomBytes(32).toString("hex");
-    const hashedToken = crypto.createHash("sha256").update(resetToken).digest("hex");
+    const hashedToken = crypto
+      .createHash("sha256")
+      .update(resetToken)
+      .digest("hex");
 
     // Save token to DB
     await PasswordResetToken.create({
@@ -232,9 +212,6 @@ router.post("/auth/forgot-password", async (req, res) => {
   }
 });
 
-
-
-
 /* ================================
   RESET PASSWORD
 ================================== */
@@ -244,43 +221,43 @@ router.post("/reset-password/:userId/:token", async (req, res) => {
     const { password } = req.body;
 
     if (!password || password.length < 6) {
-      return res.status(400).json({ 
+      return res.status(400).json({
         success: false,
-        message: "Password must be at least 6 characters" 
+        message: "Password must be at least 6 characters",
       });
     }
 
     // Hash the token from URL to compare with stored hash
     const hashedToken = crypto.createHash("sha256").update(token).digest("hex");
-    
-    const resetToken = await PasswordResetToken.findOne({ 
-      userId, 
-      token: hashedToken 
+
+    const resetToken = await PasswordResetToken.findOne({
+      userId,
+      token: hashedToken,
     });
 
     if (!resetToken) {
-      return res.status(400).json({ 
+      return res.status(400).json({
         success: false,
-        message: "Invalid or expired password reset link" 
+        message: "Invalid or expired password reset link",
       });
     }
 
     // Update password
     const hashedPassword = await bcryptjs.hash(password, 10);
     await User.findByIdAndUpdate(userId, { password: hashedPassword });
-    
+
     // Delete the used token
     await PasswordResetToken.deleteOne({ userId });
 
-    res.json({ 
+    res.json({
       success: true,
-      message: "Password reset successful! You can now login." 
+      message: "Password reset successful! You can now login.",
     });
   } catch (error) {
     console.error("Reset password error:", error);
-    res.status(500).json({ 
+    res.status(500).json({
       success: false,
-      message: "Server error. Please try again." 
+      message: "Server error. Please try again.",
     });
   }
 });

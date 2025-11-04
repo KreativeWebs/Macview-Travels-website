@@ -67,7 +67,7 @@ function VisaProcessing() {
         visaData?.visaTypes?.find((v) => v.name === selectedVisaType) || {};
       selectedVisa.requirements?.forEach((req) => {
         if (formData[req.label]) {
-          form.append(req.label, formData[req.label]);
+          form.append("documents", formData[req.label]);
         }
       });
 

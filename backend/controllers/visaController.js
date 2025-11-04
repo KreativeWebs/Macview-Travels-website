@@ -1,4 +1,5 @@
 import visaRequirements from "../models/visaRequirements.js";
+import VisaApplication from "../models/visaApplication.js";
 
 // @desc    Get visa requirements by country
 // @route   GET /api/visa/requirements/:country

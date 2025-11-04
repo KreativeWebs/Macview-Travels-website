@@ -18,6 +18,7 @@ import Team from "./pages/Team";
 import Testimonial from "./pages/Testimonial";
 import Contact from "./pages/Contact";
 import FlightSuccess from "./pages/FlightSuccess.jsx";
+import VisaSuccess from "./pages/VisaSuccess.jsx";
 import ForgotPassword from "./pages/ForgotPassword.jsx";
 import ResetPassword from "./pages/ResetPassword.jsx";
 import { useAuthStore } from "./store/authStore";
@@ -52,6 +53,7 @@ export default function App() {
         <Route path="/testimonial" element={<Testimonial />} />
         <Route path="/contact" element={<Contact />} />
         <Route path="/flight-success" element={<FlightSuccess />} />
+        <Route path="/visa-success" element={<VisaSuccess />} />
         <Route path="/forgot-password" element={<ForgotPassword />} />
         <Route
           path="/reset-password/:userId/:token"

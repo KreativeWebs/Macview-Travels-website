@@ -1,6 +1,6 @@
 import dotenv from "dotenv";
 import flightBookingRoutes from "./routes/flightbookingRoutes.js";
-import path from "path";
+
 import { fileURLToPath } from "url";
 
 
@@ -16,6 +16,7 @@ import { connectToDB } from "./config/db.js";
 import cookieParser from "cookie-parser";
 import authRouter from "./routes/authRoutes.js";
 import visaRoutes from "./routes/visaRoutes.js";
+import path from "path";
 import cors from "cors";
 
 const PORT = process.env.PORT || 5000;
@@ -34,6 +35,7 @@ app.use(cookieParser());
 app.use("/api", authRouter);
 app.use("/api/flight-bookings", flightBookingRoutes);
 app.use("/api/visa", visaRoutes);
+app.use("/uploads", express.static(path.join(process.cwd(), "uploads")));
 
 // ✅ IMPORTANT — connect to DB BEFORE starting server
 connectToDB().then(() => {
