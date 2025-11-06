@@ -20,8 +20,9 @@ const visaData = [
           { label: "Bank statement (3 months)", type: "file", required: true },
         ],
       },
+      
       {
-        name: "business",
+        name: "study",
         fee: 100,
         processingTime: "5-10 days",
         requirements: [

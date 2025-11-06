@@ -1,12 +1,12 @@
 import React from "react";
 import { useLocation, Link } from "react-router-dom";
 
-function SuccessCard ({ title, message1, message2, imageSrc, imageAlt, buttonText, buttonLink }) {
+function SuccessCard ({ title, message1, message2, imageSrc, imageAlt, buttonText, buttonLink, customStyle = "" }) {
   const location = useLocation();
   const { name } = location.state || { name: "Traveler" };
 
   return (
-    <section
+    <section 
       style={{
         backgroundColor: "#f8f9fa",
         minHeight: "80vh",
@@ -14,9 +14,10 @@ function SuccessCard ({ title, message1, message2, imageSrc, imageAlt, buttonTex
         justifyContent: "center",
         alignItems: "center",
         padding: "10px 20px",
+
       }}
     >
-      <div className="success-card">
+      <div className={`success-card ${customStyle}`} >
         <div className="success-text">
           <h2 style={{ color: "#0d47a1", fontFamily: "Raleway" }}>
             {title}, {name}

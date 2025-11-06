@@ -1,5 +1,6 @@
 import { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
+import { toast } from "react-toastify";
 
 function VisaProcessing() {
   const [selectedCountry, setSelectedCountry] = useState("");
@@ -34,21 +35,40 @@ function VisaProcessing() {
         setVisaData(data);
       } catch (error) {
         console.error(error);
-        alert("Error fetching visa data");
+        toast.error("Error fetching visa data");
       }
     };
 
     fetchVisaData();
   }, [selectedCountry]);
 
-  // Handle file uploads and text inputs for dynamic requirements
-  const handleDynamicChange = (e) => {
-    const { name, type, files, value } = e.target;
+// Handle file uploads and text inputs for dynamic requirements
+const handleDynamicChange = (e) => {
+  const { name, type, files, value } = e.target;
+
+  //If it's a file input, validate size
+  if (type === "file") {
+    const file = files[0];
+
+    if (file && file.size > 10 * 1024 * 1024) { // 10MB limit
+      toast.error("File is too large! Maximum allowed size is 10MB.");
+      e.target.value = ""; // Clear the input
+      return;
+    }
+
     setFormData((prev) => ({
       ...prev,
-      [name]: type === "file" ? files[0] : value,
+      [name]: file,
     }));
-  };
+    return;
+  }
+
+  //Otherwise handle normal text inputs
+  setFormData((prev) => ({
+    ...prev,
+    [name]: value,
+  }));
+};
 
   // Handle form submission
   const handleSubmit = async (e) => {
@@ -92,7 +112,7 @@ function VisaProcessing() {
       setVisaData(null);
     } catch (error) {
       console.error(error);
-      alert("❌ Error submitting visa application");
+      toast.error("Error submitting visa application");
     }
   };
 

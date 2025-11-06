@@ -18,7 +18,7 @@ export default function Footer() {
                 curated travel packages, expert guides, and personalized service
                 to make your adventures seamless and memorable.
               </p>
-              <a className="btn btn-link" href="/about">
+              <a className="btn btn-link" href="/aboutus">
                 About Us
               </a>
               <a className="btn btn-link" href="/contact">

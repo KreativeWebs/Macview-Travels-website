@@ -3,15 +3,11 @@ import SuccessCard from "./SuccessCard";
 
 function VisaSuccess(){
   return (
-    <SuccessCard
+    <SuccessCard customStyle="p-5"
       title="Thank You"
-      message1="Your visa application submitted successfully."
-      message2={
-        <>
-         Your application has been received successfully. We’ll get back to you<strong>shortly</strong>.
-        </>
-      }
-      imageSrc="/assets/img/ticket.png"
+      message1="Your visa application has been submitted successfully. We would get back to you shortly"
+     
+      imageSrc="assets\img\visa approved.png"
       imageAlt="Flight Ticket"
       buttonText="Back to Home"
       buttonLink= "/"

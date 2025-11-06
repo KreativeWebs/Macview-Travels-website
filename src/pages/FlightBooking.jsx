@@ -1,5 +1,6 @@
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
+import { toast } from "react-toastify";
 
 function FlightBooking() {
   const [tripType, setTripType] = useState("");
@@ -112,7 +113,7 @@ function FlightBooking() {
       setMultiCityFlights([{ from: "", to: "", date: "" }]);
     } catch (err) {
       console.error(err);
-      alert("❌ Error submitting form. Please try again.");
+      toast.error("Error submitting form. Please try again.");
     }
   };
 

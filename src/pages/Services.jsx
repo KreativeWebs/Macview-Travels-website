@@ -63,31 +63,19 @@ function Services() {
                 description="Begin your academic journey overseas with trusted guidance
                 on admissions, visas, turning your study dreams into
                 reality."
-                link="/studyabroadprograms"
+                link="/studyabroad"
               />
             </div>
 
             <div
               className="col-lg-3 col-sm-6 wow fadeInUp"
-              data-wow-delay="0.7s"
+              data-wow-delay="0.1s"
             >
               <ServicesCard
-                icon="fa-plane"
-                title="Charted Flights"
-                description="Experience exclusive air travel with personalized chartered flights, offering comfort, and privacy tailored to your schedule."
-                link="/chartedflights"
-              />
-            </div>
-
-            <div
-              className="col-lg-3 col-sm-6 wow fadeInUp"
-              data-wow-delay="0.5s"
-            >
-              <ServicesCard
-                icon="fa-user"
-                title="Protocol Service"
-                description="Enjoy seamless airport experiences with our exclusive protocol service and VIP handling from arrival to departure."
-                link="/protocolservice"
+                icon="fa-taxi"
+                title="Airport Transfers"
+                description="Arrive and depart in style with our private airport transfer service offering comfort, convenience, and class."
+                link="/airporttransfer"
               />
             </div>
 
@@ -105,13 +93,25 @@ function Services() {
 
             <div
               className="col-lg-3 col-sm-6 wow fadeInUp"
-              data-wow-delay="0.1s"
+              data-wow-delay="0.5s"
             >
               <ServicesCard
-                icon="fa-taxi"
-                title="Airport Transfers"
-                description="Arrive and depart in style with our private airport transfer service offering comfort, convenience, and class."
-                link="/airporttransfers"
+                icon="fa-user"
+                title="Protocol Service"
+                description="Enjoy seamless airport experiences with our exclusive protocol service and VIP handling from arrival to departure."
+                link="/protocolservice"
+              />
+            </div>
+
+            <div
+              className="col-lg-3 col-sm-6 wow fadeInUp"
+              data-wow-delay="0.7s"
+            >
+              <ServicesCard
+                icon="fa-plane"
+                title="Charted Flights"
+                description="Experience exclusive air travel with personalized chartered flights, offering comfort, and privacy tailored to your schedule."
+                link="/chartedflights"
               />
             </div>
           </div>

@@ -1,3 +1,9 @@
+@import "tailwindcss";
+
+
+.input {
+  @apply w-full border rounded-lg px-3 py-2 outline-none text-sm;
+}
 /********** Template CSS **********/
 :root {
   --primary: #175aa1;
@@ -294,6 +300,7 @@ body {
 .visa-next {
   right: 15px;
 }
+
 
 
 .tripType input[type="radio"] {
