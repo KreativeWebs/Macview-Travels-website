@@ -35,25 +35,13 @@ export const sendWelcomeEmail = async (email, firstName = null) => {
     await mailtrapClient.send({
       from: sender,
       to: recipients,
-      subject: "Welcome to Macview Travels!",
-      html: `
-        <div style="font-family: Arial, sans-serif; max-width: 600px; margin: 0 auto;">
-          <h2>Welcome to Macview Travels, ${displayName}!</h2>
-          <p>Thank you for joining our travel community. We're excited to help you plan your next adventure!</p>
-          <p>With Macview Travels, you can:</p>
-          <ul>
-            <li>Book flights and hotels worldwide</li>
-            <li>Discover amazing destinations</li>
-            <li>Get personalized travel recommendations</li>
-            <li>Access exclusive deals and packages</li>
-          </ul>
-          <p>Start exploring our services today!</p>
-          <a href="${process.env.CLIENT_URL || 'http://localhost:5173'}" style="background-color: #007bff; color: white; padding: 10px 20px; text-decoration: none; border-radius: 5px; display: inline-block;">Explore Now</a>
-          <p>If you have any questions, feel free to reach out to our support team.</p>
-          <p>Happy travels!<br>Macview Travels Team</p>
-        </div>
-      `,
-      category: "Welcome",
+      template_uuid: "ad17422b-6756-4493-b43f-32f2cacb09d0",
+      template_variables: {
+        username: displayName,
+        company_name: "Macview Travels",
+        login_url: process.env.CLIENT_URL || 'http://localhost:5173',
+        support_email: "support@macviewtravels.com"
+      }
     });
   } catch (error) {
     console.error("Error sending welcome email:", error);
