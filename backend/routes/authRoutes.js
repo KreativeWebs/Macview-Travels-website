@@ -5,7 +5,7 @@ import jwt from "jsonwebtoken";
 import User from "../models/User.js";
 import admin from "../config/firebase.js";
 import PasswordResetToken from "../models/PasswordResetToken.js";
-import { sendPasswordResetEmail } from "../utils/sendEmail.js";
+import { body, validationResult } from "express-validator";
 
 const router = express.Router();
 

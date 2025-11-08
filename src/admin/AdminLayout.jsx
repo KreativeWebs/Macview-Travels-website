@@ -1,26 +1,24 @@
-import { Outlet } from "react-router-dom";
-import Sidebar from "./Sidebar";
+import { useState } from "react";
 import Header from "./Header";
+import Sidebar from "./Sidebar";
+import { Outlet } from "react-router-dom";
 
 export default function AdminLayout() {
+  const [sidebarOpen, setSidebarOpen] = useState(true);
+
   return (
-    <div className="container-fluid p-0">
-      <div className="row g-0">
-        
-        {/* Sidebar */}
-        <div className="col-auto">
-          <Sidebar />
-        </div>
+    <div className="d-flex flex-column" style={{ minHeight: "100vh", marginTop: "80px" }}>
+      {/* Top Navbar */}
+      <Header toggleSidebar={() => setSidebarOpen(!sidebarOpen)} />
+
+      <div className="d-flex flex-grow-1">
+        {/* Sidebar under navbar */}
+        <Sidebar open={sidebarOpen} />
 
         {/* Main content */}
-        <div className="col">
-          <Header />
-
-          <main className="p-4">
-            <Outlet />
-          </main>
+        <div className="flex-grow-1 p-3" style={{ background: "#f8f9fa"}}>
+          <Outlet />
         </div>
-
       </div>
     </div>
   );

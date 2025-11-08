@@ -6,6 +6,8 @@ const API_URL = "http://localhost:5000/api";
 // ✅ Allow cookies to be sent (Refresh Token is in cookie)
 axios.defaults.withCredentials = true;
 
+
+
 export const useAuthStore = create((set, get) => ({
   user: null,
   accessToken: null,

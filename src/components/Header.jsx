@@ -148,8 +148,8 @@ function Header() {
           fontSize: "15px",
         }}
       >
-        <i className="fa fa-users pe-2"></i>
-        About Us
+        <i className="fa fa-users pe-4"></i>
+       About Us
       </Link>
 
       <Link

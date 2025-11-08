@@ -61,7 +61,7 @@ export const createFlightBooking = async (req, res) => {
 export const getFlightBookings = async (req, res) => {
   try {
     const bookings = await FlightBooking.find().sort({ createdAt: -1 });
-    res.json(bookings);
+     return res.status(200).json({ bookings });
   } catch (error) {
     console.error("Error fetching flight bookings:", error);
     res.status(500).json({ message: "Error fetching flight bookings" });
