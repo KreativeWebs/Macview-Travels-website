@@ -1,5 +1,6 @@
 import dotenv from "dotenv";
 import flightBookingRoutes from "./routes/flightbookingRoutes.js";
+import rateLimit from "express-rate-limit";
 
 import { fileURLToPath } from "url";
 
@@ -16,6 +17,7 @@ import { connectToDB } from "./config/db.js";
 import cookieParser from "cookie-parser";
 import authRouter from "./routes/authRoutes.js";
 import visaRoutes from "./routes/visaRoutes.js";
+import adminRoutes from "./routes/adminRoutes.js";
 import path from "path";
 import cors from "cors";
 
@@ -29,12 +31,24 @@ app.use(cors({
 }));
 
 app.use(express.json());
-app.use(cookieParser());
+app.use(cookieParser(process.env.COOKIE_SECRET));
+
+// Rate Limiting
+const authLimiter = rateLimit({
+  windowMs: 15 * 60 * 1000, // 15 minutes
+  max: 100, // Limit each IP to 100 requests per windowMs
+  standardHeaders: true,
+  legacyHeaders: false,
+});
+
+// Apply the rate limiting middleware to auth routes
+app.use("/api/", authLimiter);
 
 // ✅ auth routes
 app.use("/api", authRouter);
 app.use("/api/flight-bookings", flightBookingRoutes);
 app.use("/api/visa", visaRoutes);
+app.use("/api/admin", adminRoutes);
 app.use("/uploads", express.static(path.join(process.cwd(), "uploads")));
 
 // ✅ IMPORTANT — connect to DB BEFORE starting server

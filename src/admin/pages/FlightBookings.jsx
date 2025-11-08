@@ -1,59 +1,64 @@
-import { useState, useEffect } from "react";
+import { useEffect, useState } from "react";
+import { Link } from "react-router-dom";
+import api from "../../api";
 
 export default function FlightBookings() {
   const [bookings, setBookings] = useState([]);
 
   useEffect(() => {
-    // TODO: fetch /api/flight-bookings
-    setBookings([
-      {
-        id: "F-2001",
-        client: "Alpha Corp",
-        route: "Lagos → Doha",
-        status: "pending",
-      },
-      {
-        id: "F-2002",
-        client: "Beta Travel",
-        route: "Abuja → Cairo",
-        status: "confirmed",
-      },
-    ]);
+    const fetchBookings = async () => {
+      try {
+        const res = await api.get("/api/admin/flight-bookings");
+        const data = Array.isArray(res.data) ? res.data : [];
+        setBookings(res.data.bookings || []);
+        // console.log("Bookings from API:", data);
+      } catch (err) {
+        console.log("Error fetching bookings:", err);
+        setBookings([]);
+      }
+    };
+
+    fetchBookings();
   }, []);
 
   return (
-    <div>
-      <h2 className="h5 fw-bold mb-3">Flight Bookings</h2>
+    <div className="container mt-4">
+      <h3 className="fw-bold mb-3">Flight Booking Requests</h3>
 
-      <div className="bg-white p-3 rounded shadow-sm">
-        <table className="table table-sm align-middle">
-          <thead className="table-light small">
-            <tr>
-              <th>Client</th>
-              <th>Route</th>
-              <th>Status</th>
-              <th></th>
-            </tr>
-          </thead>
+      <table className="table table-striped">
+        <thead>
+          <tr>
+            <th>Name</th>
+            <th>Email</th>
+            <th>WhatsApp</th>
+            <th>Trip Type</th>
+            <th>Date Submitted</th>
+            <th>Action</th>
+          </tr>
+        </thead>
 
-          <tbody>
-            {bookings.map((b) => (
-              <tr key={b.id}>
-                <td>{b.client}</td>
-                <td>{b.route}</td>
+        <tbody>
+          {Array.isArray(bookings) &&
+            bookings.map((b) => (
+              <tr key={b._id}>
+                <td>{b.fullName}</td>
+                <td>{b.email}</td>
+                <td>{b.phoneNumber}</td>
+                <td className="text-capitalize">{b.tripType}</td>
+                <td>{new Date(b.createdAt).toLocaleDateString()}</td>
                 <td>
-                  <span className="badge bg-secondary">{b.status}</span>
-                </td>
-                <td>
-                  <button className="btn btn-link p-0 text-primary">
-                    View
-                  </button>
+                  <Link
+                    className="btn btn-sm btn-info"
+                    to={`/admin/flight-bookings/${b._id}`}
+                    style={{ color: "#ffffff" }}
+                  >
+                    View More
+                  </Link>
                 </td>
               </tr>
             ))}
-          </tbody>
-        </table>
-      </div>
+        </tbody>
+      </table>
     </div>
   );
 }

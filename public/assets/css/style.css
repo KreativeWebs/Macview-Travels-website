@@ -1,9 +1,4 @@
-@import "tailwindcss";
 
-
-.input {
-  @apply w-full border rounded-lg px-3 py-2 outline-none text-sm;
-}
 /********** Template CSS **********/
 :root {
   --primary: #175aa1;
@@ -12,6 +7,7 @@
   --dark: #14141f;
   --darkblack: #000000;
 }
+
 
 body {
   overflow-x: hidden;
@@ -104,6 +100,17 @@ body {
   justify-content: center;
   font-weight: normal;
   border-radius: 0px;
+}
+
+button:focus,
+button:active {
+  outline: none !important;
+  box-shadow: none !important;
+}
+
+.no-focus:focus-visible {
+  outline: none !important;
+  box-shadow: none !important;
 }
 
 /*** Navbar ***/

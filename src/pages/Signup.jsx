@@ -5,7 +5,8 @@ import { auth, googleProvider } from "../firebaseConfig";
 import { Carousel } from "react-bootstrap";
 import { useAuthStore } from "../store/authStore";
 import Modal from "bootstrap/js/dist/modal";
-import { toast } from "react-toastify";
+import PasswordStrength from '../components/PasswordStrength';
+import { toast } from 'react-toastify';
 
 function Signup() {
   const [showPassword, setShowPassword] = useState(false);
@@ -13,6 +14,7 @@ function Signup() {
   const [googleLoading, setGoogleLoading] = useState(false);
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
+  const [showPasswordStrength, setShowPasswordStrength] = useState(false);
   const modalInstanceRef = useRef(null);
 
   const { signup, error } = useAuthStore();
@@ -33,6 +35,7 @@ function Signup() {
       setEmail("");
       setPassword("");
       setShowPassword(false);
+      setShowPasswordStrength(false);
     };
 
     modalElement.addEventListener("show.bs.modal", clearFormOnShow);
@@ -185,9 +188,10 @@ function Signup() {
           className="modal-content"
           style={{
             width: "600px",
-            height: "750px",
+            height: showPasswordStrength ? "820px" : "750px",
             overflow: "hidden",
             borderRadius: "10px",
+            transition: "height 0.3s ease",
           }}
         >
           <i
@@ -271,14 +275,17 @@ function Signup() {
                   }}
                 />
               </div>
-              <div className="mb-3 position-relative">
+              <div className="mb-1 position-relative">
                 <label className="form-label">Password</label>
 
                 <input
                   type={showPassword ? "text" : "password"}
                   className="form-control"
                   value={password}
-                  onChange={(e) => setPassword(e.target.value)}
+                  onChange={(e) => {
+                    setPassword(e.target.value);
+                    if (!showPasswordStrength) setShowPasswordStrength(true);
+                  }}
                   required
                   style={{
                     borderRadius: "4px",
@@ -297,6 +304,7 @@ function Signup() {
                   ></i>
                 </span>
               </div>
+              {showPasswordStrength && <PasswordStrength password={password} />}
 
               <button
                 type="submit"
@@ -307,6 +315,7 @@ function Signup() {
                   border: "none",
                   borderRadius: "4px",
                   fontFamily: "'Raleway', sans-serif",
+                  marginTop: "10px"
                 }}
               >
                 {loading ? (
