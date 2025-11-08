@@ -26,7 +26,7 @@ const app = express();
 
 // ✅ CORS (must match your frontend URL and allow cookies)
 app.use(cors({
-  origin: process.env.CLIENT_URL, 
+  origin: process.env.CLIENT_URL || "http://localhost:5173",
   credentials: true
 }));
 
@@ -51,7 +51,7 @@ app.use("/api/visa", visaRoutes);
 app.use("/api/admin", adminRoutes);
 app.use("/uploads", express.static(path.join(process.cwd(), "uploads")));
 
-// ✅ IMPORTANT — connect to DB BEFORE starting server
+//  connect to DB BEFORE starting server
 connectToDB().then(() => {
   app.listen(PORT, () => {
     console.log(`🚀 Server started on port ${PORT}`);

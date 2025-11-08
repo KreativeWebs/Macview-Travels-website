@@ -1,40 +1,62 @@
-import nodemailer from "nodemailer";
+import { mailtrapClient, sender } from "../mailtrap/mailtrapConfig.js";
 
-const transporter = nodemailer.createTransport({
-  host: "smtp.mailgun.org",
-  port: 587,
-  auth: {
-    user: process.env.MAILGUN_USER, // e.g. postmaster@yourdomain.com
-    pass: process.env.MAILGUN_PASS,
-  },
-});
-
-export const sendPasswordResetEmail = async (to, name, resetURL) => {
-  const html = `
-    <div style="font-family: Arial, sans-serif; background: #f7f7f7; padding: 20px;">
-      <div style="max-width: 500px; margin: auto; background: white; padding: 30px; border-radius: 10px;">
-        <h2 style="color: #0066ff;">Macview Travels</h2>
-        <p>Hello ${name || "traveler"},</p>
-        <p>We received a request to reset your password. Click the button below:</p>
-        <a href="${resetURL}" 
-           style="display:inline-block;background:#ff6600;color:white;padding:10px 20px;text-decoration:none;border-radius:5px;">
-           Reset Password
-        </a>
-        <p style="margin-top:20px;">If you didn’t request this, you can safely ignore this email.</p>
-      </div>
-    </div>
-  `;
+export const sendPasswordResetEmail = async (email, resetURL) => {
+  const recipients = [{ email }];
 
   try {
-    await transporter.sendMail({
-      from: `"Macview Travels" <noreply@${process.env.MAILGUN_DOMAIN}>`,
-      to,
-      subject: "Reset your password",
-      html,
+    await mailtrapClient.send({
+      from: sender,
+      to: recipients,
+      subject: "Password Reset Request",
+      html: `
+        <div style="font-family: Arial, sans-serif; max-width: 600px; margin: 0 auto;">
+          <h2>Password Reset Request</h2>
+          <p>You requested a password reset for your Macview Travels account.</p>
+          <p>Click the link below to reset your password:</p>
+          <a href="${resetURL}" style="background-color: #007bff; color: white; padding: 10px 20px; text-decoration: none; border-radius: 5px; display: inline-block;">Reset Password</a>
+          <p>This link will expire in 1 hour.</p>
+          <p>If you didn't request this, please ignore this email.</p>
+          <p>Best regards,<br>Macview Travels Team</p>
+        </div>
+      `,
+      category: "Password Reset",
     });
-    console.log("✅ Password reset email sent");
   } catch (error) {
-    console.error("❌ Email sending failed:", error);
-    throw new Error("Email could not be sent");
+    console.error("Error sending password reset email:", error);
+    throw new Error("Failed to send password reset email");
+  }
+};
+
+export const sendWelcomeEmail = async (email, firstName = null) => {
+  const recipients = [{ email }];
+  const displayName = firstName || email.split('@')[0];
+
+  try {
+    await mailtrapClient.send({
+      from: sender,
+      to: recipients,
+      subject: "Welcome to Macview Travels!",
+      html: `
+        <div style="font-family: Arial, sans-serif; max-width: 600px; margin: 0 auto;">
+          <h2>Welcome to Macview Travels, ${displayName}!</h2>
+          <p>Thank you for joining our travel community. We're excited to help you plan your next adventure!</p>
+          <p>With Macview Travels, you can:</p>
+          <ul>
+            <li>Book flights and hotels worldwide</li>
+            <li>Discover amazing destinations</li>
+            <li>Get personalized travel recommendations</li>
+            <li>Access exclusive deals and packages</li>
+          </ul>
+          <p>Start exploring our services today!</p>
+          <a href="${process.env.CLIENT_URL || 'http://localhost:5173'}" style="background-color: #007bff; color: white; padding: 10px 20px; text-decoration: none; border-radius: 5px; display: inline-block;">Explore Now</a>
+          <p>If you have any questions, feel free to reach out to our support team.</p>
+          <p>Happy travels!<br>Macview Travels Team</p>
+        </div>
+      `,
+      category: "Welcome",
+    });
+  } catch (error) {
+    console.error("Error sending welcome email:", error);
+    throw new Error("Failed to send welcome email");
   }
 };

@@ -78,7 +78,7 @@ export default function App() {
                 <Route path="/visa-success" element={<VisaSuccess />} />
                 <Route path="/forgot-password" element={<ForgotPassword />} />
                 <Route
-                  path="/reset-password/:userId/:token"
+                  path="/reset-password/:token"
                   element={<ResetPassword />}
                 />
               </Routes>

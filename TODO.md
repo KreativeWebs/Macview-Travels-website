@@ -1,8 +1,29 @@
-# TODO: Make signup modal height adjust automatically when PasswordStrength shows
+# TODO: Implement Forgot Password Feature
 
-- [x] Modify modal-content height to be dynamic: 750px when hidden, 820px when shown
-- [x] Add smooth transition animation (0.3s ease) for height change
-- [x] Test: Modal starts at 750px height, expands to 820px when PasswordStrength appears
-- [x] Test: Modal shrinks back to 750px when reopened (PasswordStrength hidden)
-- [x] Test smooth animation during height transitions
-- [x] Ensure no layout issues or content cutoff during transitions
+- [x] Create PasswordResetToken model in backend/models/
+- [x] Create forgot password email utility function
+- [x] Create forgot password controller function
+- [x] Create reset password controller function
+- [x] Add forgot password and reset password routes in authRoutes.js
+- [x] Create ForgotPassword.jsx page component
+- [x] Create ResetPassword.jsx page component
+- [x] Add routes for forgot/reset password pages in App.jsx
+- [x] Update Login.jsx to include "Forgot Password?" link
+- [x] Test the complete forgot password flow
+- [x] Integrate PasswordStrength into Login.jsx
+- [x] Fix Firebase config to handle missing env vars
+- [x] Start backend server
+- [x] Test API endpoints (forgot-password, login)
+- [x] Start frontend dev server
+- [x] Fix API endpoint paths in ForgotPassword.jsx and ResetPassword.jsx (added /api prefix)
+- [x] Create sendEmail.js utility using mailtrapConfig.js
+- [x] Test forgot password API endpoint (working with ishakad041@gmail.com)
+- [x] Test login modal: Verify PasswordStrength displays below password field
+- [x] Test password requirements: Type various passwords to check real-time updates (e.g., empty, short, missing criteria, all met)
+- [x] Test edge cases: Special characters, numbers, uppercase/lowercase, length
+- [x] Ensure no errors in console and component renders correctly
+- [x] Test forgot password form submission from frontend
+- [x] Test reset password form with PasswordStrength component
+- [x] Test complete forgot password flow: forgot -> email -> reset -> login
+- [x] Test API endpoints thoroughly: happy paths, error paths, edge cases
+- [x] Verify all pages load without errors

@@ -327,9 +327,25 @@ function Login() {
                 )}
               </button>
 
-              {/* <Link to="/forgot-password" className="text-primary mt-2">
-                Forgot your password?
-              </Link> */}
+              <p
+                style={{
+                  textAlign: "center",
+                  marginTop: "10px",
+                  color: "#494747ff",
+                }}
+              >
+                <a
+                  href="#"
+                  onClick={() => window.location.href = '/forgot-password'}
+                  style={{
+                    color: "#175aa1",
+                    cursor: "pointer",
+                    textDecoration: "none",
+                  }}
+                >
+                  Forgot your password?
+                </a>
+              </p>
               <p
                 style={{
                   textAlign: "center",
