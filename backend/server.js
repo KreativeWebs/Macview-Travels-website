@@ -44,7 +44,7 @@ const authLimiter = rateLimit({
 // Apply the rate limiting middleware to auth routes
 app.use("/api/", authLimiter);
 
-// ✅ auth routes
+// auth routes
 app.use("/api", authRouter);
 app.use("/api/flight-bookings", flightBookingRoutes);
 app.use("/api/visa", visaRoutes);
