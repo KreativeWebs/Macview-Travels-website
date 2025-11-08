@@ -6,6 +6,7 @@ import User from "../models/User.js";
 import admin from "../config/firebase.js";
 import PasswordResetToken from "../models/PasswordResetToken.js";
 import { body, validationResult } from "express-validator";
+import { sendPasswordResetEmail, sendWelcomeEmail } from "../utils/sendEmail.js";
 
 const router = express.Router();
 
@@ -52,6 +53,14 @@ router.post("/signup", async (req, res) => {
 
     const hashedPassword = await bcryptjs.hash(password, 10);
     const user = await User.create({ email, password: hashedPassword });
+
+    // Send welcome email
+    try {
+      await sendWelcomeEmail(user.email);
+    } catch (emailError) {
+      console.error("Welcome email failed:", emailError);
+      // Don't fail signup if email fails
+    }
 
     const accessToken = createAccessToken(user._id);
     const refreshToken = createRefreshToken(user._id);
@@ -142,12 +151,24 @@ router.post("/google-login", async (req, res) => {
     }
 
     let user = await User.findOne({ email });
+    let isNewUser = false;
     if (!user) {
       user = await User.create({
         email,
         password: await bcryptjs.hash(Math.random().toString(36), 10),
         authProvider: "google",
       });
+      isNewUser = true;
+    }
+
+    // Send welcome email for new Google users
+    if (isNewUser) {
+      try {
+        await sendWelcomeEmail(user.email);
+      } catch (emailError) {
+        console.error("Welcome email failed:", emailError);
+        // Don't fail login if email fails
+      }
     }
 
     const accessToken = createAccessToken(user._id);
@@ -176,7 +197,7 @@ router.post("/logout", (req, res) => {
 /* ================================
  FORGOT PASSWORD
 ================================ */
-router.post("/auth/forgot-password", async (req, res) => {
+router.post("/forgot-password", async (req, res) => {
   const { email } = req.body;
 
   try {
@@ -200,10 +221,10 @@ router.post("/auth/forgot-password", async (req, res) => {
     });
 
     // Reset link for frontend
-    const resetURL = `${process.env.CLIENT_URL}/reset-password/${user._id}/${resetToken}`;
+    const resetURL = `${process.env.CLIENT_URL || 'http://localhost:5173'}/reset-password/${resetToken}`;
 
-    // ✅ Send email using reusable helper
-    await sendPasswordResetEmail(user.email, user.name, resetURL);
+    // Send email using reusable helper
+    await sendPasswordResetEmail(user.email, resetURL);
 
     res.json({ message: "Password reset email sent successfully" });
   } catch (error) {
@@ -215,15 +236,15 @@ router.post("/auth/forgot-password", async (req, res) => {
 /* ================================
   RESET PASSWORD
 ================================== */
-router.post("/reset-password/:userId/:token", async (req, res) => {
+router.post("/reset-password/:token", async (req, res) => {
   try {
-    const { userId, token } = req.params;
+    const { token } = req.params;
     const { password } = req.body;
 
-    if (!password || password.length < 6) {
+    if (!password || password.length < 8) {
       return res.status(400).json({
         success: false,
-        message: "Password must be at least 6 characters",
+        message: "Password must be at least 8 characters",
       });
     }
 
@@ -231,7 +252,6 @@ router.post("/reset-password/:userId/:token", async (req, res) => {
     const hashedToken = crypto.createHash("sha256").update(token).digest("hex");
 
     const resetToken = await PasswordResetToken.findOne({
-      userId,
       token: hashedToken,
     });
 
@@ -244,10 +264,10 @@ router.post("/reset-password/:userId/:token", async (req, res) => {
 
     // Update password
     const hashedPassword = await bcryptjs.hash(password, 10);
-    await User.findByIdAndUpdate(userId, { password: hashedPassword });
+    await User.findByIdAndUpdate(resetToken.userId, { password: hashedPassword });
 
     // Delete the used token
-    await PasswordResetToken.deleteOne({ userId });
+    await PasswordResetToken.deleteOne({ _id: resetToken._id });
 
     res.json({
       success: true,
