@@ -5,10 +5,10 @@ import VisaApplication from "../models/visaApplication.js";
 
 const router = express.Router();
 
-// ✅ Route: GET /api/visa/requirements/:country
+// Route: GET /api/visa/requirements/:country
 router.get("/requirements/:country", getVisaRequirements);
 
-// ✅ Route: POST /api/visa/apply
+// Route: POST /api/visa/apply
 router.post("/apply", upload.array("documents", 5), async (req, res) => {
   try {
     const {
@@ -25,14 +25,14 @@ router.post("/apply", upload.array("documents", 5), async (req, res) => {
       travelDate,
     } = req.body;
 
-    // ✅ Build documents array (schema expects label, fileUrl, textValue)
+    // Build documents array (schema expects label, fileUrl, textValue)
     const documents = req.files.map((file) => ({
       label: file.fieldname, // e.g. "passportCopy"
       fileUrl: `/uploads/${file.filename}`, // local path or cloud URL
       textValue: "", // empty for now
     }));
 
-    // ✅ Create new visa application
+    // Create new visa application
     const newApplication = new VisaApplication({
       fullName,
       email,

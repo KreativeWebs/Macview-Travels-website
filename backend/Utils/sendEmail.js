@@ -13,9 +13,10 @@ export const sendPasswordResetEmail = async (email, resetURL) => {
           <h2>Password Reset Request</h2>
           <p>You requested a password reset for your Macview Travels account.</p>
           <p>Click the link below to reset your password:</p>
-          <a href="${resetURL}" style="background-color: #007bff; color: white; padding: 10px 20px; text-decoration: none; border-radius: 5px; display: inline-block;">Reset Password</a>
+          <a href="${resetURL}" style="background-color: #175aa1; color: white; padding: 10px 20px; text-decoration: none; border-radius: 5px; display: inline-block;">Reset Password</a>
           <p>This link will expire in 1 hour.</p>
           <p>If you didn't request this, please ignore this email.</p>
+          <p>Questions? Contact <a href="https://wa.me/2348169056956" target="_blank">Support Team</a></p>
           <p>Best regards,<br>Macview Travels Team</p>
         </div>
       `,

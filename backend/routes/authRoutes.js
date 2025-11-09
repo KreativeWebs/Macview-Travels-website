@@ -3,6 +3,7 @@ import crypto from "crypto";
 import bcryptjs from "bcryptjs";
 import jwt from "jsonwebtoken";
 import User from "../models/User.js";
+import Admin from "../models/Admin.js";
 import admin from "../config/firebase.js";
 import PasswordResetToken from "../models/PasswordResetToken.js";
 import { body, validationResult } from "express-validator";
@@ -131,7 +132,19 @@ router.get("/fetchuser", async (req, res) => {
 
   try {
     const decoded = jwt.verify(token, process.env.ACCESS_TOKEN_SECRET);
-    const user = await User.findById(decoded.id).select("-password");
+
+    // Try to find user in regular User collection first
+    let user = await User.findById(decoded.id).select("-password");
+
+    // If not found in User collection, try Admin collection
+    if (!user) {
+      user = await Admin.findById(decoded.id).select("-password");
+    }
+
+    if (!user) {
+      return res.status(404).json({ message: "User not found" });
+    }
+
     res.json({ user });
   } catch (error) {
     res.status(401).json({ message: "Invalid or expired token" });
@@ -279,6 +292,77 @@ router.post("/reset-password/:token", async (req, res) => {
       success: false,
       message: "Server error. Please try again.",
     });
+  }
+});
+
+/* ================================
+   ADMIN LOGIN
+================================ */
+router.post("/admin/login", async (req, res) => {
+  const { email, password } = req.body;
+
+  try {
+    const adminUser = await Admin.findOne({ email });
+    if (!adminUser) return res.status(400).json({ success: false, message: "Invalid admin credentials" });
+
+    // Check if account is locked
+    if (adminUser.lockUntil && adminUser.lockUntil > Date.now()) {
+      return res.status(423).json({
+        success: false,
+        message: "Admin account temporarily locked due to too many failed attempts"
+      });
+    }
+
+    const isPasswordValid = await bcryptjs.compare(password, adminUser.password);
+    if (!isPasswordValid) {
+      // Increment login attempts
+      adminUser.loginAttempts += 1;
+
+      // Lock account after 3 failed attempts for admin (stricter than regular users)
+      if (adminUser.loginAttempts >= 3) {
+        adminUser.lockUntil = Date.now() + 1 * 60 * 60 * 1000; // 1 hour lock for admin
+      }
+
+      await adminUser.save();
+      return res.status(400).json({
+        success: false,
+        message: adminUser.loginAttempts >= 3 ? "Admin account locked due to too many failed attempts" : "Invalid admin credentials"
+      });
+    }
+
+    // Reset login attempts on successful login
+    adminUser.loginAttempts = 0;
+    adminUser.lockUntil = undefined;
+    adminUser.lastLogin = new Date();
+
+    // Track IP address for security monitoring
+    const clientIP = req.ip || req.connection.remoteAddress || req.socket.remoteAddress;
+    if (clientIP && !adminUser.ipAddresses.includes(clientIP)) {
+      adminUser.ipAddresses.push(clientIP);
+      console.log(`Admin login from new IP: ${clientIP} for ${email}`);
+    }
+
+    await adminUser.save();
+
+    const accessToken = createAccessToken(adminUser._id);
+    const refreshToken = createRefreshToken(adminUser._id);
+    setRefreshCookie(res, refreshToken);
+
+    res.status(200).json({
+      success: true,
+      user: {
+        _id: adminUser._id,
+        email: adminUser.email,
+        role: adminUser.role,
+        lastLogin: adminUser.lastLogin,
+        ipAddresses: adminUser.ipAddresses
+      },
+      accessToken,
+      message: "Admin login successful"
+    });
+  } catch (error) {
+    console.error("Admin login error:", error);
+    res.status(500).json({ success: false, message: "Server error" });
   }
 });
 

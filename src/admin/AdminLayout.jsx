@@ -1,10 +1,37 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
+import { useNavigate } from "react-router-dom";
+import { useAuthStore } from "../store/authStore";
 import Header from "./Header";
 import Sidebar from "./Sidebar";
 import { Outlet } from "react-router-dom";
 
 export default function AdminLayout() {
   const [sidebarOpen, setSidebarOpen] = useState(true);
+  const { user, fetchUser, fetchingUser } = useAuthStore();
+  const navigate = useNavigate();
+
+  useEffect(() => {
+    // Check if admin is authenticated
+    const checkAuth = async () => {
+      if (!user && !fetchingUser) {
+        await fetchUser();
+      }
+    };
+
+    checkAuth();
+  }, []); // Only run once on mount
+
+  useEffect(() => {
+    // Redirect to login if not authenticated or not admin
+    if (!fetchingUser && (!user || user.role !== 'admin')) {
+      navigate('/adminlogin');
+    }
+  }, [user, fetchingUser, navigate]);
+
+  // Don't render if not authenticated or still fetching
+  if (fetchingUser || !user || user.role !== 'admin') {
+    return null;
+  }
 
   return (
     <div className="d-flex flex-column" style={{ minHeight: "100vh", marginTop: "80px" }}>
