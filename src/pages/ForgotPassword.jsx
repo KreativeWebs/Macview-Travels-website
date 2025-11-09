@@ -81,7 +81,6 @@ function ForgotPassword() {
               borderRadius: "40px",
               transition: "0.3s",
               border: "none",
-              borderRadius: "4px",
             }}
           >
             {loading ? (
