@@ -174,7 +174,7 @@ function Login() {
           className="modal-content position-relative"
           style={{
             width: "600px",
-            height: "750px",
+            height: "780px",
             overflow: "hidden",
             borderRadius: "10px",
           }}

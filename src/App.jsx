@@ -1,8 +1,8 @@
-import { Routes, Route } from "react-router-dom";
-import { useEffect } from "react";
+import { Routes, Route, useLocation } from "react-router-dom";
 import { ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import "@fortawesome/fontawesome-free/css/all.min.css";
+import { useEffect } from "react";
 import Header from "./components/Header";
 import Footer from "./components/Footer";
 import Home from "./pages/Home";
@@ -37,19 +37,25 @@ import FlightBookings from "./admin/pages/FlightBookings";
 import Transfers from "./admin/pages/Transfers";
 import Settings from "./admin/pages/Settings";
 
-export default function App() {
-  const { fetchUser, fetchingUser } = useAuthStore();
+function FloatingButtonsController() {
+  const location = useLocation();
 
   useEffect(() => {
-    fetchUser();
-  }, [fetchUser]);
+    const floatingButtons = document.getElementById('floating-buttons');
+    if (floatingButtons) {
+      // Show floating buttons only on public website routes (not admin routes)
+      const isAdminRoute = location.pathname.startsWith('/admin');
+      floatingButtons.style.display = isAdminRoute ? 'none' : 'block';
+    }
+  }, [location]);
 
-  if (fetchingUser) {
-    return <p>Loading, please wait...</p>;
-  }
+  return null;
+}
 
+export default function App() {
   return (
     <div>
+      <FloatingButtonsController />
       <Routes>
         {/* Public Website Layout */}
         <Route
@@ -87,21 +93,20 @@ export default function App() {
           }
         />
 
+        {/* Admin Login Route (outside admin layout) */}
+        <Route path="/adminlogin" element={<AdminLogin />} />
+
         {/* Admin Routes */}
         <Route path="/admin" element={<AdminLayout />}>
           <Route index element={<Dashboard />} />
           <Route path="clients" element={<Clients />} />
-         
+
           <Route path="clients/:id" element={<ClientProfile />} />
           <Route path="visa" element={<VisaRequests />} />
           <Route path="flights" element={<FlightBookings />} />
           <Route path="transfers" element={<Transfers />} />
           <Route path="settings" element={<Settings />} />
         </Route>
-        
-         <Route path="login" element={<AdminLogin />}>
- 
- </Route>
 
       </Routes>
 

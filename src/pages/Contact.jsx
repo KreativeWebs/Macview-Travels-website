@@ -165,14 +165,13 @@ function Contact() {
                         className="form-control"
                         placeholder="Leave a message here"
                         id="message"
-                        style={{ height: 100 }}
-                        defaultValue={""}
-
                         style={{
-                        borderRadius: "4px",
-                        boxShadow: "none",
-                        borderColor: "#c9b5b5ff",
-                      }}
+                          height: 100,
+                          borderRadius: "4px",
+                          boxShadow: "none",
+                          borderColor: "#c9b5b5ff",
+                        }}
+                        defaultValue={""}
                       />
                       <label htmlFor="message">Message</label>
                     </div>

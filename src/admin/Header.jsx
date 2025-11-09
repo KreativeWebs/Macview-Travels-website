@@ -1,6 +1,16 @@
+import { useAuthStore } from "../store/authStore";
+import { useNavigate } from "react-router-dom";
 import SearchBox from "./SearchBox";
 
 export default function Header({ toggleSidebar }) {
+  const { user, logout } = useAuthStore();
+  const navigate = useNavigate();
+
+  const handleLogout = async () => {
+    await logout();
+    navigate('/adminlogin');
+  };
+
   return (
     <header
       className="bg-white p-3 d-flex justify-content-between align-items-center"
@@ -39,12 +49,26 @@ export default function Header({ toggleSidebar }) {
       <div className="d-flex align-items-center gap-3">
         <SearchBox />
         <div className="small">
-          Hello, <strong>Admin</strong>
+          Hello, <strong>{user?.email || 'Admin'}</strong>
         </div>
-        <div
-          className="rounded-circle bg-secondary bg-opacity-50"
-          style={{ width: "40px", height: "40px" }}
-        ></div>
+        <div className="dropdown">
+          <div
+            className="rounded-circle bg-secondary bg-opacity-50 d-flex align-items-center justify-content-center"
+            style={{ width: "40px", height: "40px", cursor: "pointer" }}
+            data-bs-toggle="dropdown"
+            aria-expanded="false"
+          >
+            <i className="fa-solid fa-user"></i>
+          </div>
+          <ul className="dropdown-menu">
+            <li>
+              <button className="dropdown-item" onClick={handleLogout}>
+                <i className="fa-solid fa-sign-out-alt me-2"></i>
+                Logout
+              </button>
+            </li>
+          </ul>
+        </div>
       </div>
     </header>
   );
