@@ -24,6 +24,27 @@ export const createFlightBooking = async (req, res) => {
       });
 
       await newBooking.save();
+
+      // Emit real-time update to admin dashboard
+      if (global.io) {
+        global.io.emit('newFlightBooking', {
+          id: newBooking._id,
+          fullName: newBooking.fullName,
+          tripType: newBooking.tripType,
+          departureCity: newBooking.multiCityFlights?.[0]?.departureCity || 'Multiple',
+          destinationCity: newBooking.multiCityFlights?.[0]?.destinationCity || 'Multiple',
+          createdAt: newBooking.createdAt,
+          isNew: true
+        });
+
+        // Emit updated stats
+        const FlightBooking = (await import("../models/flightbooking.js")).default;
+        const flightCount = await FlightBooking.countDocuments();
+        global.io.emit('statsUpdate', {
+          flightRequests: flightCount
+        });
+      }
+
       return res
         .status(201)
         .json({ message: "Flight booking submitted successfully!" });
@@ -50,6 +71,27 @@ export const createFlightBooking = async (req, res) => {
     });
 
     await newBooking.save();
+
+    // Emit real-time update to admin dashboard
+    if (global.io) {
+      global.io.emit('newFlightBooking', {
+        id: newBooking._id,
+        fullName: newBooking.fullName,
+        tripType: newBooking.tripType,
+        departureCity: newBooking.departureCity,
+        destinationCity: newBooking.destinationCity,
+        createdAt: newBooking.createdAt,
+        isNew: true
+      });
+
+      // Emit updated stats
+      const FlightBooking = (await import("../models/flightbooking.js")).default;
+      const flightCount = await FlightBooking.countDocuments();
+      global.io.emit('statsUpdate', {
+        flightRequests: flightCount
+      });
+    }
+
     res.status(201).json({ message: "Flight booking submitted successfully!" });
   } catch (error) {
     console.error("Error saving flight booking:", error);

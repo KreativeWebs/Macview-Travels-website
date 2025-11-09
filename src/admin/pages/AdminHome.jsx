@@ -1,9 +1,58 @@
+import { useState, useEffect } from "react";
+import adminAxios from "../../api/adminAxios";
+import socket from "../../socket";
+
 export default function AdminHome() {
+  const [stats, setStats] = useState({
+    visaApplications: 0,
+    flightRequests: 0,
+    hotelBookings: 0,
+    airportTransfers: 0,
+  });
+  const [loading, setLoading] = useState(true);
+
+  useEffect(() => {
+    fetchStats();
+
+    // Listen for real-time stats updates
+    socket.on('statsUpdate', (updatedStats) => {
+      setStats(prevStats => ({
+        ...prevStats,
+        ...updatedStats
+      }));
+    });
+
+    return () => {
+      socket.off('statsUpdate');
+    };
+  }, []);
+
+  const fetchStats = async () => {
+    try {
+      setLoading(true);
+
+      // Fetch overview data from backend
+    const res = await adminAxios.get('/overview');
+      const data = res.data;
+
+      setStats({
+        visaApplications: data.visaApplications || 0,
+        flightRequests: data.flightBookings || 0,
+        hotelBookings: data.hotelBookings || 0,
+        airportTransfers: 0, // Not in backend yet
+      });
+    } catch (error) {
+      console.error("Error fetching stats:", error);
+    } finally {
+      setLoading(false);
+    }
+  };
+
   const cards = [
-    { title: "Visa Applications", value: 120 },
-    { title: "Flight Requests", value: 85 },
-    { title: "Transfers", value: 42 },
-    { title: "Revenue (USD)", value: "$12,900" },
+    { title: "Visa Applications", value: stats.visaApplications, loading },
+    { title: "Flight Requests", value: stats.flightRequests, loading },
+    { title: "Hotel Bookings", value: stats.hotelBookings, loading },
+    { title: "Airport Transfers", value: stats.airportTransfers, loading },
   ];
 
   return (
@@ -11,6 +60,9 @@ export default function AdminHome() {
       {/* Page Title */}
       <div className="d-flex justify-content-between align-items-center mb-4">
         <h2 className="fw-bold">Overview</h2>
+        <div className="text-muted small">
+          Monthly stats for {new Date().toLocaleString('default', { month: 'long', year: 'numeric' })}
+        </div>
       </div>
 
       {/* Stat Cards */}
@@ -19,7 +71,15 @@ export default function AdminHome() {
           <div key={c.title} className="col-12 col-md-4 col-lg-3">
             <div className="bg-white p-4 rounded shadow-sm">
               <div className="text-muted small">{c.title}</div>
-              <div className="fs-3 fw-bold mt-2">{c.value}</div>
+              <div className="fs-3 fw-bold mt-2">
+                {c.loading ? (
+                  <div className="spinner-border spinner-border-sm text-primary" role="status">
+                    <span className="visually-hidden">Loading...</span>
+                  </div>
+                ) : (
+                  c.value
+                )}
+              </div>
             </div>
           </div>
         ))}
@@ -46,24 +106,69 @@ export default function AdminHome() {
 }
 
 export function MiniVisaList() {
-  const items = [
-    { id: "V-1001", name: "Jane Doe", country: "Kenya", status: "received" },
-    { id: "V-1002", name: "John Smith", country: "Egypt", status: "processing" },
-    { id: "V-1003", name: "Mary Jay", country: "South Africa", status: "completed" },
-  ];
+  const [items, setItems] = useState([]);
+  const [loading, setLoading] = useState(true);
+
+  useEffect(() => {
+    fetchRecentVisaApplications();
+
+    // Listen for real-time updates
+    socket.on('newVisaApplication', (newApplication) => {
+      setItems(prevItems => [{ ...newApplication, _id: newApplication.id }, ...prevItems.slice(0, 4)]); // Keep only 5 items
+    });
+
+    return () => {
+      socket.off('newVisaApplication');
+    };
+  }, []);
+
+  const fetchRecentVisaApplications = async () => {
+    try {
+      setLoading(true);
+      const res = await adminAxios.get('/visa-applications/recent');
+      setItems(res.data.applications || []);
+    } catch (error) {
+      console.error("Error fetching recent visa applications:", error);
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  if (loading) {
+    return (
+      <div className="text-center py-3">
+        <div className="spinner-border spinner-border-sm text-primary" role="status">
+          <span className="visually-hidden">Loading...</span>
+        </div>
+      </div>
+    );
+  }
+
+  if (items.length === 0) {
+    return <div className="text-muted small py-3">No recent visa applications</div>;
+  }
 
   return (
     <ul className="list-group">
       {items.map((it) => (
         <li
-          key={it.id}
+          key={it._id}
           className="list-group-item d-flex justify-content-between align-items-center"
         >
-          <div>
-            <div className="fw-medium">{it.name}</div>
-            <div className="small text-muted">{it.country} • {it.id}</div>
+          <div className="d-flex align-items-center">
+            <div>
+              <div className="fw-medium">{it.fullName}</div>
+              <div className="small text-muted">{it.destinationCountry} • {it.visaType}</div>
+            </div>
+            {it.isNew && (
+              <div className="ms-2">
+                <span className="badge bg-primary rounded-circle" style={{ width: '8px', height: '8px', padding: 0 }}>
+                  <span className="visually-hidden">New</span>
+                </span>
+              </div>
+            )}
           </div>
-          <span className="badge bg-secondary">{it.status}</span>
+          <span className={`badge ${getStatusBadgeClass(it.status)}`}>{it.status}</span>
         </li>
       ))}
     </ul>
@@ -71,25 +176,87 @@ export function MiniVisaList() {
 }
 
 export function MiniFlightList() {
-  const items = [
-    { id: "F-2001", name: "Alpha Corp", route: "Lagos → Doha", status: "pending" },
-    { id: "F-2002", name: "Beta Travel", route: "Abuja → Cairo", status: "confirmed" },
-  ];
+  const [items, setItems] = useState([]);
+  const [loading, setLoading] = useState(true);
+
+  useEffect(() => {
+    fetchRecentFlightBookings();
+
+    // Listen for real-time updates
+    socket.on('newFlightBooking', (newBooking) => {
+      setItems(prevItems => [{ ...newBooking, _id: newBooking.id }, ...prevItems.slice(0, 4)]); // Keep only 5 items
+    });
+
+    return () => {
+      socket.off('newFlightBooking');
+    };
+  }, []);
+
+  const fetchRecentFlightBookings = async () => {
+    try {
+      setLoading(true);
+    const res = await adminAxios.get('/flight-bookings/recent');
+      setItems(res.data.bookings || []);
+    } catch (error) {
+      console.error("Error fetching recent flight bookings:", error);
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  if (loading) {
+    return (
+      <div className="text-center py-3">
+        <div className="spinner-border spinner-border-sm text-primary" role="status">
+          <span className="visually-hidden">Loading...</span>
+        </div>
+      </div>
+    );
+  }
+
+  if (items.length === 0) {
+    return <div className="text-muted small py-3">No recent flight bookings</div>;
+  }
 
   return (
     <ul className="list-group">
       {items.map((it) => (
         <li
-          key={it.id}
+          key={it._id}
           className="list-group-item d-flex justify-content-between align-items-center"
         >
-          <div>
-            <div className="fw-medium">{it.name}</div>
-            <div className="small text-muted">{it.route} • {it.id}</div>
+          <div className="d-flex align-items-center">
+            <div>
+              <div className="fw-medium">{it.fullName}</div>
+              <div className="small text-muted">
+                {it.tripType === 'multi-city'
+                  ? `${it.multiCityFlights?.length || 0} segments`
+                  : `${it.departureCity} → ${it.destinationCity}`
+                }
+              </div>
+            </div>
+            {it.isNew && (
+              <div className="ms-2">
+                <span className="badge bg-primary rounded-circle" style={{ width: '8px', height: '8px', padding: 0 }}>
+                  <span className="visually-hidden">New</span>
+                </span>
+              </div>
+            )}
           </div>
-          <span className="badge bg-secondary">{it.status}</span>
+          <span className="badge bg-secondary">{it.tripType}</span>
         </li>
       ))}
     </ul>
   );
 }
+
+// Helper function for status badges
+const getStatusBadgeClass = (status) => {
+  switch (status) {
+    case 'received': return 'bg-warning';
+    case 'processing': return 'bg-info';
+    case 'completed': return 'bg-success';
+    case 'rejected': return 'bg-danger';
+    default: return 'bg-secondary';
+  }
+};

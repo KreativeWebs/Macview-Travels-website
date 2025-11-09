@@ -1,12 +1,8 @@
-# TODO: Implement Admin Login System
+# TODO: Integrate getOverviewData into AdminHome Overview Section
 
-- [x] Create Admin model with role and security fields
-- [x] Add admin login route with pre-seeded credentials
-- [x] Update AdminLogin.jsx with state management and API calls
-- [x] Add security features: rate limiting, session management, IP logging
-- [x] Extend auth store with admin login method
-- [x] Seed admin user in database (MongoDB connection issue - needs MongoDB running)
-- [x] Test admin login functionality (Frontend running on 5174, Backend on 5000)
-- [x] Add security middleware
-- [x] Protect admin dashboard routes (login required)
-- [x] Add admin logout functionality in header dropdown
+- [x] Fix duplicate route definition in backend/routes/adminRoutes.js
+- [x] Update fetchStats in src/admin/pages/AdminHome.jsx to call /api/admin/overview
+- [x] Map backend response data to frontend stats state
+- [x] Fix admin login to store token in localStorage
+- [x] Test the changes by running the app
+- [x] Fix duplicate import in adminRoutes.js

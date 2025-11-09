@@ -53,6 +53,27 @@ router.post("/apply", upload.array("documents", 5), async (req, res) => {
 
     await newApplication.save();
 
+    // Emit real-time update to admin dashboard
+    if (global.io) {
+      // Emit new application
+      global.io.emit('newVisaApplication', {
+        id: newApplication._id,
+        fullName: newApplication.fullName,
+        destinationCountry: newApplication.destinationCountry,
+        visaType: newApplication.visaType,
+        status: newApplication.status,
+        createdAt: newApplication.createdAt,
+        isNew: true
+      });
+
+      // Emit updated stats
+      const VisaApplication = (await import("../models/visaApplication.js")).default;
+      const visaCount = await VisaApplication.countDocuments();
+      global.io.emit('statsUpdate', {
+        visaApplications: visaCount
+      });
+    }
+
     res.status(201).json({
       success: true,
       message: "✅ Visa application submitted successfully!",
