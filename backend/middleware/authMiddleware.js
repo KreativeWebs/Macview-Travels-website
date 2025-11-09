@@ -2,43 +2,36 @@ import jwt from "jsonwebtoken";
 import Admin from "../models/Admin.js";
 
 export const authenticateAdmin = async (req, res, next) => {
-  const authHeader = req.headers.authorization;
-  if (!authHeader) {
-    return res.status(401).json({ message: "No access token provided" });
-  }
-
-  const token = authHeader.split(" ")[1];
-
   try {
-    const decoded = jwt.verify(token, process.env.ACCESS_TOKEN_SECRET);
+    const token = req.headers.authorization?.split(' ')[1] || req.cookies.refreshToken;
+
+    if (!token) {
+      return res.status(401).json({ success: false, message: "No access token provided" });
+    }
+
+    let decoded;
+    try {
+      // Try to verify as access token first (admin login creates access tokens)
+      decoded = jwt.verify(token, process.env.ACCESS_TOKEN_SECRET);
+    } catch (accessError) {
+      try {
+        // If access token verification fails, try refresh token secret
+        decoded = jwt.verify(token, process.env.REFRESH_TOKEN_SECRET);
+      } catch (refreshError) {
+        throw new Error("Invalid token signature");
+      }
+    }
+
     const admin = await Admin.findById(decoded.id);
 
-    if (!admin || admin.role !== 'admin' || !admin.isActive) {
-      return res.status(403).json({ message: "Access denied. Admin privileges required." });
+    if (!admin || !admin.isActive) {
+      return res.status(401).json({ success: false, message: "Invalid admin token" });
     }
 
     req.admin = admin;
     next();
   } catch (error) {
-    res.status(401).json({ message: "Invalid or expired token" });
-  }
-};
-
-export const refreshTokenMiddleware = async (req, res, next) => {
-  const token = req.cookies.refreshToken;
-  if (!token) return res.status(401).json({ message: "No refresh token" });
-
-  try {
-    const decoded = jwt.verify(token, process.env.REFRESH_TOKEN_SECRET);
-    const admin = await Admin.findById(decoded.id);
-
-    if (!admin || admin.role !== 'admin' || !admin.isActive) {
-      return res.status(403).json({ message: "Access denied. Admin privileges required." });
-    }
-
-    req.admin = admin;
-    next();
-  } catch (error) {
-    res.status(401).json({ message: "Invalid refresh token" });
+    console.error("Admin authentication error:", error);
+    res.status(401).json({ success: false, message: "Authentication failed" });
   }
 };

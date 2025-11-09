@@ -106,6 +106,8 @@ export const useAuthStore = create((set, get) => ({
     set({ isLoading: true });
     try {
       await axios.post(`${API_URL}/logout`);
+      // Clear admin token from localStorage
+      localStorage.removeItem('adminToken');
       set({ user: null, accessToken: null, isLoading: false });
     } catch {
       set({ isLoading: false });
@@ -116,6 +118,9 @@ export const useAuthStore = create((set, get) => ({
     set({ isLoading: true, error: null });
     try {
       const res = await axios.post(`${API_URL}/admin/login`, { email, password });
+
+      // Store token in localStorage for adminAxios
+      localStorage.setItem('adminToken', res.data.accessToken);
 
       set({
         user: res.data.user,

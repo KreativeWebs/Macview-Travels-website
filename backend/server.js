@@ -1,6 +1,8 @@
 import dotenv from "dotenv";
 import flightBookingRoutes from "./routes/flightbookingRoutes.js";
 import rateLimit from "express-rate-limit";
+import { Server } from "socket.io";
+import http from "http";
 
 import { fileURLToPath } from "url";
 
@@ -26,7 +28,7 @@ const app = express();
 
 // ✅ CORS (must match your frontend URL and allow cookies)
 app.use(cors({
-  origin: process.env.CLIENT_URL || "http://localhost:5173",
+  origin: process.env.CLIENT_URL || ["http://localhost:5173", "http://localhost:5174", "http://localhost:5175"],
   credentials: true
 }));
 
@@ -36,7 +38,7 @@ app.use(cookieParser(process.env.COOKIE_SECRET));
 // Rate Limiting
 const authLimiter = rateLimit({
   windowMs: 15 * 60 * 1000, // 15 minutes
-  max: 100, // Limit each IP to 100 requests per windowMs
+  max: 1000, // Limit each IP to 1000 requests per windowMs (increased for development)
   standardHeaders: true,
   legacyHeaders: false,
 });
@@ -51,9 +53,30 @@ app.use("/api/visa", visaRoutes);
 app.use("/api/admin", adminRoutes);
 app.use("/uploads", express.static(path.join(process.cwd(), "uploads")));
 
+// Create HTTP server and Socket.IO
+const server = http.createServer(app);
+const io = new Server(server, {
+  cors: {
+    origin: process.env.CLIENT_URL || ["http://localhost:5173", "http://localhost:5174", "http://localhost:5175"],
+    credentials: true
+  }
+});
+
+// Socket.IO connection handling
+io.on('connection', (socket) => {
+  console.log('Admin connected:', socket.id);
+
+  socket.on('disconnect', () => {
+    console.log('Admin disconnected:', socket.id);
+  });
+});
+
+// Make io available globally for emitting events
+global.io = io;
+
 //  connect to DB BEFORE starting server
 connectToDB().then(() => {
-  app.listen(PORT, () => {
+  server.listen(PORT, () => {
     console.log(`🚀 Server started on port ${PORT}`);
   });
 }).catch((err) => {
