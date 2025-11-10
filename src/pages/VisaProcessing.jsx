@@ -1,6 +1,8 @@
 import { useState, useEffect } from "react";
 import { useNavigate, useLocation } from "react-router-dom";
 import { toast } from "react-toastify";
+import { useAuthStore } from "../store/authStore";
+import { countryCodes } from "../data/countryCodes";
 
 function VisaProcessing() {
   const navigate = useNavigate();
@@ -12,9 +14,11 @@ function VisaProcessing() {
   const [formData, setFormData] = useState(prevState.formData || {
     fullName: "",
     phoneNumber: "",
+    countryCode: "+234",
   });
   const [touristRequirements, setTouristRequirements] = useState(prevState.touristRequirements || []);
   const [fee, setFee] = useState(prevState.fee || 0);
+  const [processingTime, setProcessingTime] = useState(prevState.processingTime || "");
   const [uploadProgress, setUploadProgress] = useState({});
   const [selectedFiles, setSelectedFiles] = useState({});
 
@@ -110,6 +114,8 @@ function VisaProcessing() {
     setFormData(prev => ({ ...prev, [name]: value }));
   };
 
+
+
   // Fetch visa requirements
   useEffect(() => {
     if (!selectedCountry) return;
@@ -133,6 +139,7 @@ function VisaProcessing() {
         setVisaData(data);
         setTouristRequirements(touristVisa.requirements || []);
         setFee(touristVisa.fee || 0);
+        setProcessingTime(touristVisa.processingTime || "");
       } catch (error) {
         console.error(error);
         toast.error("Error fetching visa data");
@@ -145,6 +152,14 @@ function VisaProcessing() {
   const handleNext = () => {
     if (!formData.fullName || !formData.phoneNumber || !selectedCountry) {
       toast.error("Please fill all required fields");
+      return;
+    }
+
+    // Check if user is logged in
+    const user = useAuthStore.getState().user;
+    if (!user || !user.email) {
+      toast.error("Please login to continue with your visa application");
+      navigate("/");
       return;
     }
 
@@ -168,6 +183,7 @@ function VisaProcessing() {
         selectedVisaType: "Tourist",
         touristRequirements: touristVisa.requirements,
         fee: touristVisa.fee,
+        processingTime: touristVisa.processingTime,
       },
     });
   };
@@ -181,7 +197,7 @@ function VisaProcessing() {
         <hr />
 
         <form>
-          <label className="form-label">Full Name </label>
+          <label className="form-label">Full Name <small>(Name to be used on Visa)</small></label>
           <input
             type="text"
             name="fullName"
@@ -193,15 +209,31 @@ function VisaProcessing() {
           />
 
           <label className="form-label mt-3">WhatsApp Number</label>
-          <input
-            type="tel"
-            name="phoneNumber"
-            value={formData.phoneNumber}
-            onChange={handleInputChange}
-            className="form-control"
-            required
-            style={{ borderRadius: "4px", borderColor: "#c9b5b5ff" }}
-          />
+          <div className="input-group">
+            <select
+              className="form-select"
+              name="countryCode"
+              value={formData.countryCode || "+234"}
+              onChange={handleInputChange}
+              style={{ borderRadius: "4px 0 0 4px", borderColor: "#c9b5b5ff", maxWidth: "120px" }}
+            >
+              {countryCodes.map((country) => (
+                <option key={country.code} value={country.code}>
+                  {country.flag} {country.code} ({country.name})
+                </option>
+              ))}
+            </select>
+            <input
+              type="tel"
+              name="phoneNumber"
+              value={formData.phoneNumber}
+              onChange={handleInputChange}
+              className="form-control"
+              placeholder="Enter phone number without country code"
+              required
+              style={{ borderRadius: "0 4px 4px 0", borderColor: "#c9b5b5ff" }}
+            />
+          </div>
 
           <p className="mt-5" style={{ fontWeight: "bold" }}>VISA DETAILS</p>
           <hr />
@@ -281,6 +313,7 @@ function VisaProcessing() {
                   )}
                 </div>
               ))}
+              {processingTime && <p><strong>Processing Time:</strong> {processingTime}</p>}
               <p><strong>Fee:</strong> ₦{fee.toLocaleString()}</p>
             </div>
           )}

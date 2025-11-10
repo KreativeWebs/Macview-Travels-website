@@ -1,5 +1,7 @@
 import { useEffect, useState } from "react";
 import adminAxios from "../../api/adminAxios";
+import { useAuthStore } from "../../store/authStore";
+import socket from "../../socket";
 
 export default function VisaRequests() {
   const [applications, setApplications] = useState([]);
@@ -9,10 +11,54 @@ export default function VisaRequests() {
   const [totalPages, setTotalPages] = useState(1);
   const [statusFilter, setStatusFilter] = useState('all');
   const [searchTerm, setSearchTerm] = useState('');
+  const [refreshing, setRefreshing] = useState(false);
 
   useEffect(() => {
     fetchApplications();
   }, [currentPage, statusFilter, searchTerm]);
+
+  useEffect(() => {
+    // Listen for real-time updates
+    socket.on('visaApplicationStatusUpdate', (update) => {
+      console.log('VisaRequests: Received status update:', update);
+      // Update the application status in real-time
+      setApplications(prevApps =>
+        prevApps.map(app =>
+          app._id === update.id
+            ? { ...app, status: update.status, updatedAt: update.updatedAt }
+            : app
+        )
+      );
+
+      // Update selected application if it's the one being updated
+      if (selected && selected._id === update.id) {
+        setSelected(prev => ({ ...prev, status: update.status, updatedAt: update.updatedAt }));
+      }
+    });
+
+    // Listen for new visa applications
+    socket.on('newVisaApplication', (newApp) => {
+      console.log('VisaRequests: New visa application received:', newApp);
+      // Prepend the new application to the list
+      setApplications(prevApps => {
+        const newApps = [newApp, ...prevApps];
+        setTotalPages(Math.ceil(newApps.length / 10));
+        return newApps;
+      });
+    });
+
+    // Also listen for global refresh
+    socket.on('globalRefresh', () => {
+      console.log('VisaRequests: Global refresh triggered');
+      fetchApplications();
+    });
+
+    return () => {
+      socket.off('visaApplicationStatusUpdate');
+      socket.off('newVisaApplication');
+      socket.off('globalRefresh');
+    };
+  }, [selected]);
 
   const fetchApplications = async () => {
     try {
@@ -34,14 +80,59 @@ export default function VisaRequests() {
     }
   };
 
-  const openDetails = (app) => setSelected(app);
+  const handleRefresh = async () => {
+    setRefreshing(true);
+    await fetchApplications();
+    setRefreshing(false);
+  };
+
+  const openDetails = async (app) => {
+    // If the application is incomplete (from socket event), fetch full details
+    if (!app.documents || !app.payment || !app.phoneNumber) {
+      try {
+        const res = await adminAxios.get(`/visa-applications/${app._id}`);
+        app = res.data.application;
+      } catch (error) {
+        console.error("Error fetching full application details:", error);
+        return;
+      }
+    }
+
+    setSelected(app);
+    // Mark as viewed (remove new indicator)
+    if (app.isNew) {
+      setApplications(prevApps =>
+        prevApps.map(a => a._id === app._id ? { ...a, isNew: false } : a)
+      );
+    }
+  };
 
   return (
     <div className="row g-4">
       {/* Applications Table */}
       <div className="col-12 col-lg-8">
         <div className="bg-white p-3 rounded shadow-sm">
-          <h2 className="fw-bold mb-3">Visa Applications</h2>
+          <div className="d-flex justify-content-between align-items-center mb-3">
+            <h2 className="fw-bold mb-0">Visa Applications</h2>
+            <button
+              onClick={handleRefresh}
+              disabled={refreshing}
+              className="btn btn-outline-primary btn-sm"
+              title="Refresh applications"
+            >
+              {refreshing ? (
+                <>
+                  <span className="spinner-border spinner-border-sm me-2" role="status" aria-hidden="true"></span>
+                  Refreshing...
+                </>
+              ) : (
+                <>
+                  <i className="fas fa-sync-alt me-2"></i>
+                  Refresh
+                </>
+              )}
+            </button>
+          </div>
 
           {/* Filters */}
           <div className="row g-3 mb-3">
@@ -73,7 +164,7 @@ export default function VisaRequests() {
             <table className="table table-hover align-middle text-sm">
               <thead className="table-light">
                 <tr>
-                  <th>Client</th>
+                  <th>Visa Name</th>
                   <th>Country</th>
                   <th>Visa Type</th>
                   <th>Status</th>
@@ -100,9 +191,14 @@ export default function VisaRequests() {
                   applications.map((a) => (
                     <tr key={a._id}>
                       <td>
-                        <div>
-                          <div className="fw-medium">{a.fullName}</div>
-                          <div className="small text-muted">{a.email}</div>
+                        <div className="d-flex align-items-center">
+                          {a.isNew && (
+                            <span className="badge bg-danger me-2" style={{ fontSize: '0.7em' }}>NEW</span>
+                          )}
+                          <div>
+                            <div className="fw-medium">{a.fullName}</div>
+                            <div className="small text-muted">{a.email}</div>
+                          </div>
                         </div>
                       </td>
                       <td>{a.destinationCountry}</td>
@@ -189,8 +285,7 @@ export function VisaDetails({ app }) {
     try {
       setUpdating(true);
       await adminAxios.put(`/visa-applications/${app._id}/status`, { status: newStatus });
-      // Refresh the applications list
-      window.location.reload();
+      // Status will be updated in real-time via Socket.IO, no need to reload
     } catch (error) {
       console.error("Error updating status:", error);
     } finally {
@@ -198,36 +293,64 @@ export function VisaDetails({ app }) {
     }
   };
 
+  const handleDownload = async (fileUrl, fileName) => {
+    try {
+      // For Cloudinary URLs, we need to fetch and download as blob
+      const response = await fetch(fileUrl);
+      const blob = await response.blob();
+
+      // Create a temporary URL for the blob
+      const blobUrl = window.URL.createObjectURL(blob);
+
+      // Create a temporary anchor element and trigger download
+      const link = document.createElement('a');
+      link.href = blobUrl;
+      link.download = fileName;
+      document.body.appendChild(link);
+      link.click();
+
+      // Clean up
+      document.body.removeChild(link);
+      window.URL.revokeObjectURL(blobUrl);
+    } catch (error) {
+      console.error('Download failed:', error);
+      // Fallback: open in new tab
+      window.open(fileUrl, '_blank');
+    }
+  };
+
   return (
     <div>
-      <h6 className="fw-bold">{app.fullName}</h6>
+      <h6 className="fw-bold">{app.email}</h6>
 
       <div className="mb-3">
         <div className="row g-2">
           <div className="col-6">
-            <small className="text-muted d-block">Email</small>
-            <span className="small">{app.email}</span>
+            <small className="text-muted d-block">Name</small>
+            <span className="small">{app.fullName}</span>
           </div>
           <div className="col-6">
-            <small className="text-muted d-block">Phone</small>
-            <span className="small">{app.phoneNumber}</span>
+            <small className="text-muted d-block">WhatsApp Number</small>
+            <a
+              href={`https://wa.me/${app.phoneNumber}`}
+              target="_blank"
+              rel="noopener noreferrer"
+              className="small text-primary"
+              style={{ textDecoration: 'none' }}
+            >
+              {app.phoneNumber}
+            </a>
           </div>
+     
           <div className="col-6">
-            <small className="text-muted d-block">Nationality</small>
-            <span className="small">{app.nationality}</span>
-          </div>
-          <div className="col-6">
-            <small className="text-muted d-block">Destination</small>
+            <small className="text-muted d-block">Country</small>
             <span className="small">{app.destinationCountry}</span>
           </div>
           <div className="col-6">
             <small className="text-muted d-block">Visa Type</small>
             <span className="small">{app.visaType}</span>
           </div>
-          <div className="col-6">
-            <small className="text-muted d-block">Travel Date</small>
-            <span className="small">{app.travelDate ? new Date(app.travelDate).toLocaleDateString() : 'Not specified'}</span>
-          </div>
+ 
           <div className="col-6">
             <small className="text-muted d-block">Status</small>
             <span className={`badge ${getStatusBadgeClass(app.status)}`}>{app.status}</span>
@@ -252,29 +375,64 @@ export function VisaDetails({ app }) {
         <div className="mb-3">
           <small className="text-muted d-block">Documents</small>
           {app.documents.map((doc, index) => (
-            <div key={index} className="small mb-2">
-              <strong>{doc.label}:</strong>
+            <div key={index} className="mb-3">
+              <strong className="small">{doc.label}:</strong>
               {doc.fileUrl ? (
-                <div className="mt-1">
-                  <a
-                    href={`http://localhost:5000${doc.fileUrl}`}
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    className="btn btn-sm btn-outline-primary me-2"
-                  >
-                    View Document
-                  </a>
-                  {doc.fileUrl.match(/\.(jpg|jpeg|png|gif|webp)$/i) && (
-                    <img
-                      src={`http://localhost:5000${doc.fileUrl}`}
-                      alt={doc.label}
-                      className="img-thumbnail mt-2"
-                      style={{ maxWidth: '200px', maxHeight: '200px' }}
-                    />
+                <div className="mt-2">
+                  {doc.fileUrl.match(/\.(jpg|jpeg|png|gif|webp)$/i) ? (
+                    <div className="text-center">
+                      <img
+                        src={doc.fileUrl.startsWith('http') ? doc.fileUrl : `http://localhost:5000${doc.fileUrl}`}
+                        alt={doc.label}
+                        className="img-fluid rounded shadow-sm"
+                        style={{ maxWidth: '100%', maxHeight: '300px', cursor: 'pointer' }}
+                        onClick={() => window.open(doc.fileUrl.startsWith('http') ? doc.fileUrl : `http://localhost:5000${doc.fileUrl}`, '_blank')}
+                      />
+                      <div className="mt-2 d-flex gap-2 justify-content-center">
+                        <a
+                          href={doc.fileUrl.startsWith('http') ? doc.fileUrl : `http://localhost:5000${doc.fileUrl}`}
+                          target="_blank"
+                          rel="noopener noreferrer"
+                          className="btn btn-sm btn-outline-primary"
+                        >
+                          View Full Size
+                        </a>
+                        <button
+                          onClick={() => handleDownload(doc.fileUrl.startsWith('http') ? doc.fileUrl : `http://localhost:5000${doc.fileUrl}`, doc.originalName || `${doc.label}.jpg`)}
+                          className="btn btn-sm btn-outline-success"
+                        >
+                          Download
+                        </button>
+                      </div>
+                    </div>
+                  ) : (
+                    <div>
+                      <div className="d-flex gap-2 align-items-center">
+                        <a
+                          href={doc.fileUrl.startsWith('http') ? doc.fileUrl : `http://localhost:5000${doc.fileUrl}`}
+                          target="_blank"
+                          rel="noopener noreferrer"
+                          className="btn btn-sm btn-outline-primary"
+                        >
+                          View Document
+                        </a>
+                        <button
+                          onClick={() => handleDownload(doc.fileUrl.startsWith('http') ? doc.fileUrl : `http://localhost:5000${doc.fileUrl}`, doc.originalName || `${doc.label}.pdf`)}
+                          className="btn btn-sm btn-outline-success"
+                        >
+                          Download
+                        </button>
+                      </div>
+                      <small className="text-muted d-block mt-1">
+                        {doc.originalName || 'Document file'}
+                      </small>
+                    </div>
                   )}
                 </div>
               ) : (
-                doc.textValue || 'Not provided'
+                <div className="small text-muted">
+                  {doc.textValue || 'Not provided'}
+                </div>
               )}
             </div>
           ))}

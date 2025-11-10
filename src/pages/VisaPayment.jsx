@@ -1,6 +1,7 @@
 import { useLocation, useNavigate } from "react-router-dom";
 import PaystackPayment from "../components/PaystackPayment";
 import axios from "axios";
+import { useAuthStore } from "../store/authStore";
 
 function VisaPayment() {
   const location = useLocation();
@@ -13,7 +14,7 @@ function VisaPayment() {
     return null;
   }
 
-  const { formData, selectedCountry, selectedVisaType, touristRequirements, fee } = data;
+  const { formData, selectedCountry, selectedVisaType, touristRequirements, fee, processingTime } = data;
 
   const handlePaymentSuccess = async (paymentRef) => {
     try {
@@ -50,12 +51,22 @@ function VisaPayment() {
         }
       });
 
+      const user = useAuthStore.getState().user;
+      if (!user || !user.email) {
+        alert("Please login to submit your visa application.");
+        return;
+      }
+
+      const fullPhoneNumber = `${formData.countryCode || '+254'}${formData.phoneNumber}`;
+
       const payload = {
         fullName: formData.fullName,
-        phoneNumber: formData.phoneNumber,
+        email: user.email,
+        phoneNumber: fullPhoneNumber,
         destinationCountry: selectedCountry,
         visaType: selectedVisaType,
         documents,
+        processingTime,
         payment: {
           status: "paid",
           provider: "paystack",
@@ -124,6 +135,7 @@ function VisaPayment() {
           <h5 className="mt-4">Visa Details</h5>
           <p><strong>Country:</strong> {selectedCountry}</p>
           <p><strong>Visa Type:</strong> {selectedVisaType}</p>
+          {processingTime && <p><strong>Processing Time:</strong> {processingTime}</p>}
           <p><strong>Fee:</strong> ₦{fee.toLocaleString()}</p>
 
           <h5 className="mt-4">Documents</h5>
@@ -152,7 +164,7 @@ function VisaPayment() {
             className="btn btn-secondary me-3"
             onClick={() =>
               navigate("/visaprocessing", {
-                state: { formData, selectedCountry, touristRequirements, fee },
+                state: { formData, selectedCountry, touristRequirements, fee, processingTime },
               })
             }
           >

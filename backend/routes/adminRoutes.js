@@ -13,7 +13,54 @@ router.use(authenticateAdmin);
 router.get("/overview", getOverviewData);
 
 // Get flight bookings
-router.get("/flight-bookings", getFlightBookings);
+router.get("/flight-bookings", async (req, res) => {
+  try {
+    const { page = 1, limit = 10, tripType, search } = req.query;
+
+    let query = {};
+    let conditions = [];
+
+    // Filter by trip type if provided
+    if (tripType && tripType !== 'all') {
+      conditions.push({ tripType });
+    }
+
+    // Search by fullName or email if provided
+    if (search) {
+      let searchTerm = search.trim();
+      // Escape regex special characters
+      searchTerm = searchTerm.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
+      conditions.push({
+        $or: [
+          { fullName: { $regex: searchTerm, $options: 'i' } },
+          { email: { $regex: searchTerm, $options: 'i' } }
+        ]
+      });
+    }
+
+    if (conditions.length > 0) {
+      query.$and = conditions;
+    }
+
+    const bookings = await FlightBooking.find(query)
+      .sort({ createdAt: -1 })
+      .limit(limit * 1)
+      .skip((page - 1) * limit)
+      .select('fullName email phoneNumber gender dob tripType departureCity destinationCity departureDate returnDate multiCityFlights preferredAirline travelClass adults children infants notes createdAt');
+
+    const total = await FlightBooking.countDocuments(query);
+
+    res.json({
+      bookings,
+      totalPages: Math.ceil(total / limit),
+      currentPage: page,
+      total
+    });
+  } catch (error) {
+    console.error("Error fetching flight bookings:", error);
+    res.status(500).json({ message: "Error fetching flight bookings" });
+  }
+});
 
 // Get flight bookings count for a specific month
 router.get("/flight-bookings/count", async (req, res) => {
@@ -105,7 +152,7 @@ router.get("/visa-applications", async (req, res) => {
       .sort({ createdAt: -1 })
       .limit(limit * 1)
       .skip((page - 1) * limit)
-      .select('fullName email phoneNumber nationality destinationCountry visaType travelDate status payment createdAt documents notes');
+      .select('fullName email phoneNumber nationality destinationCountry visaType processingTime status payment createdAt documents notes');
 
     const total = await VisaApplication.countDocuments(query);
 
@@ -150,6 +197,18 @@ router.put("/visa-applications/:id/status", async (req, res) => {
 
     if (!application) {
       return res.status(404).json({ message: "Visa application not found" });
+    }
+
+    // Emit real-time update to all connected admin clients
+    if (global.io) {
+      global.io.emit("visaApplicationStatusUpdate", {
+        id: application._id,
+        status: application.status,
+        updatedAt: application.updatedAt,
+      });
+
+      // Also emit a global refresh event to trigger page reloads if needed
+      global.io.emit("globalRefresh");
     }
 
     res.json({ application });
