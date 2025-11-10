@@ -7,7 +7,6 @@ import { useAuthStore } from "../store/authStore";
 import Modal from "bootstrap/js/dist/modal";
 import { toast } from "react-toastify";
 
-
 function Login() {
   const [showPassword, setShowPassword] = useState(false);
   const [loading, setLoading] = useState(false);
@@ -18,6 +17,8 @@ function Login() {
 
   const { login, error } = useAuthStore();
   const navigate = useNavigate();
+
+
 
   useEffect(() => {
     const modalElement = document.getElementById("loginModal");
@@ -336,7 +337,7 @@ function Login() {
               >
                 <a
                   href="#"
-                  onClick={() => window.location.href = '/forgot-password'}
+                  onClick={() => (window.location.href = "/forgot-password")}
                   style={{
                     color: "#175aa1",
                     cursor: "pointer",

@@ -1,38 +1,138 @@
 import { useState, useEffect } from "react";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, useLocation } from "react-router-dom";
 import { toast } from "react-toastify";
 
 function VisaProcessing() {
-  const [selectedCountry, setSelectedCountry] = useState("");
+  const navigate = useNavigate();
+  const location = useLocation();
+
+  const prevState = location.state || {};
+  const [selectedCountry, setSelectedCountry] = useState(prevState.selectedCountry || "");
   const [visaData, setVisaData] = useState(null);
-  const [selectedVisaType, setSelectedVisaType] = useState("");
-  const [formData, setFormData] = useState({
+  const [formData, setFormData] = useState(prevState.formData || {
     fullName: "",
-    email: "",
     phoneNumber: "",
   });
+  const [touristRequirements, setTouristRequirements] = useState(prevState.touristRequirements || []);
+  const [fee, setFee] = useState(prevState.fee || 0);
+  const [uploadProgress, setUploadProgress] = useState({});
+  const [selectedFiles, setSelectedFiles] = useState({});
 
-  const navigate = useNavigate();
-
-  // Handle input fields
+  // Input change for text fields
   const handleInputChange = (e) => {
     const { name, value } = e.target;
-    setFormData((prev) => ({ ...prev, [name]: value }));
+    setFormData(prev => ({ ...prev, [name]: value }));
   };
 
-  // Fetch visa requirements when a country is selected
+  // Upload file to backend (Cloudinary)
+  const handleFileUpload = async (file, reqLabel, fileIndex) => {
+    const form = new FormData();
+    form.append("file", file);
+
+    // Set initial progress
+    setUploadProgress(prev => ({
+      ...prev,
+      [`${reqLabel}-${fileIndex}`]: { status: 'uploading', progress: 0 }
+    }));
+
+    try {
+      const res = await fetch(`${import.meta.env.VITE_API_URL}/visa/upload-document`, {
+        method: "POST",
+        body: form,
+      });
+
+      if (!res.ok) throw new Error("File upload failed");
+      const data = await res.json();
+
+      // Update progress to success
+      setUploadProgress(prev => ({
+        ...prev,
+        [`${reqLabel}-${fileIndex}`]: { status: 'success', progress: 100 }
+      }));
+
+      return {
+        fileUrl: data.fileUrl,
+        originalName: file.name, // store real file name
+      };
+    } catch (error) {
+      console.error("File upload error:", error);
+      toast.error("File upload failed");
+
+      // Update progress to failed
+      setUploadProgress(prev => ({
+        ...prev,
+        [`${reqLabel}-${fileIndex}`]: { status: 'failed', progress: 0 }
+      }));
+
+      return null;
+    }
+  };
+
+  // Dynamic input change (text & file)
+  const handleDynamicChange = async (e) => {
+    const { name, type, files, value } = e.target;
+
+    if (type === "file") {
+      if (!files || files.length === 0) return;
+
+      // Store selected files for display
+      setSelectedFiles(prev => ({
+        ...prev,
+        [name]: Array.from(files)
+      }));
+
+      const uploadedFiles = [];
+      for (let i = 0; i < files.length; i++) {
+        const file = files[i];
+
+        if (file.size > 10 * 1024 * 1024) {
+          toast.error(`File "${file.name}" is too large! Max 10MB.`);
+          uploadedFiles.push({ fileUrl: null, originalName: file.name, failed: true });
+          setUploadProgress(prev => ({
+            ...prev,
+            [`${name}-${i}`]: { status: 'failed', progress: 0 }
+          }));
+          continue;
+        }
+
+        const uploaded = await handleFileUpload(file, name, i);
+        uploadedFiles.push(uploaded || { fileUrl: null, originalName: file.name, failed: true });
+      }
+
+      setFormData(prev => ({
+        ...prev,
+        [name]: uploadedFiles.length > 1 ? uploadedFiles : uploadedFiles[0],
+      }));
+
+      return;
+    }
+
+    setFormData(prev => ({ ...prev, [name]: value }));
+  };
+
+  // Fetch visa requirements
   useEffect(() => {
     if (!selectedCountry) return;
 
     const fetchVisaData = async () => {
       try {
-        const res = await fetch(
-          `${import.meta.env.VITE_API_URL}/visa/requirements/${selectedCountry}`
-        );
+        const res = await fetch(`${import.meta.env.VITE_API_URL}/visa/requirements/${selectedCountry}`);
         if (!res.ok) throw new Error("Failed to fetch visa requirements");
 
         const data = await res.json();
+        const touristVisa = data.visaTypes.find(v => v.name.toLowerCase() === "tourist");
+
+        if (!touristVisa) {
+          toast.error("No Tourist visa available for this country");
+          setVisaData(null);
+          setTouristRequirements([]);
+          setFee(0);
+          return;
+        }
+
         setVisaData(data);
+        setTouristRequirements(touristVisa.requirements || []);
+        setFee(touristVisa.fee || 0);
       } catch (error) {
         console.error(error);
         toast.error("Error fetching visa data");
@@ -42,110 +142,50 @@ function VisaProcessing() {
     fetchVisaData();
   }, [selectedCountry]);
 
-// Handle file uploads and text inputs for dynamic requirements
-const handleDynamicChange = (e) => {
-  const { name, type, files, value } = e.target;
-
-  //If it's a file input, validate size
-  if (type === "file") {
-    const file = files[0];
-
-    if (file && file.size > 10 * 1024 * 1024) { // 10MB limit
-      toast.error("File is too large! Maximum allowed size is 10MB.");
-      e.target.value = ""; // Clear the input
+  const handleNext = () => {
+    if (!formData.fullName || !formData.phoneNumber || !selectedCountry) {
+      toast.error("Please fill all required fields");
       return;
     }
 
-    setFormData((prev) => ({
-      ...prev,
-      [name]: file,
-    }));
-    return;
-  }
-
-  //Otherwise handle normal text inputs
-  setFormData((prev) => ({
-    ...prev,
-    [name]: value,
-  }));
-};
-
-  // Handle form submission
-  const handleSubmit = async (e) => {
-    e.preventDefault();
-
-    try {
-      const form = new FormData();
-      form.append("country", selectedCountry);
-      form.append("visaType", selectedVisaType);
-      form.append("fullName", formData.fullName);
-      form.append("email", formData.email);
-      form.append("phoneNumber", formData.phoneNumber);
-
-      // Append dynamic fields
-      const selectedVisa =
-        visaData?.visaTypes?.find((v) => v.name === selectedVisaType) || {};
-      selectedVisa.requirements?.forEach((req) => {
-        if (formData[req.label]) {
-          form.append("documents", formData[req.label]);
-        }
-      });
-
-      const response = await fetch(
-        `${import.meta.env.VITE_API_URL}/visa/apply`,
-        {
-          method: "POST",
-          body: form,
-        }
-      );
-
-      if (!response.ok) throw new Error("Submission failed");
-
-      navigate("/visa-success", {
-        state: { name: formData.fullName, country: selectedCountry },
-      });
-
-      // Reset form
-      setFormData({ fullName: "", email: "", phoneNumber: "" });
-      setSelectedCountry("");
-      setSelectedVisaType("");
-      setVisaData(null);
-    } catch (error) {
-      console.error(error);
-      toast.error("Error submitting visa application");
+    // Check if visaData is loaded
+    if (!visaData || !visaData.visaTypes) {
+      toast.error("Visa data is still loading. Please wait.");
+      return;
     }
+
+    const touristVisa = visaData.visaTypes.find(v => v.name.toLowerCase() === "tourist");
+
+    if (!touristVisa) {
+      toast.error("Tourist visa type not found");
+      return;
+    }
+
+    navigate("/visa-payment", {
+      state: {
+        formData,
+        selectedCountry,
+        selectedVisaType: "Tourist",
+        touristRequirements: touristVisa.requirements,
+        fee: touristVisa.fee,
+      },
+    });
   };
 
   return (
     <div className="container-xxl" style={{ paddingTop: "150px" }}>
       <div className="container">
-        <h1 className="text-start" style={{ fontFamily: "Raleway" }}>
-          Visa Application
-        </h1>
-        <p>Choose your destination country and fill in the required details.</p>
+        <h1 className="text-start" style={{ fontFamily: "Raleway" }}>Visa Application</h1>
 
-        <p className="mt-5" style={{ fontWeight: "bold" }}>
-          PERSONAL INFORMATION
-        </p>
+        <p className="mt-5" style={{ fontWeight: "bold" }}>PERSONAL INFORMATION</p>
         <hr />
 
-        <form onSubmit={handleSubmit}>
-          <label className="form-label">Full Name</label>
+        <form>
+          <label className="form-label">Full Name </label>
           <input
             type="text"
             name="fullName"
             value={formData.fullName}
-            onChange={handleInputChange}
-            className="form-control"
-            required
-            style={{ borderRadius: "4px", borderColor: "#c9b5b5ff" }}
-          />
-
-          <label className="form-label mt-3">Email</label>
-          <input
-            type="email"
-            name="email"
-            value={formData.email}
             onChange={handleInputChange}
             className="form-control"
             required
@@ -163,16 +203,13 @@ const handleDynamicChange = (e) => {
             style={{ borderRadius: "4px", borderColor: "#c9b5b5ff" }}
           />
 
-          <p className="mt-5" style={{ fontWeight: "bold" }}>
-            VISA DETAILS
-          </p>
+          <p className="mt-5" style={{ fontWeight: "bold" }}>VISA DETAILS</p>
           <hr />
 
-          {/* Country Selector */}
           <label className="form-label mt-3">Select Country</label>
           <select
             value={selectedCountry}
-            onChange={(e) => setSelectedCountry(e.target.value)}
+            onChange={e => setSelectedCountry(e.target.value)}
             className="form-select"
             required
             style={{ borderRadius: "4px", borderColor: "#c9b5b5ff" }}
@@ -183,58 +220,78 @@ const handleDynamicChange = (e) => {
             <option value="Egypt">Egypt</option>
           </select>
 
-          {/* Visa Type */}
-          {visaData && (
-            <>
-              <label className="form-label mt-3">Visa Type</label>
-              <select
-                value={selectedVisaType}
-                onChange={(e) => setSelectedVisaType(e.target.value)}
-                className="form-select"
-                required
-                style={{ borderRadius: "4px", borderColor: "#c9b5b5ff" }}
-              >
-                <option value="">Select Visa Type</option>
-                {visaData.visaTypes.map((type) => (
-                  <option key={type.name} value={type.name}>
-                    {type.name.toUpperCase()} — Fee: ${type.fee}
-                  </option>
-                ))}
-              </select>
-            </>
-          )}
-
-          {/* Dynamic Requirements */}
-          {selectedVisaType &&
-            visaData?.visaTypes
-              ?.find((v) => v.name === selectedVisaType)
-              ?.requirements?.map((req, index) => (
+          {touristRequirements.length > 0 && (
+            <div className="mt-4">
+              <p style={{ fontWeight: "bold" }}>Tourist Visa Requirements</p>
+              {touristRequirements.map((req, index) => (
                 <div key={index} className="mt-3">
                   <label className="form-label">{req.label}</label>
-                  <input
-                    type={req.type}
-                    name={req.label}
-                    required={req.required}
-                    onChange={handleDynamicChange}
-                    className="form-control"
-                    style={{ borderRadius: "4px", borderColor: "#c9b5b5ff" }}
-                  />
+                  {req.type === "file" ? (
+                    <div>
+                      <input
+                        type="file"
+                        name={req.label}
+                        multiple // allow multiple files
+                        required={req.required}
+                        onChange={handleDynamicChange}
+                        className="form-control"
+                        style={{ borderRadius: "4px", borderColor: "#c9b5b5ff" }}
+                      />
+                      {selectedFiles[req.label] && selectedFiles[req.label].map((file, fileIndex) => {
+                        const progressKey = `${req.label}-${fileIndex}`;
+                        const progress = uploadProgress[progressKey];
+                        return (
+                          <div key={fileIndex} className="mt-2">
+                            <small className="text-muted">{file.name}</small>
+                            {progress && (
+                              <div className="progress mt-1" style={{ height: '6px' }}>
+                                <div
+                                  className={`progress-bar ${progress.status === 'success' ? 'bg-success' : progress.status === 'failed' ? 'bg-danger' : 'bg-primary'}`}
+                                  role="progressbar"
+                                  style={{ width: `${progress.progress}%` }}
+                                  aria-valuenow={progress.progress}
+                                  aria-valuemin="0"
+                                  aria-valuemax="100"
+                                ></div>
+                              </div>
+                            )}
+                            {progress && progress.status === 'success' && (
+                              <small className="text-success">✓ Uploaded successfully</small>
+                            )}
+                            {progress && progress.status === 'failed' && (
+                              <small className="text-danger">✗ Upload failed</small>
+                            )}
+                            {progress && progress.status === 'uploading' && (
+                              <small className="text-primary">Uploading...</small>
+                            )}
+                          </div>
+                        );
+                      })}
+                    </div>
+                  ) : (
+                    <input
+                      type={req.type}
+                      name={req.label}
+                      value={formData[req.label] || ""}
+                      required={req.required}
+                      onChange={handleDynamicChange}
+                      className="form-control"
+                      style={{ borderRadius: "4px", borderColor: "#c9b5b5ff" }}
+                    />
+                  )}
                 </div>
               ))}
+              <p><strong>Fee:</strong> ₦{fee.toLocaleString()}</p>
+            </div>
+          )}
 
-          {/* Submit Button */}
           <button
-            type="submit"
-            className="btn btn-secondary py-3 px-1 mt-5"
-            style={{
-              fontFamily: "Raleway",
-              fontWeight: "600",
-              border: "none",
-              borderRadius: "4px",
-              width: "170px",
-            }}
+            type="button"
+            className="btn btn-secondary py-3 px-4 mt-5"
+            onClick={handleNext}
+            style={{ fontFamily: "Raleway", fontWeight: "600", border: "none", borderRadius: "4px" }}
           >
-            Submit
+            Next
           </button>
         </form>
       </div>

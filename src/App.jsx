@@ -23,6 +23,7 @@ import Testimonial from "./pages/Testimonial";
 import Contact from "./pages/Contact";
 import FlightSuccess from "./pages/FlightSuccess.jsx";
 import VisaSuccess from "./pages/VisaSuccess.jsx";
+import VisaPayment from "./pages/VisaPayment";
 import ForgotPassword from "./pages/ForgotPassword.jsx";
 import ResetPassword from "./pages/ResetPassword.jsx";
 import { useAuthStore } from "./store/authStore";
@@ -52,9 +53,23 @@ function FloatingButtonsController() {
   return null;
 }
 
+function AuthInitializer() {
+  const refreshAccessToken = useAuthStore((state) => state.refreshAccessToken);
+
+  useEffect(() => {
+    // Silent refresh on app load
+    refreshAccessToken();
+  }, [refreshAccessToken]);
+
+  return null;
+}
+
+
+
 export default function App() {
   return (
     <div>
+      <AuthInitializer />
       <FloatingButtonsController />
       <Routes>
         {/* Public Website Layout */}
@@ -82,6 +97,7 @@ export default function App() {
                 <Route path="/contact" element={<Contact />} />
                 <Route path="/flight-success" element={<FlightSuccess />} />
                 <Route path="/visa-success" element={<VisaSuccess />} />
+                 <Route path="/visa-payment" element={<VisaPayment />} />
                 <Route path="/forgot-password" element={<ForgotPassword />} />
                 <Route
                   path="/reset-password/:token"

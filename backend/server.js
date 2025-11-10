@@ -3,17 +3,6 @@ import flightBookingRoutes from "./routes/flightbookingRoutes.js";
 import rateLimit from "express-rate-limit";
 import { Server } from "socket.io";
 import http from "http";
-
-import { fileURLToPath } from "url";
-
-
-const __filename = fileURLToPath(import.meta.url);
-const __dirname = path.dirname(__filename);
-
-// ✅ Load .env from root folder (parent directory)
-dotenv.config({ path: path.join(__dirname, '..', '.env') });
-
-
 import express from "express";
 import { connectToDB } from "./config/db.js";
 import cookieParser from "cookie-parser";
@@ -21,64 +10,104 @@ import authRouter from "./routes/authRoutes.js";
 import visaRoutes from "./routes/visaRoutes.js";
 import adminRoutes from "./routes/adminRoutes.js";
 import path from "path";
+import { fileURLToPath } from "url";
 import cors from "cors";
 
-const PORT = process.env.PORT || 5000;
-const app = express();
+// -----------------------------
+// File path fixes for ES Modules
+// -----------------------------
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = path.dirname(__filename);
 
-// ✅ CORS (must match your frontend URL and allow cookies)
+// -----------------------------
+// Load .env
+// -----------------------------
+dotenv.config({ path: path.join(__dirname, "..", ".env") });
+
+// -----------------------------
+// Express app
+// -----------------------------
+const app = express();
+const PORT = process.env.PORT || 5000;
+
+// -----------------------------
+// CORS (multiple origins + cookies)
+// -----------------------------
+const allowedOrigins = [
+  "http://localhost:5173",
+  "http://localhost:5174",
+  "http://localhost:5175"
+];
+
 app.use(cors({
-  origin: process.env.CLIENT_URL || ["http://localhost:5173", "http://localhost:5174", "http://localhost:5175"],
+  origin: (origin, callback) => {
+    // allow requests with no origin (like mobile apps, curl, postman)
+    if (!origin || allowedOrigins.includes(origin)) {
+      callback(null, true);
+    } else {
+      callback(new Error("Not allowed by CORS"));
+    }
+  },
   credentials: true
 }));
 
+// -----------------------------
+// Middleware
+// -----------------------------
 app.use(express.json());
-app.use(cookieParser(process.env.COOKIE_SECRET));
+app.use(cookieParser()); // no secret needed for unsigned cookies
 
-// Rate Limiting
+// -----------------------------
+// Rate Limiter
+// -----------------------------
 const authLimiter = rateLimit({
-  windowMs: 15 * 60 * 1000, // 15 minutes
-  max: 1000, // Limit each IP to 1000 requests per windowMs (increased for development)
+  windowMs: 15 * 60 * 1000, // 15 min
+  max: 1000,
   standardHeaders: true,
-  legacyHeaders: false,
+  legacyHeaders: false
 });
 
-// Apply the rate limiting middleware to auth routes
 app.use("/api/", authLimiter);
 
-// auth routes
+// -----------------------------
+// Routes
+// -----------------------------
 app.use("/api", authRouter);
 app.use("/api/flight-bookings", flightBookingRoutes);
 app.use("/api/visa", visaRoutes);
 app.use("/api/admin", adminRoutes);
 app.use("/uploads", express.static(path.join(process.cwd(), "uploads")));
 
-// Create HTTP server and Socket.IO
+// -----------------------------
+// HTTP Server + Socket.IO
+// -----------------------------
 const server = http.createServer(app);
 const io = new Server(server, {
   cors: {
-    origin: process.env.CLIENT_URL || ["http://localhost:5173", "http://localhost:5174", "http://localhost:5175"],
+    origin: allowedOrigins,
     credentials: true
   }
 });
 
-// Socket.IO connection handling
-io.on('connection', (socket) => {
-  console.log('Admin connected:', socket.id);
-
-  socket.on('disconnect', () => {
-    console.log('Admin disconnected:', socket.id);
+io.on("connection", (socket) => {
+  console.log("Admin connected:", socket.id);
+  socket.on("disconnect", () => {
+    console.log("Admin disconnected:", socket.id);
   });
 });
 
-// Make io available globally for emitting events
 global.io = io;
 
-//  connect to DB BEFORE starting server
-connectToDB().then(() => {
-  server.listen(PORT, () => {
-    console.log(`🚀 Server started on port ${PORT}`);
+// -----------------------------
+// Start server after DB connection
+// -----------------------------
+connectToDB()
+  .then(() => {
+    server.listen(PORT, () => {
+      console.log(`🚀 Server started on port ${PORT}`);
+    });
+  })
+  .catch((err) => {
+    console.error("❌ DB Connection Failed:", err);
   });
-}).catch((err) => {
-  console.error("❌ DB Connection Failed:", err);
-});
+
