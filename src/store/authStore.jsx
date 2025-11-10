@@ -65,7 +65,7 @@ export const useAuthStore = create((set, get) => ({
     try {
       const res = await axios.post(`${API_URL}/refresh`);
 
-      set({ accessToken: res.data.accessToken });
+      set({ user: res.data.user, accessToken: res.data.accessToken });
       return res.data.accessToken;
     } catch {
       set({ user: null, accessToken: null });

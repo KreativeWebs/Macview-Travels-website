@@ -1,18 +1,19 @@
 import mongoose from "mongoose";
 
+// Schema for individual documents
 const docSchema = new mongoose.Schema({
   label: String,
   fileUrl: String,    // S3 or storage URL
-  textValue: String,
+  textValue: String,  // Optional text input
 });
 
+// Main visa application schema
 const visaApplicationSchema = new mongoose.Schema({
-  fullName: String,
-  email: String,
-  phoneNumber: String,
-  nationality: String,
-  destinationCountry: String,
-  visaType: String,
+  fullName: { type: String, required: true },
+  phoneNumber: { type: String, required: true },
+  nationality: String,               // Optional if you want to track it
+  destinationCountry: { type: String, required: true },
+  visaType: { type: String, required: true },
   travelDate: Date,
   notes: String,
   documents: [docSchema],

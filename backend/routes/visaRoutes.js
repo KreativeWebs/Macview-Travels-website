@@ -1,77 +1,65 @@
 import express from "express";
 import { getVisaRequirements } from "../controllers/visaController.js";
-import { upload } from "../middleware/upload.js";
 import VisaApplication from "../models/visaApplication.js";
+import upload from "../config/multer.js"; 
 
 const router = express.Router();
 
 // Route: GET /api/visa/requirements/:country
 router.get("/requirements/:country", getVisaRequirements);
 
-// Route: POST /api/visa/apply
-router.post("/apply", upload.array("documents", 5), async (req, res) => {
+// File Upload Route using Cloudinary
+router.post("/upload-document", upload.single("file"), (req, res) => {
   try {
-    const {
-      fullName,
-      email,
-      phoneNumber,
-      country,
-      nationality,
-      gender,
-      dob,
-      passportNumber,
-      notes,
-      visaType,
-      travelDate,
-    } = req.body;
+    // Check if file was uploaded
+    if (!req.file) {
+      return res.status(400).json({ 
+        success: false, 
+        error: "No file uploaded" 
+      });
+    }
 
-    // Build documents array (schema expects label, fileUrl, textValue)
-    const documents = req.files.map((file) => ({
-      label: file.fieldname, // e.g. "passportCopy"
-      fileUrl: `/uploads/${file.filename}`, // local path or cloud URL
-      textValue: "", // empty for now
-    }));
+    return res.json({
+      success: true,
+      fileUrl: req.file.path, // Cloudinary file URL returned
+    });
+  } catch (error) {
+    console.error("Upload error:", error);
+    res.status(500).json({ success: false, error: error.message });
+  }
+});
 
-    // Create new visa application
+// Route: POST /api/visa/apply
+router.post("/apply", async (req, res) => {
+  try {
+    const { fullName, phoneNumber, destinationCountry, visaType, documents, payment } = req.body;
+
     const newApplication = new VisaApplication({
       fullName,
-      email,
       phoneNumber,
-      nationality,
-      destinationCountry: country,
+      destinationCountry,
       visaType,
-      travelDate,
-      gender,
-      dob,
-      passportNumber,
-      notes,
       documents,
-      payment: {
-        status: "pending",
-      },
+      payment,
+      status: "received",
     });
 
     await newApplication.save();
 
-    // Emit real-time update to admin dashboard
     if (global.io) {
-      // Emit new application
-      global.io.emit('newVisaApplication', {
+      global.io.emit("newVisaApplication", {
         id: newApplication._id,
         fullName: newApplication.fullName,
         destinationCountry: newApplication.destinationCountry,
         visaType: newApplication.visaType,
         status: newApplication.status,
         createdAt: newApplication.createdAt,
-        isNew: true
+        isNew: true,
       });
 
-      // Emit updated stats
       const VisaApplication = (await import("../models/visaApplication.js")).default;
       const visaCount = await VisaApplication.countDocuments();
-      global.io.emit('statsUpdate', {
-        visaApplications: visaCount
-      });
+      global.io.emit("statsUpdate", { visaApplications: visaCount });
     }
 
     res.status(201).json({
@@ -79,6 +67,7 @@ router.post("/apply", upload.array("documents", 5), async (req, res) => {
       message: "✅ Visa application submitted successfully!",
       data: newApplication,
     });
+
   } catch (error) {
     console.error("❌ Error submitting visa application:", error);
     res.status(500).json({

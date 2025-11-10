@@ -11,7 +11,7 @@ const visaData = [
     visaTypes: [
       {
         name: "tourist",
-        fee: 50,
+        fee: 500,
         processingTime: "3-7 days",
         requirements: [
           { label: "Passport copy", type: "file", required: true },
@@ -21,16 +21,6 @@ const visaData = [
         ],
       },
       
-      {
-        name: "study",
-        fee: 100,
-        processingTime: "5-10 days",
-        requirements: [
-          { label: "Invitation letter", type: "file", required: true },
-          { label: "Passport copy", type: "file", required: true },
-          { label: "Company letter", type: "file", required: true },
-        ],
-      },
     ],
   },
 
@@ -39,7 +29,7 @@ const visaData = [
     visaTypes: [
       {
         name: "tourist",
-        fee: 60,
+        fee: 500,
         processingTime: "4-8 days",
         requirements: [
           { label: "Passport copy", type: "file", required: true },
