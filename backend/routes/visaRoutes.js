@@ -32,15 +32,17 @@ router.post("/upload-document", upload.single("file"), (req, res) => {
 // Route: POST /api/visa/apply
 router.post("/apply", async (req, res) => {
   try {
-    const { fullName, phoneNumber, destinationCountry, visaType, documents, payment } = req.body;
+    const { fullName, email, phoneNumber, destinationCountry, visaType, documents, payment, processingTime } = req.body;
 
     const newApplication = new VisaApplication({
       fullName,
+      email,
       phoneNumber,
       destinationCountry,
       visaType,
       documents,
       payment,
+      processingTime,
       status: "received",
     });
 
@@ -50,8 +52,13 @@ router.post("/apply", async (req, res) => {
       global.io.emit("newVisaApplication", {
         id: newApplication._id,
         fullName: newApplication.fullName,
+        email: newApplication.email,
+        phoneNumber: newApplication.phoneNumber,
         destinationCountry: newApplication.destinationCountry,
         visaType: newApplication.visaType,
+        documents: newApplication.documents,
+        payment: newApplication.payment,
+        processingTime: newApplication.processingTime,
         status: newApplication.status,
         createdAt: newApplication.createdAt,
         isNew: true,

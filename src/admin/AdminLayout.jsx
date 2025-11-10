@@ -4,6 +4,7 @@ import { useAuthStore } from "../store/authStore";
 import Header from "./Header";
 import Sidebar from "./Sidebar";
 import { Outlet } from "react-router-dom";
+import socket from "../socket";
 
 export default function AdminLayout() {
   const [sidebarOpen, setSidebarOpen] = useState(true);
@@ -19,6 +20,27 @@ export default function AdminLayout() {
     };
 
     checkAuth();
+
+    // Initialize socket connection for real-time updates
+    socket.on('connect', () => {
+      console.log('Admin connected to real-time updates');
+    });
+
+    socket.on('disconnect', () => {
+      console.log('Admin disconnected from real-time updates');
+    });
+
+    // Listen for global refresh events
+    socket.on('globalRefresh', () => {
+      console.log('Global refresh triggered');
+      window.location.reload();
+    });
+
+    return () => {
+      socket.off('connect');
+      socket.off('disconnect');
+      socket.off('globalRefresh');
+    };
   }, []); // Only run once on mount
 
   useEffect(() => {

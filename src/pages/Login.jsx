@@ -18,8 +18,6 @@ function Login() {
   const { login, error } = useAuthStore();
   const navigate = useNavigate();
 
-
-
   useEffect(() => {
     const modalElement = document.getElementById("loginModal");
     if (!modalElement) return;

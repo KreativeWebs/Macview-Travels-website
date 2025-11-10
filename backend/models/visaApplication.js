@@ -10,11 +10,13 @@ const docSchema = new mongoose.Schema({
 // Main visa application schema
 const visaApplicationSchema = new mongoose.Schema({
   fullName: { type: String, required: true },
+  email: { type: String, required: true },
   phoneNumber: { type: String, required: true },
   nationality: String,               // Optional if you want to track it
   destinationCountry: { type: String, required: true },
   visaType: { type: String, required: true },
   travelDate: Date,
+  processingTime: String,
   notes: String,
   documents: [docSchema],
   payment: {

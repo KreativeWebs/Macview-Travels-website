@@ -85,14 +85,25 @@ const server = http.createServer(app);
 const io = new Server(server, {
   cors: {
     origin: allowedOrigins,
-    credentials: true
-  }
+    credentials: true,
+    methods: ["GET", "POST"]
+  },
+  transports: ['websocket', 'polling'],
+  allowEIO3: true, // Allow Engine.IO v3 clients
+  pingTimeout: 60000,
+  pingInterval: 25000
 });
 
 io.on("connection", (socket) => {
-  console.log("Admin connected:", socket.id);
-  socket.on("disconnect", () => {
-    console.log("Admin disconnected:", socket.id);
+  console.log("🔌 Socket connected:", socket.id);
+  console.log("🔌 Connection details:", {
+    transport: socket.conn.transport.name,
+    headers: socket.handshake.headers.origin,
+    userAgent: socket.handshake.headers['user-agent']?.substring(0, 50)
+  });
+
+  socket.on("disconnect", (reason) => {
+    console.log("🔌 Socket disconnected:", socket.id, "Reason:", reason);
   });
 });
 
