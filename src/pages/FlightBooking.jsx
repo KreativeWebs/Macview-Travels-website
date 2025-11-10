@@ -1,6 +1,7 @@
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { toast } from "react-toastify";
+import { countryCodes } from "../data/countryCodes";
 
 function FlightBooking() {
   const [tripType, setTripType] = useState("");
@@ -14,6 +15,7 @@ function FlightBooking() {
     fullName: "",
     email: "",
     phoneNumber: "",
+    countryCode: "+1",
     gender: "",
     dob: "",
     departureCity: "",
@@ -57,7 +59,7 @@ function FlightBooking() {
     const payload = {
       fullName: formData.fullName,
       email: formData.email,
-      phoneNumber: formData.phoneNumber,
+      phoneNumber: `${formData.countryCode}${formData.phoneNumber}`,
       gender: formData.gender || "",
       dob: formData.dob || "",
       tripType,
@@ -96,6 +98,7 @@ function FlightBooking() {
         fullName: "",
         email: "",
         phoneNumber: "",
+        countryCode: "+1",
         gender: "",
         dob: "",
         departureCity: "",
@@ -167,19 +170,40 @@ function FlightBooking() {
             />
 
             <label className="form-label mt-3">Whatsapp Number</label>
-            <input
-              type="tel"
-              name="phoneNumber"
-              value={formData.phoneNumber}
-              onChange={handleInputChange}
-              className="form-control"
-              required
-              style={{
-                borderRadius: "4px",
-                boxShadow: "none",
-                borderColor: "#c9b5b5ff",
-              }}
-            />
+            <div className="d-flex">
+              <select
+                name="countryCode"
+                value={formData.countryCode}
+                onChange={handleInputChange}
+                className="form-select me-2"
+                style={{
+                  width: "120px",
+                  borderRadius: "4px",
+                  boxShadow: "none",
+                  borderColor: "#c9b5b5ff",
+                }}
+                required
+              >
+                {countryCodes.map((country) => (
+                  <option key={country.code} value={country.code}>
+                    {country.flag} {country.code}
+                  </option>
+                ))}
+              </select>
+              <input
+                type="tel"
+                name="phoneNumber"
+                value={formData.phoneNumber}
+                onChange={handleInputChange}
+                className="form-control"
+                required
+                style={{
+                  borderRadius: "4px",
+                  boxShadow: "none",
+                  borderColor: "#c9b5b5ff",
+                }}
+              />
+            </div>
 
             <div className="mb-3 mt-3">
               <label htmlFor="gender" className="form-label">
