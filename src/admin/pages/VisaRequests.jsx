@@ -6,6 +6,7 @@ import socket from "../../socket";
 export default function VisaRequests() {
   const [applications, setApplications] = useState([]);
   const [selected, setSelected] = useState(null);
+  const [selectedRow, setSelectedRow] = useState(null);
   const [loading, setLoading] = useState(true);
   const [currentPage, setCurrentPage] = useState(1);
   const [totalPages, setTotalPages] = useState(1);
@@ -58,7 +59,7 @@ export default function VisaRequests() {
       socket.off('newVisaApplication');
       socket.off('globalRefresh');
     };
-  }, [selected]);
+  }, []);
 
   const fetchApplications = async () => {
     try {
@@ -99,6 +100,7 @@ export default function VisaRequests() {
     }
 
     setSelected(app);
+    setSelectedRow(app._id);
     // Mark as viewed (remove new indicator)
     if (app.isNew) {
       setApplications(prevApps =>
@@ -154,7 +156,7 @@ export default function VisaRequests() {
                 <option value="all">All Status</option>
                 <option value="received">Received</option>
                 <option value="processing">Processing</option>
-                <option value="completed">Completed</option>
+                <option value="approved">Approved</option>
                 <option value="rejected">Rejected</option>
               </select>
             </div>
@@ -189,7 +191,7 @@ export default function VisaRequests() {
                   </tr>
                 ) : (
                   applications.map((a) => (
-                    <tr key={a._id}>
+                    <tr key={a._id} className={selectedRow === a._id ? 'table-active' : ''}>
                       <td>
                         <div className="d-flex align-items-center">
                           {a.isNew && (
@@ -266,7 +268,12 @@ export default function VisaRequests() {
           <h5 className="fw-semibold mb-3">Details</h5>
 
           {selected ? (
-            <VisaDetails app={selected} />
+            <VisaDetails key={selected._id} app={selected} onStatusUpdate={(id, newStatus) => {
+              setApplications(prevApps =>
+                prevApps.map(a => a._id === id ? { ...a, status: newStatus } : a)
+              );
+              setSelected(prevSelected => prevSelected && prevSelected._id === id ? { ...prevSelected, status: newStatus } : prevSelected);
+            }} />
           ) : (
             <div className="text-muted small">
               Select an application to view details
@@ -278,14 +285,20 @@ export default function VisaRequests() {
   );
 }
 
-export function VisaDetails({ app }) {
+export function VisaDetails({ app, onStatusUpdate }) {
+  const [status, setStatus] = useState(app.status);
   const [updating, setUpdating] = useState(false);
+
+  useEffect(() => {
+    setStatus(app.status);
+  }, [app.status]);
 
   const updateStatus = async (newStatus) => {
     try {
       setUpdating(true);
       await adminAxios.put(`/visa-applications/${app._id}/status`, { status: newStatus });
-      // Status will be updated in real-time via Socket.IO, no need to reload
+      setStatus(newStatus);
+      onStatusUpdate(app._id, newStatus);
     } catch (error) {
       console.error("Error updating status:", error);
     } finally {
@@ -341,7 +354,7 @@ export function VisaDetails({ app }) {
               {app.phoneNumber}
             </a>
           </div>
-     
+
           <div className="col-6">
             <small className="text-muted d-block">Country</small>
             <span className="small">{app.destinationCountry}</span>
@@ -350,10 +363,20 @@ export function VisaDetails({ app }) {
             <small className="text-muted d-block">Visa Type</small>
             <span className="small">{app.visaType}</span>
           </div>
- 
+
           <div className="col-6">
             <small className="text-muted d-block">Status</small>
-            <span className={`badge ${getStatusBadgeClass(app.status)}`}>{app.status}</span>
+            <select
+              className="form-select form-select-sm"
+              value={status}
+              onChange={(e) => updateStatus(e.target.value)}
+              disabled={updating}
+            >
+              <option value="received">Received</option>
+              <option value="processing">Processing</option>
+              <option value="approved">Approved</option>
+              <option value="rejected">Rejected</option>
+            </select>
           </div>
           <div className="col-6">
             <small className="text-muted d-block">Payment</small>
@@ -438,30 +461,6 @@ export function VisaDetails({ app }) {
           ))}
         </div>
       )}
-
-      <div className="d-flex gap-2 flex-wrap">
-        <button
-          className="btn btn-warning btn-sm"
-          onClick={() => updateStatus('processing')}
-          disabled={updating || app.status === 'processing'}
-        >
-          {updating ? 'Updating...' : 'Mark Processing'}
-        </button>
-        <button
-          className="btn btn-success btn-sm"
-          onClick={() => updateStatus('completed')}
-          disabled={updating || app.status === 'completed'}
-        >
-          {updating ? 'Updating...' : 'Approve'}
-        </button>
-        <button
-          className="btn btn-danger btn-sm"
-          onClick={() => updateStatus('rejected')}
-          disabled={updating || app.status === 'rejected'}
-        >
-          {updating ? 'Updating...' : 'Reject'}
-        </button>
-      </div>
     </div>
   );
 }
@@ -471,7 +470,7 @@ const getStatusBadgeClass = (status) => {
   switch (status) {
     case 'received': return 'bg-warning';
     case 'processing': return 'bg-info';
-    case 'completed': return 'bg-success';
+    case 'approved': return 'bg-success';
     case 'rejected': return 'bg-danger';
     default: return 'bg-secondary';
   }

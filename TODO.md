@@ -1,8 +1,13 @@
-# TODO: Integrate getOverviewData into AdminHome Overview Section
+# Row Highlighting Implementation
 
-- [x] Fix duplicate route definition in backend/routes/adminRoutes.js
-- [x] Update fetchStats in src/admin/pages/AdminHome.jsx to call /api/admin/overview
-- [x] Map backend response data to frontend stats state
-- [x] Fix admin login to store token in localStorage
-- [x] Test the changes by running the app
-- [x] Fix duplicate import in adminRoutes.js
+## Tasks
+- [ ] Add selectedRow state to VisaRequests.jsx
+- [ ] Update openDetails in VisaRequests.jsx to set selectedRow
+- [ ] Add conditional className to table rows in VisaRequests.jsx
+- [ ] Add selectedRow state to FlightBookings.jsx
+- [ ] Update openDetails in FlightBookings.jsx to set selectedRow
+- [ ] Add conditional className to table rows in FlightBookings.jsx
+- [ ] Add selectedRow state to HotelBookings.jsx
+- [ ] Update openDetails in HotelBookings.jsx to set selectedRow
+- [ ] Add conditional className to table rows in HotelBookings.jsx
+- [ ] Test highlighting functionality across all pages

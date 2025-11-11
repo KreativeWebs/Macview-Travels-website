@@ -1,5 +1,6 @@
 import dotenv from "dotenv";
 import flightBookingRoutes from "./routes/flightbookingRoutes.js";
+import hotelRoutes from "./routes/hotelRoutes.js";
 import rateLimit from "express-rate-limit";
 import { Server } from "socket.io";
 import http from "http";
@@ -74,6 +75,7 @@ app.use("/api/", authLimiter);
 // -----------------------------
 app.use("/api", authRouter);
 app.use("/api/flight-bookings", flightBookingRoutes);
+app.use("/api/hotel-bookings", hotelRoutes);
 app.use("/api/visa", visaRoutes);
 app.use("/api/admin", adminRoutes);
 app.use("/uploads", express.static(path.join(process.cwd(), "uploads")));

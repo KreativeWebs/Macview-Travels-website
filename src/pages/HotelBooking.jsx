@@ -1,19 +1,32 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import { toast } from "react-toastify";
+import DatePicker from "react-datepicker";
+import "react-datepicker/dist/react-datepicker.css";
+import { countryCodes } from "../data/countryCodes";
+import { useAuthStore } from "../store/authStore";
 
 function HotelBooking() {
   const navigate = useNavigate();
+  const { user } = useAuthStore();
+
+  // Get today's date in YYYY-MM-DD format
+  const today = new Date().toISOString().split('T')[0];
+
+  // Calculate max date for DOB (16 years ago)
+  const maxDobDate = new Date();
+  maxDobDate.setFullYear(maxDobDate.getFullYear() - 16);
+  const maxDob = maxDobDate.toISOString().split('T')[0];
 
   const [formData, setFormData] = useState({
     fullName: "",
-    email: "",
     phoneNumber: "",
+    countryCode: "+1",
     gender: "",
-    dob: "",
+    dob: null,
     destination: "",
-    checkInDate: "",
-    checkOutDate: "",
+    checkInDate: null,
+    checkOutDate: null,
     rooms: "",
     guests: "",
     roomType: "",
@@ -23,6 +36,9 @@ function HotelBooking() {
     purpose: "",
     notes: "",
   });
+
+  const [minCheckInDate, setMinCheckInDate] = useState(new Date());
+  const [minCheckOutDate, setMinCheckOutDate] = useState(null);
 
   const handleInputChange = (e) => {
     const { name, value, type, checked } = e.target;
@@ -41,10 +57,130 @@ function HotelBooking() {
     setFormData((prev) => ({ ...prev, [name]: value }));
   };
 
+  const handleCheckInDateChange = (date) => {
+    setFormData((prev) => ({ ...prev, checkInDate: date }));
+    // Set min check-out date to the day after check-in
+    if (date) {
+      const nextDay = new Date(date);
+      nextDay.setDate(nextDay.getDate() + 1);
+      setMinCheckOutDate(nextDay);
+      // Clear check-out if it's before the new min
+      if (formData.checkOutDate && formData.checkOutDate < nextDay) {
+        setFormData((prev) => ({ ...prev, checkOutDate: null }));
+      }
+    } else {
+      setMinCheckOutDate(null);
+    }
+  };
+
+  const handleCheckOutDateChange = (date) => {
+    setFormData((prev) => ({ ...prev, checkOutDate: date }));
+  };
+
+
+
   const handleSubmit = async (e) => {
     e.preventDefault();
 
-    const payload = { ...formData };
+    // Security validation
+    const sanitizeInput = (input) => {
+      if (typeof input !== 'string') return input;
+      return input.replace(/<script\b[^<]*(?:(?!<\/script>)<[^<]*)*<\/script>/gi, '').trim();
+    };
+
+    const validatePhoneNumber = (phone) => {
+      const phoneRegex = /^[0-9+\-\s()]+$/;
+      return phoneRegex.test(phone) && phone.length >= 7 && phone.length <= 15;
+    };
+
+    const validateTextInput = (text, maxLength = 100) => {
+      return text.length <= maxLength && !/<[^>]*>/.test(text);
+    };
+
+    const validateNumberInput = (num, min = 1, max = 1000) => {
+      const parsed = parseInt(num);
+      return !isNaN(parsed) && parsed >= min && parsed <= max;
+    };
+
+    // Validate inputs
+    if (!validateTextInput(formData.fullName, 100)) {
+      toast.error("Full name contains invalid characters or is too long.");
+      return;
+    }
+
+    if (!validatePhoneNumber(formData.phoneNumber)) {
+      toast.error("Please enter a valid phone number.");
+      return;
+    }
+
+    if (!validateTextInput(formData.destination, 100)) {
+      toast.error("Destination contains invalid characters or is too long.");
+      return;
+    }
+
+    if (!validateNumberInput(formData.rooms, 1, 50)) {
+      toast.error("Number of rooms must be between 1 and 50.");
+      return;
+    }
+
+    if (!validateNumberInput(formData.guests, 1, 100)) {
+      toast.error("Number of guests must be between 1 and 100.");
+      return;
+    }
+
+    if (formData.budget && !validateNumberInput(formData.budget, 1, 100000)) {
+      toast.error("Budget must be a valid number between 1 and 100,000.");
+      return;
+    }
+
+    if (!validateTextInput(formData.notes, 500)) {
+      toast.error("Notes contain invalid characters or are too long.");
+      return;
+    }
+
+    // Check dates
+    const checkIn = new Date(formData.checkInDate);
+    const checkOut = new Date(formData.checkOutDate);
+    const dob = new Date(formData.dob);
+    const today = new Date();
+    today.setHours(0, 0, 0, 0);
+
+    // Calculate age
+    const age = today.getFullYear() - dob.getFullYear();
+    const monthDiff = today.getMonth() - dob.getMonth();
+    if (monthDiff < 0 || (monthDiff === 0 && today.getDate() < dob.getDate())) {
+      age--;
+    }
+
+    if (age < 16) {
+      toast.error("Age too young. You must be at least 16 years old.");
+      return;
+    }
+
+    if (checkIn < today) {
+      toast.error("Check-in date cannot be in the past.");
+      return;
+    }
+
+    if (checkOut <= checkIn) {
+      toast.error("Check-out date must be after check-in date.");
+      return;
+    }
+
+    // Sanitize inputs
+    const sanitizedFormData = {
+      ...formData,
+      fullName: sanitizeInput(formData.fullName),
+      destination: sanitizeInput(formData.destination),
+      notes: sanitizeInput(formData.notes),
+      purpose: sanitizeInput(formData.purpose),
+    };
+
+    const payload = {
+      ...sanitizedFormData,
+      phoneNumber: `${sanitizedFormData.countryCode}${sanitizedFormData.phoneNumber}`,
+      email: user?.email || null,
+    };
 
     try {
       const res = await fetch(
@@ -58,17 +194,17 @@ function HotelBooking() {
 
       if (!res.ok) throw new Error("Failed to submit hotel request");
 
-      navigate("/hotel-success", { state: { name: formData.fullName } });
+      navigate("/hotel-success", { state: { name: sanitizedFormData.fullName } });
 
       setFormData({
         fullName: "",
-        email: "",
         phoneNumber: "",
+        countryCode: "+1",
         gender: "",
         dob: "",
         destination: "",
-        checkInDate: "",
-        checkOutDate: "",
+        checkInDate: null,
+        checkOutDate: null,
         rooms: "",
         guests: "",
         roomType: "",
@@ -105,24 +241,43 @@ function HotelBooking() {
             required
           />
 
-          <label className="form-label mt-3">Email</label>
-          <input
-            type="email"
-            name="email"
-            value={formData.email}
-            onChange={handleInputChange}
-            className="form-control"
-            required
-          />
+
 
           <label className="form-label mt-3">Whatsapp Number</label>
-          <input
-            name="phoneNumber"
-            value={formData.phoneNumber}
-            onChange={handleInputChange}
-            className="form-control"
-            required
-          />
+          <div className="input-group">
+            <select
+              name="countryCode"
+              value={formData.countryCode}
+              onChange={handleInputChange}
+              className="form-select"
+              style={{
+                borderRadius: "4px 0 0 4px",
+                boxShadow: "none",
+                borderColor: "#c9b5b5ff",
+                maxWidth: "120px",
+              }}
+            >
+              {countryCodes.map((country, index) => (
+                <option key={index} value={country.code}>
+                  {country.flag} {country.code}
+                </option>
+              ))}
+            </select>
+            <input
+              type="tel"
+              name="phoneNumber"
+              value={formData.phoneNumber}
+              onChange={handleInputChange}
+              className="form-control"
+              required
+              placeholder="Enter phone number"
+              style={{
+                borderRadius: "0 4px 4px 0",
+                boxShadow: "none",
+                borderColor: "#c9b5b5ff",
+              }}
+            />
+          </div>
 
           <label className="form-label mt-3">Gender</label>
           <select
@@ -144,6 +299,7 @@ function HotelBooking() {
             name="dob"
             value={formData.dob}
             onChange={handleInputChange}
+            max={maxDob}
             className="form-control"
             required
           />
@@ -161,22 +317,24 @@ function HotelBooking() {
           />
 
           <label className="form-label mt-3">Check-in Date</label>
-          <input
-            type="date"
-            name="checkInDate"
-            value={formData.checkInDate}
-            onChange={handleInputChange}
+          <DatePicker
+            selected={formData.checkInDate}
+            onChange={handleCheckInDateChange}
+            minDate={minCheckInDate}
+            dateFormat="yyyy-MM-dd"
             className="form-control"
+            placeholderText="Select check-in date"
             required
           />
 
           <label className="form-label mt-3">Check-out Date</label>
-          <input
-            type="date"
-            name="checkOutDate"
-            value={formData.checkOutDate}
-            onChange={handleInputChange}
+          <DatePicker
+            selected={formData.checkOutDate}
+            onChange={handleCheckOutDateChange}
+            minDate={minCheckOutDate}
+            dateFormat="yyyy-MM-dd"
             className="form-control"
+            placeholderText="Select check-out date"
             required
           />
 

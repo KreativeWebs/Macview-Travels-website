@@ -1,6 +1,6 @@
 import { useAuthStore } from "../store/authStore";
 import { useNavigate } from "react-router-dom";
-import SearchBox from "./SearchBox";
+
 
 export default function Header({ toggleSidebar }) {
   const { user, logout } = useAuthStore();
@@ -47,7 +47,7 @@ export default function Header({ toggleSidebar }) {
       </div>
 
       <div className="d-flex align-items-center gap-3">
-        <SearchBox />
+  
         <div className="small">
           Hello, <strong>{user?.email || 'Admin'}</strong>
         </div>

@@ -22,6 +22,7 @@ import Team from "./pages/Team";
 import Testimonial from "./pages/Testimonial";
 import Contact from "./pages/Contact";
 import FlightSuccess from "./pages/FlightSuccess.jsx";
+import HotelSuccess from "./pages/HotelSuccess.jsx";
 import VisaSuccess from "./pages/VisaSuccess.jsx";
 import VisaPayment from "./pages/VisaPayment";
 import ForgotPassword from "./pages/ForgotPassword.jsx";
@@ -35,6 +36,7 @@ import Clients from "./admin/pages/Clients";
 import ClientProfile from "./admin/pages/ClientProfile";
 import VisaRequests from "./admin/pages/VisaRequests";
 import FlightBookings from "./admin/pages/FlightBookings";
+import HotelBookings from "./admin/pages/HotelBookings";
 import Transfers from "./admin/pages/Transfers";
 import Settings from "./admin/pages/Settings";
 
@@ -58,7 +60,10 @@ function AuthInitializer() {
 
   useEffect(() => {
     // Silent refresh on app load
-    refreshAccessToken();
+    const refresh = async () => {
+      await refreshAccessToken();
+    };
+    refresh();
   }, [refreshAccessToken]);
 
   return null;
@@ -96,6 +101,7 @@ export default function App() {
                 <Route path="/testimonial" element={<Testimonial />} />
                 <Route path="/contact" element={<Contact />} />
                 <Route path="/flight-success" element={<FlightSuccess />} />
+                <Route path="/hotel-success" element={<HotelSuccess />} />
                 <Route path="/visa-success" element={<VisaSuccess />} />
                  <Route path="/visa-payment" element={<VisaPayment />} />
                 <Route path="/forgot-password" element={<ForgotPassword />} />
@@ -120,6 +126,7 @@ export default function App() {
           <Route path="clients/:id" element={<ClientProfile />} />
           <Route path="visa" element={<VisaRequests />} />
           <Route path="flights" element={<FlightBookings />} />
+           <Route path="hotels" element={<HotelBookings />} />
           <Route path="transfers" element={<Transfers />} />
           <Route path="settings" element={<Settings />} />
         </Route>

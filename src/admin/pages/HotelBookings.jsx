@@ -2,25 +2,24 @@ import { useEffect, useState } from "react";
 import adminAxios from "../../api/adminAxios";
 import socket from "../../socket";
 
-export default function FlightBookings() {
+export default function HotelBookings() {
   const [bookings, setBookings] = useState([]);
   const [selected, setSelected] = useState(null);
   const [selectedRow, setSelectedRow] = useState(null);
   const [loading, setLoading] = useState(true);
   const [currentPage, setCurrentPage] = useState(1);
   const [totalPages, setTotalPages] = useState(1);
-  const [tripTypeFilter, setTripTypeFilter] = useState('all');
   const [searchTerm, setSearchTerm] = useState('');
   const [refreshing, setRefreshing] = useState(false);
 
   useEffect(() => {
     fetchBookings();
-  }, [currentPage, tripTypeFilter, searchTerm]);
+  }, [currentPage, searchTerm]);
 
   useEffect(() => {
     // Listen for real-time updates
-    socket.on('newFlightBooking', (newBooking) => {
-      console.log('FlightBookings: New flight booking received:', newBooking);
+    socket.on('newHotelBooking', (newBooking) => {
+      console.log('HotelBookings: New hotel booking received:', newBooking);
       // Prepend the new booking to the list
       setBookings(prevBookings => {
         const newBookings = [newBooking, ...prevBookings];
@@ -31,22 +30,22 @@ export default function FlightBookings() {
 
     // Also listen for global refresh
     socket.on('globalRefresh', () => {
-      console.log('FlightBookings: Global refresh triggered');
+      console.log('HotelBookings: Global refresh triggered');
       fetchBookings();
     });
 
     // Listen for status updates
-    socket.on('flightBookingStatusUpdate', ({ id, status }) => {
-      console.log('FlightBookings: Status updated for booking:', id, status);
+    socket.on('hotelBookingStatusUpdate', ({ id, status }) => {
+      console.log('HotelBookings: Status updated for booking:', id, status);
       setBookings(prevBookings =>
         prevBookings.map(b => b._id === id ? { ...b, status } : b)
       );
     });
 
     return () => {
-      socket.off('newFlightBooking');
+      socket.off('newHotelBooking');
       socket.off('globalRefresh');
-      socket.off('flightBookingStatusUpdate');
+      socket.off('hotelBookingStatusUpdate');
     };
   }, []);
 
@@ -56,15 +55,14 @@ export default function FlightBookings() {
       const params = new URLSearchParams({
         page: currentPage,
         limit: 10,
-        tripType: tripTypeFilter,
         ...(searchTerm && { search: searchTerm })
       });
 
-      const res = await adminAxios.get(`/flight-bookings?${params}`);
+      const res = await adminAxios.get(`/hotel-bookings?${params}`);
       setBookings(res.data.bookings);
       setTotalPages(res.data.totalPages || 1);
     } catch (error) {
-      console.error("Error fetching flight bookings:", error);
+      console.error("Error fetching hotel bookings:", error);
     } finally {
       setLoading(false);
     }
@@ -76,14 +74,19 @@ export default function FlightBookings() {
     setRefreshing(false);
   };
 
-  const openDetails = (booking) => {
+  const openDetails = async (booking) => {
     setSelected(booking);
     setSelectedRow(booking._id);
     // Mark as viewed (remove new indicator)
-    if (booking.isNew) {
-      setBookings(prevBookings =>
-        prevBookings.map(b => b._id === booking._id ? { ...b, isNew: false } : b)
-      );
+    if (booking.isUnread) {
+      try {
+        await adminAxios.put(`/hotel-bookings/${booking._id}/read`);
+        setBookings(prevBookings =>
+          prevBookings.map(b => b._id === booking._id ? { ...b, isUnread: false } : b)
+        );
+      } catch (error) {
+        console.error("Error marking booking as read:", error);
+      }
     }
   };
 
@@ -93,7 +96,7 @@ export default function FlightBookings() {
       <div className="col-12 col-lg-8">
         <div className="bg-white p-3 rounded shadow-sm">
           <div className="d-flex justify-content-between align-items-center mb-3">
-            <h2 className="fw-bold mb-0">Flight Booking Requests</h2>
+            <h2 className="fw-bold mb-0">Hotel Booking Requests</h2>
             <button
               onClick={handleRefresh}
               disabled={refreshing}
@@ -114,9 +117,9 @@ export default function FlightBookings() {
             </button>
           </div>
 
-          {/* Filters */}
+          {/* Search */}
           <div className="row g-3 mb-3">
-            <div className="col-md-6">
+            <div className="col-md-12">
               <input
                 type="text"
                 className="form-control form-control-sm"
@@ -124,18 +127,6 @@ export default function FlightBookings() {
                 value={searchTerm}
                 onChange={(e) => setSearchTerm(e.target.value)}
               />
-            </div>
-            <div className="col-md-6">
-              <select
-                className="form-select form-select-sm"
-                value={tripTypeFilter}
-                onChange={(e) => setTripTypeFilter(e.target.value)}
-              >
-                <option value="all">All Trip Types</option>
-                <option value="one-way">One Way</option>
-                <option value="round-trip">Round Trip</option>
-                <option value="multi-city">Multi City</option>
-              </select>
             </div>
           </div>
 
@@ -145,9 +136,9 @@ export default function FlightBookings() {
                 <tr>
                   <th>Name</th>
                   <th>Email</th>
-                  <th>Trip Type</th>
-                  <th>Departure</th>
                   <th>Destination</th>
+                  <th>Check-in</th>
+                  <th>Check-out</th>
                   <th>Status</th>
                   <th>Date</th>
                   <th></th>
@@ -165,15 +156,15 @@ export default function FlightBookings() {
                 ) : bookings.length === 0 ? (
                   <tr>
                     <td colSpan="8" className="text-center py-4 text-muted">
-                      No flight bookings found
+                      No hotel bookings found
                     </td>
                   </tr>
                 ) : (
                   bookings.map((b) => (
                     <tr key={b._id} className={selectedRow === b._id ? 'table-active' : ''}>
-                      <td>
-                        <div className="d-flex align-items-center">
-                          {b.isNew && (
+                          <td>
+                            <div className="d-flex align-items-center">
+                          {b.isUnread && (
                             <span className="badge bg-danger me-2" style={{ fontSize: '0.7em' }}>NEW</span>
                           )}
                           <div>
@@ -183,19 +174,9 @@ export default function FlightBookings() {
                         </div>
                       </td>
                       <td>{b.email}</td>
-                      <td className="text-capitalize">{b.tripType}</td>
-                      <td>
-                        {b.tripType === 'multi-city'
-                          ? b.multiCityFlights?.[0]?.from || 'Multiple'
-                          : b.departureCity
-                        }
-                      </td>
-                      <td>
-                        {b.tripType === 'multi-city'
-                          ? b.multiCityFlights?.[0]?.to || 'Multiple'
-                          : b.destinationCity
-                        }
-                      </td>
+                      <td>{b.destination}</td>
+                      <td>{new Date(b.checkInDate).toLocaleDateString()}</td>
+                      <td>{new Date(b.checkOutDate).toLocaleDateString()}</td>
                       <td>
                         <span className={`badge ${b.status === 'received' ? 'bg-warning' : b.status === 'booked' ? 'bg-success' : 'bg-danger'}`}>
                           {b.status}
@@ -261,7 +242,7 @@ export default function FlightBookings() {
           <h5 className="fw-semibold mb-3">Details</h5>
 
           {selected ? (
-            <FlightDetails booking={selected} onStatusUpdate={(id, newStatus) => {
+            <HotelDetails key={selected._id} booking={selected} onStatusUpdate={(id, newStatus) => {
               setBookings(prevBookings =>
                 prevBookings.map(b => b._id === id ? { ...b, status: newStatus } : b)
               );
@@ -278,7 +259,7 @@ export default function FlightBookings() {
   );
 }
 
-export function FlightDetails({ booking, onStatusUpdate }) {
+export function HotelDetails({ booking, onStatusUpdate }) {
   const [status, setStatus] = useState(booking.status);
   const [updating, setUpdating] = useState(false);
 
@@ -289,11 +270,11 @@ export function FlightDetails({ booking, onStatusUpdate }) {
   const handleStatusUpdate = async (newStatus) => {
     try {
       setUpdating(true);
-      await adminAxios.put(`/flight-bookings/${booking._id}/status`, { status: newStatus });
+      await adminAxios.put(`/hotel-bookings/${booking._id}/status`, { status: newStatus });
       setStatus(newStatus);
       onStatusUpdate(booking._id, newStatus);
     } catch (error) {
-      console.error("Error updating flight booking status:", error);
+      console.error("Error updating hotel booking status:", error);
     } finally {
       setUpdating(false);
     }
@@ -302,7 +283,6 @@ export function FlightDetails({ booking, onStatusUpdate }) {
   return (
     <div>
       <h6 className="fw-bold">{booking.email}</h6>
-
 
       <div className="mb-3">
         <div className="row g-2">
@@ -319,7 +299,7 @@ export function FlightDetails({ booking, onStatusUpdate }) {
               className="small text-primary"
               style={{ textDecoration: 'none' }}
             >
-              {booking.phoneNumber}
+              {booking.phoneNumber.startsWith('+') ? booking.phoneNumber : `+${booking.phoneNumber}`}
             </a>
           </div>
           <div className="col-6">
@@ -330,20 +310,6 @@ export function FlightDetails({ booking, onStatusUpdate }) {
             <small className="text-muted d-block">Date of Birth</small>
             <span className="small">{booking.dob}</span>
           </div>
-          <div className="col-6">
-            <small className="text-muted d-block">Trip Type</small>
-            <span className="small text-capitalize">{booking.tripType}</span>
-          </div>
-          <div className="col-6">
-            <small className="text-muted d-block">Travel Class</small>
-            <span className="small text-capitalize">{booking.travelClass}</span>
-          </div>
-        </div>
-      </div>
-
-         {/* Status and Payment */}
-      <div className="mb-3">
-        <div className="row g-2">
           <div className="col-6">
             <small className="text-muted d-block">Status</small>
             <select
@@ -359,76 +325,64 @@ export function FlightDetails({ booking, onStatusUpdate }) {
           </div>
           <div className="col-6">
             <small className="text-muted d-block">Payment Status</small>
-            <span className={`badge ${booking.payment?.status === 'pending' ? 'bg-warning' : booking.payment?.status === 'paid' ? 'bg-success' : 'bg-danger'}`}>
-              {booking.payment?.status || 'pending'}
+            <span className={`badge bg-warning`}>
+              pending
             </span>
           </div>
         </div>
       </div>
 
-      {/* Flight Details */}
+      {/* Hotel Details */}
       <div className="mb-3">
-        <small className="text-muted d-block">Flight Details</small>
-        {booking.tripType === 'multi-city' ? (
-          <div>
-            {booking.multiCityFlights?.map((flight, index) => (
-              <div key={index} className="mb-2 p-2 bg-light rounded">
-                <div className="small">
-                  <strong>Flight {index + 1}:</strong> {flight.from} → {flight.to}
-                </div>
-                <div className="small text-muted">
-                  Date: {new Date(flight.date).toLocaleDateString()}
-                </div>
-              </div>
-            ))}
+        <small className="text-muted d-block">Hotel Details</small>
+        <div className="p-2 bg-light rounded">
+          <div className="small">
+            <strong>{booking.destination}</strong>
           </div>
-        ) : (
-          <div className="p-2 bg-light rounded">
-            <div className="small">
-              <strong>{booking.departureCity} → {booking.destinationCity}</strong>
-            </div>
+          <div className="small text-muted">
+            Check-in: {new Date(booking.checkInDate).toLocaleDateString()}
+          </div>
+          <div className="small text-muted">
+            Check-out: {new Date(booking.checkOutDate).toLocaleDateString()}
+          </div>
+          <div className="small text-muted">
+            Rooms: {booking.rooms}, Guests: {booking.guests}
+          </div>
+          <div className="small text-muted">
+            Room Type: {booking.roomType}
+          </div>
+          {booking.starRating && booking.starRating !== 'any' && (
             <div className="small text-muted">
-              Departure: {booking.departureDate ? new Date(booking.departureDate).toLocaleDateString() : 'N/A'}
+              Star Rating: {booking.starRating} ★
             </div>
-            {booking.returnDate && (
-              <div className="small text-muted">
-                Return: {new Date(booking.returnDate).toLocaleDateString()}
-              </div>
-            )}
-          </div>
-        )}
-      </div>
-
-      {/* Passengers */}
-      <div className="mb-3">
-        <small className="text-muted d-block">Passengers</small>
-        <div className="row g-2">
-          <div className="col-4">
-            <div className="p-2 bg-light rounded text-center">
-              <div className="small fw-bold">{booking.adults}</div>
-              <div className="small text-muted">Adults</div>
-            </div>
-          </div>
-          <div className="col-4">
-            <div className="p-2 bg-light rounded text-center">
-              <div className="small fw-bold">{booking.children || 0}</div>
-              <div className="small text-muted">Children</div>
-            </div>
-          </div>
-          <div className="col-4">
-            <div className="p-2 bg-light rounded text-center">
-              <div className="small fw-bold">{booking.infants || 0}</div>
-              <div className="small text-muted">Infants</div>
-            </div>
-          </div>
+          )}
         </div>
       </div>
 
-      {/* Additional Info */}
-      {booking.preferredAirline && (
+      {/* Amenities */}
+      {booking.amenities && booking.amenities.length > 0 && (
         <div className="mb-3">
-          <small className="text-muted d-block">Preferred Airline</small>
-          <span className="small">{booking.preferredAirline}</span>
+          <small className="text-muted d-block">Preferred Amenities</small>
+          <div className="d-flex flex-wrap gap-1">
+            {booking.amenities.map((amenity, index) => (
+              <span key={index} className="badge bg-secondary small">{amenity}</span>
+            ))}
+          </div>
+        </div>
+      )}
+
+      {/* Additional Info */}
+      {booking.budget && (
+        <div className="mb-3">
+          <small className="text-muted d-block">Budget per night</small>
+          <span className="small">{booking.budget}</span>
+        </div>
+      )}
+
+      {booking.purpose && (
+        <div className="mb-3">
+          <small className="text-muted d-block">Purpose of Travel</small>
+          <span className="small">{booking.purpose}</span>
         </div>
       )}
 

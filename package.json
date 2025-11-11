@@ -40,6 +40,7 @@
     "paystack-js": "^0.18.1",
     "react": "^19.1.1",
     "react-bootstrap": "^2.10.10",
+    "react-datepicker": "^8.9.0",
     "react-dom": "^19.1.1",
     "react-owl-carousel": "^2.3.3",
     "react-paystack": "^6.0.0",

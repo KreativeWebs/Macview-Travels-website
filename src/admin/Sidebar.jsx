@@ -3,9 +3,17 @@ import { NavLink } from "react-router-dom";
 export default function Sidebar({ open }) {
   const menu = [
     { name: "Dashboard", path: "", icon: "fa-solid fa-house" },
-    { name: "Clients", path: "clients", icon: "fa-solid fa-users" },
     { name: "Visa Requests", path: "visa", icon: "fa-solid fa-passport" },
-    { name: "Flight Bookings", path: "flights", icon: "fa-solid fa-plane-departure" },
+    {
+      name: "Flight Bookings",
+      path: "flights",
+      icon: "fa-solid fa-plane-departure",
+    },
+    {
+      name: "Hotel Bookings",
+      path: "hotels",
+      icon: "fa-solid fa-hotel",
+    },
     { name: "Transfers", path: "transfers", icon: "fa-solid fa-car" },
     { name: "Settings", path: "settings", icon: "fa-solid fa-gear" },
   ];
@@ -18,7 +26,6 @@ export default function Sidebar({ open }) {
         transition: "0.3s",
         minHeight: "100vh",
         backgroundColor: "transparent",
-        
       }}
     >
       <nav className="mt-2">
