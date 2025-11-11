@@ -217,8 +217,8 @@ function VisaProcessing() {
               onChange={handleInputChange}
               style={{ borderRadius: "4px 0 0 4px", borderColor: "#c9b5b5ff", maxWidth: "120px" }}
             >
-              {countryCodes.map((country) => (
-                <option key={country.code} value={country.code}>
+              {countryCodes.map((country, index) => (
+                <option key={index} value={country.code}>
                   {country.flag} {country.code} ({country.name})
                 </option>
               ))}

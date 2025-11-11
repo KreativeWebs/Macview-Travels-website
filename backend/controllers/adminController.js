@@ -1,5 +1,6 @@
 import VisaApplication from "../models/visaApplication.js";
 import FlightBooking from "../models/flightbooking.js";
+import HotelBooking from "../models/HotelBooking.js";
 
 export const getOverviewData = async (req, res) => {
   try {
@@ -21,7 +22,9 @@ export const getOverviewData = async (req, res) => {
     // Placeholders for other data
     const messagesCount = 0;
     const newUsersCount = 0;
-    const hotelBookingsCount = 0;
+    const hotelBookingsCount = await HotelBooking.countDocuments({
+      createdAt: { $gte: startDate, $lt: endDate },
+    });
     const tourPackagesCount = 0;
 
     res.json({

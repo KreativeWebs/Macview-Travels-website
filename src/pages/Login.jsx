@@ -44,6 +44,13 @@ function Login() {
     modalElement.addEventListener("hidden.bs.modal", cleanupOnHide);
     modalElement.addEventListener("show.bs.modal", clearFormOnShow);
 
+    // Silent refresh on login modal show
+    const refreshOnShow = async () => {
+      const { refreshAccessToken } = useAuthStore.getState();
+      await refreshAccessToken();
+    };
+    modalElement.addEventListener("show.bs.modal", refreshOnShow);
+
     return () => {
       if (modalInstanceRef.current) {
         modalInstanceRef.current.dispose();
@@ -51,6 +58,7 @@ function Login() {
       }
       modalElement.removeEventListener("hidden.bs.modal", cleanupOnHide);
       modalElement.removeEventListener("show.bs.modal", clearFormOnShow);
+      modalElement.removeEventListener("show.bs.modal", refreshOnShow);
       cleanupOnHide();
     };
   }, []);

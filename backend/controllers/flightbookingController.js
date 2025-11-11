@@ -28,11 +28,24 @@ export const createFlightBooking = async (req, res) => {
       // Emit real-time update to admin dashboard
       if (global.io) {
         global.io.emit('newFlightBooking', {
-          id: newBooking._id,
+          _id: newBooking._id,
           fullName: newBooking.fullName,
+          email: newBooking.email,
+          phoneNumber: newBooking.phoneNumber,
+          gender: newBooking.gender,
+          dob: newBooking.dob,
           tripType: newBooking.tripType,
-          departureCity: newBooking.multiCityFlights?.[0]?.departureCity || 'Multiple',
-          destinationCity: newBooking.multiCityFlights?.[0]?.destinationCity || 'Multiple',
+          departureCity: newBooking.departureCity,
+          destinationCity: newBooking.destinationCity,
+          departureDate: newBooking.departureDate,
+          returnDate: newBooking.returnDate,
+          multiCityFlights: newBooking.multiCityFlights,
+          preferredAirline: newBooking.preferredAirline,
+          travelClass: newBooking.travelClass,
+          adults: newBooking.adults,
+          children: newBooking.children,
+          infants: newBooking.infants,
+          notes: newBooking.notes,
           createdAt: newBooking.createdAt,
           isNew: true
         });
@@ -75,11 +88,24 @@ export const createFlightBooking = async (req, res) => {
     // Emit real-time update to admin dashboard
     if (global.io) {
       global.io.emit('newFlightBooking', {
-        id: newBooking._id,
+        _id: newBooking._id,
         fullName: newBooking.fullName,
+        email: newBooking.email,
+        phoneNumber: newBooking.phoneNumber,
+        gender: newBooking.gender,
+        dob: newBooking.dob,
         tripType: newBooking.tripType,
         departureCity: newBooking.departureCity,
         destinationCity: newBooking.destinationCity,
+        departureDate: newBooking.departureDate,
+        returnDate: newBooking.returnDate,
+        multiCityFlights: newBooking.multiCityFlights,
+        preferredAirline: newBooking.preferredAirline,
+        travelClass: newBooking.travelClass,
+        adults: newBooking.adults,
+        children: newBooking.children,
+        infants: newBooking.infants,
+        notes: newBooking.notes,
         createdAt: newBooking.createdAt,
         isNew: true
       });

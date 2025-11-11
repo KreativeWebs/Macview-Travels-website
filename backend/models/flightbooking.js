@@ -50,6 +50,13 @@ const flightBookingSchema = new mongoose.Schema(
     children: { type: Number },
     infants: { type: Number },
     notes: { type: String },
+    status: { type: String, default: "received" }, // received, booked, not booked
+    payment: {
+      status: { type: String, enum: ["pending", "paid", "failed"], default: "pending" },
+      provider: String,
+      transactionId: String,
+      amount: Number,
+    },
   },
   { timestamps: true }
 );

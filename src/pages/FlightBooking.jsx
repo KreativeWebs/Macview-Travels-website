@@ -1,15 +1,28 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import { toast } from "react-toastify";
 import { countryCodes } from "../data/countryCodes";
+import { useAuthStore } from "../store/authStore";
 
 function FlightBooking() {
+  const navigate = useNavigate();
+  const { user } = useAuthStore();
+
+  useEffect(() => {
+    if (!user) {
+      toast.error("Please log in to book a flight.");
+      navigate("/");
+    }
+  }, [user, navigate]);
+
+  if (!user) {
+    return <div className="text-center mt-5">Redirecting to login...</div>;
+  }
+
   const [tripType, setTripType] = useState("");
   const [multiCityFlights, setMultiCityFlights] = useState([
     { from: "", to: "", date: "" },
   ]);
-
-  const navigate = useNavigate();
 
   const [formData, setFormData] = useState({
     fullName: "",
@@ -58,7 +71,7 @@ function FlightBooking() {
 
     const payload = {
       fullName: formData.fullName,
-      email: formData.email,
+      email: user.email,
       phoneNumber: `${formData.countryCode}${formData.phoneNumber}`,
       gender: formData.gender || "",
       dob: formData.dob || "",
@@ -154,20 +167,7 @@ function FlightBooking() {
               }}
             />
 
-            <label className="form-label mt-3">Email</label>
-            <input
-              type="email"
-              name="email"
-              value={formData.email}
-              onChange={handleInputChange}
-              className="form-control"
-              required
-              style={{
-                borderRadius: "4px",
-                boxShadow: "none",
-                borderColor: "#c9b5b5ff",
-              }}
-            />
+
 
             <label className="form-label mt-3">Whatsapp Number</label>
             <div className="d-flex">
@@ -184,8 +184,8 @@ function FlightBooking() {
                 }}
                 required
               >
-                {countryCodes.map((country) => (
-                  <option key={country.code} value={country.code}>
+                {countryCodes.map((country, index) => (
+                  <option key={index} value={country.code}>
                     {country.flag} {country.code}
                   </option>
                 ))}

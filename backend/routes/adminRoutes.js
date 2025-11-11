@@ -4,6 +4,7 @@ import { getFlightBookings } from "../controllers/flightbookingController.js";
 import { authenticateAdmin } from "../middleware/authMiddleware.js";
 import VisaApplication from "../models/visaApplication.js";
 import FlightBooking from "../models/flightbooking.js";
+import HotelBooking from "../models/HotelBooking.js";
 
 const router = express.Router();
 
@@ -46,7 +47,7 @@ router.get("/flight-bookings", async (req, res) => {
       .sort({ createdAt: -1 })
       .limit(limit * 1)
       .skip((page - 1) * limit)
-      .select('fullName email phoneNumber gender dob tripType departureCity destinationCity departureDate returnDate multiCityFlights preferredAirline travelClass adults children infants notes createdAt');
+      .select('fullName email phoneNumber gender dob tripType departureCity destinationCity departureDate returnDate multiCityFlights preferredAirline travelClass adults children infants notes createdAt status payment');
 
     const total = await FlightBooking.countDocuments(query);
 
@@ -86,7 +87,7 @@ router.get("/flight-bookings/recent", async (req, res) => {
     const bookings = await FlightBooking.find()
       .sort({ createdAt: -1 })
       .limit(5)
-      .select('fullName tripType departureCity destinationCity multiCityFlights createdAt');
+      .select('fullName tripType departureCity destinationCity multiCityFlights status createdAt');
 
     res.json({ bookings });
   } catch (error) {
@@ -206,15 +207,174 @@ router.put("/visa-applications/:id/status", async (req, res) => {
         status: application.status,
         updatedAt: application.updatedAt,
       });
-
-      // Also emit a global refresh event to trigger page reloads if needed
-      global.io.emit("globalRefresh");
     }
 
     res.json({ application });
   } catch (error) {
     console.error("Error updating visa application status:", error);
     res.status(500).json({ message: "Error updating visa application status" });
+  }
+});
+
+// Get hotel bookings
+router.get("/hotel-bookings", async (req, res) => {
+  try {
+    const { page = 1, limit = 10, search } = req.query;
+
+    let query = {};
+
+    // Search by fullName or email if provided
+    if (search) {
+      let searchTerm = search.trim();
+      // Escape regex special characters
+      searchTerm = searchTerm.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
+      query.$or = [
+        { fullName: { $regex: searchTerm, $options: 'i' } },
+        { email: { $regex: searchTerm, $options: 'i' } }
+      ];
+    }
+
+    const bookings = await HotelBooking.find(query)
+      .sort({ createdAt: -1 })
+      .limit(limit * 1)
+      .skip((page - 1) * limit)
+      .select('fullName email phoneNumber gender dob destination checkInDate checkOutDate rooms guests roomType starRating amenities budget purpose notes isUnread status createdAt');
+
+    const total = await HotelBooking.countDocuments(query);
+
+    res.json({
+      bookings,
+      totalPages: Math.ceil(total / limit),
+      currentPage: page,
+      total
+    });
+  } catch (error) {
+    console.error("Error fetching hotel bookings:", error);
+    res.status(500).json({ message: "Error fetching hotel bookings" });
+  }
+});
+
+// Get hotel bookings count for a specific month
+router.get("/hotel-bookings/count", async (req, res) => {
+  try {
+    const { month, year } = req.query;
+    const startDate = new Date(year, month - 1, 1); // Month is 0-indexed in JS
+    const endDate = new Date(year, month, 1);
+
+    const count = await HotelBooking.countDocuments({
+      createdAt: { $gte: startDate, $lt: endDate }
+    });
+
+    res.json({ count });
+  } catch (error) {
+    console.error("Error fetching hotel bookings count:", error);
+    res.status(500).json({ message: "Error fetching hotel bookings count" });
+  }
+});
+
+// Get recent hotel bookings (last 5)
+router.get("/hotel-bookings/recent", async (req, res) => {
+  try {
+    const bookings = await HotelBooking.find()
+      .sort({ createdAt: -1 })
+      .limit(5)
+      .select('fullName destination checkInDate checkOutDate isUnread status createdAt');
+
+    res.json({ bookings });
+  } catch (error) {
+    console.error("Error fetching recent hotel bookings:", error);
+    res.status(500).json({ message: "Error fetching recent hotel bookings" });
+  }
+});
+
+// Mark hotel booking as read
+router.put("/hotel-bookings/:id/read", async (req, res) => {
+  try {
+    const booking = await HotelBooking.findByIdAndUpdate(
+      req.params.id,
+      { isUnread: false },
+      { new: true }
+    );
+
+    if (!booking) {
+      return res.status(404).json({ message: "Hotel booking not found" });
+    }
+
+    // Emit real-time update to all connected admin clients
+    if (global.io) {
+      global.io.emit("hotelBookingRead", {
+        id: booking._id,
+        isUnread: false,
+        updatedAt: booking.updatedAt,
+      });
+    }
+
+    res.json({ booking });
+  } catch (error) {
+    console.error("Error marking hotel booking as read:", error);
+    res.status(500).json({ message: "Error marking hotel booking as read" });
+  }
+});
+
+// Update flight booking status
+router.put("/flight-bookings/:id/status", async (req, res) => {
+  try {
+    const { status } = req.body;
+
+    const booking = await FlightBooking.findByIdAndUpdate(
+      req.params.id,
+      { status },
+      { new: true }
+    );
+
+    if (!booking) {
+      return res.status(404).json({ message: "Flight booking not found" });
+    }
+
+    // Emit real-time update to all connected admin clients
+    if (global.io) {
+      global.io.emit("flightBookingStatusUpdate", {
+        id: booking._id,
+        status: booking.status,
+        updatedAt: booking.updatedAt,
+      });
+    }
+
+    res.json({ booking });
+  } catch (error) {
+    console.error("Error updating flight booking status:", error);
+    res.status(500).json({ message: "Error updating flight booking status" });
+  }
+});
+
+// Update hotel booking status
+router.put("/hotel-bookings/:id/status", async (req, res) => {
+  try {
+    const { status } = req.body;
+
+    const booking = await HotelBooking.findByIdAndUpdate(
+      req.params.id,
+      { status },
+      { new: true }
+    );
+
+    if (!booking) {
+      return res.status(404).json({ message: "Hotel booking not found" });
+    }
+
+    // Emit real-time update to all connected admin clients
+    if (global.io) {
+      global.io.emit("hotelBookingStatusUpdate", {
+        id: booking._id,
+        status: booking.status,
+        updatedAt: booking.updatedAt,
+      });
+    }
+
+    res.json({ booking });
+  } catch (error) {
+    console.error("Error updating hotel booking status:", error);
+    res.status(500).json({ message: "Error updating hotel booking status" });
   }
 });
 

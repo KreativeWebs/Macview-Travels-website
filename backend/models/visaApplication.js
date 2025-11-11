@@ -25,7 +25,7 @@ const visaApplicationSchema = new mongoose.Schema({
     transactionId: String,
     amount: Number,
   },
-  status: { type: String, default: "received" }, // e.g. received, processing, completed
+  status: { type: String, enum: ["received", "processing", "approved", "rejected"], default: "received" }, // e.g. received, processing, completed
   createdAt: { type: Date, default: Date.now }
 });
 
