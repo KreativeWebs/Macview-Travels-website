@@ -145,8 +145,9 @@ function HotelBooking() {
     const today = new Date();
     today.setHours(0, 0, 0, 0);
 
-    // Calculate age
-    const age = today.getFullYear() - dob.getFullYear();
+  // Calculate age
+  // allow mutation below when adjusting for month/day
+  let age = today.getFullYear() - dob.getFullYear();
     const monthDiff = today.getMonth() - dob.getMonth();
     if (monthDiff < 0 || (monthDiff === 0 && today.getDate() < dob.getDate())) {
       age--;
@@ -442,12 +443,13 @@ function HotelBooking() {
             className="form-control"
           />
 
-          <label className="form-label mt-3">Special Request / Notes</label>
+          <label className="form-label mt-3">Special Request</label>
           <textarea
             name="notes"
             value={formData.notes}
             onChange={handleInputChange}
             className="form-control"
+            placeholder="Like a Preferred Hotel..."
           />
 
           <button type="submit" className="btn btn-secondary py-3 px-4 mt-4">

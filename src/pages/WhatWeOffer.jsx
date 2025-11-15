@@ -1,8 +1,25 @@
 import React from "react";
 import { Link } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
+import { useAuthStore } from "../store/authStore";
 import ServicesCard from "./ServicesCard";
 
 function WhatWeOffer() {
+  const navigate = useNavigate();
+  const { accessToken } = useAuthStore(); // get token from memory
+
+  const isLoggedIn = () => {
+    return !!accessToken; // check in-memory token
+  };
+
+  const handleServiceClick = (link) => {
+    if (!isLoggedIn()) {
+      toast.info("Please log in to access this service");
+      return;
+    }
+    navigate(link);
+  };
+
   return (
     <div className="container-xxl py-5">
       <div className="container">
@@ -33,7 +50,7 @@ function WhatWeOffer() {
               icon="fa-passport"
               title="Visa Processing"
               description="Simplify your travel plans with our fast and reliable visa processing services for top destinations around the world."
-              link="/visaprocessing"
+              onClick={() => handleServiceClick("/visaprocessing")}
             />
           </div>
 
@@ -42,7 +59,7 @@ function WhatWeOffer() {
               icon="fa-plane"
               title="Flight Booking"
               description="Book affordable flights to your favorite destinations with ease and flexibility, connecting you to the world, one trip at a time."
-              link="/flightbooking"
+              onClick={() => handleServiceClick("/flightbooking")}
             />
           </div>
 
@@ -52,18 +69,18 @@ function WhatWeOffer() {
               title="Hotel Booking"
               description="Find and book the perfect stay that matches your comfort,
               style, and budget, from luxury resorts to cozy city hotels."
-              link="/hotelbooking"
+              onClick={() => handleServiceClick("/hotelbooking")}
             />
           </div>
 
           <div className="col-lg-3 col-sm-6 wow fadeInUp" data-wow-delay="0.1s">
-             <ServicesCard
+            <ServicesCard
               icon="fa-graduation-cap"
               title="Study Abroad Programs"
               description="Begin your academic journey overseas with trusted guidance
               on admissions, visas, turning your study dreams into
               reality."
-              link="/studyabroadprograms"
+              onClick={() => handleServiceClick("/studyabroadprograms")}
             />
           </div>
 

@@ -1,4 +1,5 @@
 import { useState, useEffect } from "react";
+import { io } from "socket.io-client";
 import { useNavigate, useLocation } from "react-router-dom";
 import { toast } from "react-toastify";
 import { useAuthStore } from "../store/authStore";
@@ -11,6 +12,7 @@ function VisaProcessing() {
   const prevState = location.state || {};
   const [selectedCountry, setSelectedCountry] = useState(prevState.selectedCountry || "");
   const [visaData, setVisaData] = useState(null);
+  const [availableCountries, setAvailableCountries] = useState([]);
   const [formData, setFormData] = useState(prevState.formData || {
     fullName: "",
     phoneNumber: "",
@@ -149,6 +151,50 @@ function VisaProcessing() {
     fetchVisaData();
   }, [selectedCountry]);
 
+  // Fetch list of available countries so admin-added entries appear immediately
+  const fetchCountries = async () => {
+    try {
+      const res = await fetch(`${import.meta.env.VITE_API_URL}/visa/requirements`);
+      if (!res.ok) throw new Error("Failed to fetch visa countries");
+      const data = await res.json();
+      setAvailableCountries(Array.isArray(data.requirements) ? data.requirements : []);
+    } catch (error) {
+      console.error("Error fetching visa countries:", error);
+      // keep availableCountries empty; fallback to hard-coded list below
+    }
+  };
+
+  useEffect(() => {
+    fetchCountries();
+  }, []);
+
+  // Socket listener: refetch countries when admin updates visa requirements
+  useEffect(() => {
+    // Only run on client
+    let socket;
+    try {
+      socket = io(import.meta.env.VITE_API_URL, {
+        transports: ["websocket", "polling"],
+      });
+
+      socket.on("connect", () => {
+        console.debug("VisaProcessing: socket connected", socket.id);
+      });
+
+      socket.on("visaRequirementsUpdated", (payload) => {
+        console.debug("visaRequirementsUpdated received:", payload);
+        // Simply refetch the master list to keep client in sync
+        fetchCountries();
+      });
+    } catch (err) {
+      console.error("Socket connect error:", err);
+    }
+
+    return () => {
+      if (socket && socket.disconnect) socket.disconnect();
+    };
+  }, []);
+
   const handleNext = () => {
     if (!formData.fullName || !formData.phoneNumber || !selectedCountry) {
       toast.error("Please fill all required fields");
@@ -247,9 +293,19 @@ function VisaProcessing() {
             style={{ borderRadius: "4px", borderColor: "#c9b5b5ff" }}
           >
             <option value="">Select a country</option>
-            <option value="Kenya">Kenya</option>
-            <option value="South Africa">South Africa</option>
-            <option value="Egypt">Egypt</option>
+            {availableCountries.length > 0 ? (
+              availableCountries.map((c) => (
+                <option key={c._id || c.country} value={c.country}>
+                  {c.country}
+                </option>
+              ))
+            ) : (
+              <>
+                <option value="Kenya">Kenya</option>
+                <option value="South Africa">South Africa</option>
+                <option value="Egypt">Egypt</option>
+              </>
+            )}
           </select>
 
           {touristRequirements.length > 0 && (

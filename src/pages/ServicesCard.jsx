@@ -1,6 +1,6 @@
 import React from "react";
 
-function ServicesCard({ icon, title, description, onClick }) {
+function ServicesCard({ icon, title, description, onClick}) {
   return (
     <div>
       <div

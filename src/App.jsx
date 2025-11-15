@@ -17,7 +17,7 @@ import AirportTransfer from "./pages/AirportTransfer.jsx";
 import TravelInsurance from "./pages/TravelInsurance.jsx";
 import ProtocolService from "./pages/ProtocolService.jsx";
 import Destination from "./pages/Destination";
-import ManageBooking from "./pages/ManageBooking";
+import ManageBookings from "./pages/ManageBookings";
 import Team from "./pages/Team";
 import Testimonial from "./pages/Testimonial";
 import Contact from "./pages/Contact";
@@ -39,6 +39,11 @@ import FlightBookings from "./admin/pages/FlightBookings";
 import HotelBookings from "./admin/pages/HotelBookings";
 import Transfers from "./admin/pages/Transfers";
 import Settings from "./admin/pages/Settings";
+import AddNewVisa from "./admin/pages/AddNewVisa.jsx";
+import AddNewFlightRequest from "./admin/pages/AddNewFlightRequest.jsx";
+import AddNewHotel from "./admin/pages/AddNewHotel.jsx";
+import VisaRequirements from "./admin/pages/VisaRequirements.jsx";
+import AddNewVisaRequirement from "./admin/pages/AddNewVisaRequirement.jsx";
 
 function FloatingButtonsController() {
   const location = useLocation();
@@ -96,7 +101,7 @@ export default function App() {
                 <Route path="/travelinsurance" element={<TravelInsurance />} />
                 <Route path="/protocolservice" element={<ProtocolService />} />
                 <Route path="/destination" element={<Destination />} />
-                <Route path="/managebooking" element={<ManageBooking />} />
+                <Route path="/managebookings" element={<ManageBookings />} />
                 <Route path="/team" element={<Team />} />
                 <Route path="/testimonial" element={<Testimonial />} />
                 <Route path="/contact" element={<Contact />} />
@@ -125,10 +130,17 @@ export default function App() {
 
           <Route path="clients/:id" element={<ClientProfile />} />
           <Route path="visa" element={<VisaRequests />} />
+          <Route path="visa/addnewvisa" element={<AddNewVisa />} />
           <Route path="flights" element={<FlightBookings />} />
+          <Route path="addnewflight" element={<AddNewFlightRequest />} />
            <Route path="hotels" element={<HotelBookings />} />
           <Route path="transfers" element={<Transfers />} />
           <Route path="settings" element={<Settings />} />
+          <Route path="visa-requirements" element={<VisaRequirements />} />
+          <Route path="add-visa-requirement" element={<AddNewVisaRequirement />} />
+          <Route path="edit-visa-requirement/:id" element={<AddNewVisaRequirement />} />
+          
+          <Route path="addnewhotel" element={<AddNewHotel />} />
         </Route>
 
       </Routes>

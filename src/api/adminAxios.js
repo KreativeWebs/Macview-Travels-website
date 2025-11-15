@@ -8,9 +8,10 @@ const adminAxios = axios.create({
 adminAxios.interceptors.request.use(
   (config) => {
     const token = localStorage.getItem("adminToken");
-    if (token) {
-      config.headers.Authorization = `Bearer ${token}`;
-    }
+      // Avoid sending invalid tokens (e.g. string "undefined")
+      if (token && token !== "undefined" && token !== "null") {
+        config.headers.Authorization = `Bearer ${token}`;
+      }
     return config;
   },
   (error) => Promise.reject(error)

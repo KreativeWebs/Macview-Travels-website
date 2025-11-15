@@ -76,7 +76,16 @@ export const useAuthStore = create((set, get) => ({
   fetchUser: async () => {
     set({ fetchingUser: true });
     try {
-      const token = get().accessToken;
+      let token = get().accessToken;
+
+      // If we don't have an access token in memory, try to refresh first
+      if (!token) {
+        token = await get().refreshAccessToken();
+        if (!token) {
+          set({ user: null, fetchingUser: false });
+          return;
+        }
+      }
 
       const res = await axios.get(`${API_URL}/fetchuser`, {
         headers: { Authorization: `Bearer ${token}` },

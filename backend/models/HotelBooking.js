@@ -21,7 +21,7 @@ const hotelBookingSchema = new mongoose.Schema(
     gender: {
       type: String,
       required: true,
-      enum: ["male", "female", "prefer_not_to_say"],
+      enum: ["male", "female", "prefer_not_to_say", "none"],
     },
     dob: {
       type: String,
@@ -91,6 +91,12 @@ const hotelBookingSchema = new mongoose.Schema(
       type: String,
       enum: ["received", "booked", "not booked"],
       default: "received",
+    },
+    payment: {
+      status: { type: String, enum: ["pending", "paid", "failed"], default: "pending" },
+      provider: String,
+      transactionId: String,
+      amount: Number,
     },
   },
   {
