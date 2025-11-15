@@ -15,6 +15,7 @@ export default function Sidebar({ open }) {
       icon: "fa-solid fa-hotel",
     },
     { name: "Transfers", path: "transfers", icon: "fa-solid fa-car" },
+    { name: "Visa Requirements", path: "visa-requirements", icon: "fa-solid fa-file-alt" },
     { name: "Settings", path: "settings", icon: "fa-solid fa-gear" },
   ];
 
@@ -29,30 +30,34 @@ export default function Sidebar({ open }) {
       }}
     >
       <nav className="mt-2">
-        {menu.map((m) => (
-          <NavLink
-            key={m.path}
-            to={m.path}
-            end
-            className={({ isActive }) =>
-              `d-flex align-items-center p-2 text-decoration-none mb-1 sidebar-link ${
-                isActive ? "active-item" : ""
-              }`
-            }
-            style={{ transition: "0.3s", marginTop: "10px" }}
-          >
-            <i
-              className={`${m.icon}`}
-              style={{
-                width: "45px",
-                textAlign: "center",
-                fontSize: "18px",
-                marginRight: open ? "10px" : "0",
-              }}
-            />
-            {open && <span>{m.name}</span>}
-          </NavLink>
-        ))}
+        {menu.map((m) => {
+          // Use absolute admin paths to avoid relative navigation like "/admin/visa/settings"
+          const link = m.path ? `/admin/${m.path}` : "/admin";
+          return (
+            <NavLink
+              key={m.path}
+              to={link}
+              end
+              className={({ isActive }) =>
+                `d-flex align-items-center p-2 text-decoration-none mb-1 sidebar-link ${
+                  isActive ? "active-item" : ""
+                }`
+              }
+              style={{ transition: "0.3s", marginTop: "10px" }}
+            >
+              <i
+                className={`${m.icon}`}
+                style={{
+                  width: "45px",
+                  textAlign: "center",
+                  fontSize: "18px",
+                  marginRight: open ? "10px" : "0",
+                }}
+              />
+              {open && <span>{m.name}</span>}
+            </NavLink>
+          );
+        })}
       </nav>
 
       <style>

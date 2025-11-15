@@ -84,7 +84,7 @@ function Contact() {
                 </div>
                 <div className="ms-3">
                   <h5 className="" style={{fontFamily: "Raleway", color: "#f1741e"}}>Email</h5>
-                  <p className="mb-0">info@macview.com</p>
+                  <p className="mb-0">info@macviewtravel.com</p>
                 </div>
               </div>
             </div>

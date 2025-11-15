@@ -26,6 +26,7 @@ const visaApplicationSchema = new mongoose.Schema({
     amount: Number,
   },
   status: { type: String, enum: ["received", "processing", "approved", "rejected"], default: "received" }, // e.g. received, processing, completed
+  addedByAdmin: { type: Boolean, default: false }, // Flag for admin-added applications
   createdAt: { type: Date, default: Date.now }
 });
 

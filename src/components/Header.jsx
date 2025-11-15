@@ -46,7 +46,7 @@ function Header() {
 
     if (user) {
       // User is logged in, navigate to bookings page
-      navigate("/managebooking");
+      navigate("/managebookings");
     } else {
       // User not logged in, show login modal
       const loginModalElement = document.getElementById("loginModal");

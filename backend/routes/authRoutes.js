@@ -6,6 +6,9 @@ import User from "../models/User.js";
 import Admin from "../models/Admin.js";
 import admin from "../config/firebase.js";
 import PasswordResetToken from "../models/PasswordResetToken.js";
+import VisaApplication from "../models/visaApplication.js";
+import FlightBooking from "../models/flightbooking.js";
+import HotelBooking from "../models/HotelBooking.js";
 import { sendPasswordResetEmail, sendWelcomeEmail } from "../utils/sendEmail.js";
 
 const router = express.Router();
@@ -276,6 +279,114 @@ router.post("/admin/login", async (req, res) => {
   } catch (error) {
     console.error("Admin login error:", error);
     res.status(500).json({ success: false, message: "Server error" });
+  }
+});
+
+/* ================================
+   GET USER'S VISA APPLICATIONS (AUTH REQUIRED)
+================================ */
+router.get("/user/visa-applications", async (req, res) => {
+  const authHeader = req.headers.authorization;
+  if (!authHeader) {
+    return res.status(401).json({ message: "No access token provided" });
+  }
+
+  const token = authHeader.split(" ")[1];
+    if (!token) {
+      return res.status(401).json({ message: "Invalid authorization format" });
+    }
+  try {
+    const decoded = jwt.verify(token, process.env.ACCESS_TOKEN_SECRET);
+    const user = await User.findById(decoded.id).select("email");
+    if (!user) {
+      return res.status(404).json({ message: "User not found" });
+    }
+
+    // Fetch visa applications for this user only
+    const applications = await VisaApplication.find({
+      email: { $regex: new RegExp(`^${user.email}$`, "i") },
+    })
+      .sort({ createdAt: -1 });
+
+    res.json({ applications });
+  } catch (error) {
+      console.error("Error fetching user visa applications:", error.message, error);
+    if (error.name === "JsonWebTokenError") {
+      return res.status(401).json({ message: "Invalid or expired token" });
+    }
+    res.status(500).json({ message: "Server error while fetching visa applications" });
+  }
+});
+
+/* ================================
+   GET USER'S FLIGHT BOOKINGS (AUTH REQUIRED)
+================================ */
+router.get("/user/flight-bookings", async (req, res) => {
+  const authHeader = req.headers.authorization;
+  if (!authHeader) {
+    return res.status(401).json({ message: "No access token provided" });
+  }
+
+  const token = authHeader.split(" ")[1];
+    if (!token) {
+      return res.status(401).json({ message: "Invalid authorization format" });
+    }
+  try {
+    const decoded = jwt.verify(token, process.env.ACCESS_TOKEN_SECRET);
+    const user = await User.findById(decoded.id).select("email");
+    if (!user) {
+      return res.status(404).json({ message: "User not found" });
+    }
+
+    // Fetch flight bookings for this user only
+    const bookings = await FlightBooking.find({
+      email: { $regex: new RegExp(`^${user.email}$`, "i") },
+    })
+      .sort({ createdAt: -1 });
+
+    res.json({ bookings });
+  } catch (error) {
+      console.error("Error fetching user flight bookings:", error.message, error);
+    if (error.name === "JsonWebTokenError") {
+      return res.status(401).json({ message: "Invalid or expired token" });
+    }
+    res.status(500).json({ message: "Server error while fetching flight bookings" });
+  }
+});
+
+/* ================================
+   GET USER'S HOTEL BOOKINGS (AUTH REQUIRED)
+================================ */
+router.get("/user/hotel-bookings", async (req, res) => {
+  const authHeader = req.headers.authorization;
+  if (!authHeader) {
+    return res.status(401).json({ message: "No access token provided" });
+  }
+
+  const token = authHeader.split(" ")[1];
+    if (!token) {
+      return res.status(401).json({ message: "Invalid authorization format" });
+    }
+  try {
+    const decoded = jwt.verify(token, process.env.ACCESS_TOKEN_SECRET);
+    const user = await User.findById(decoded.id).select("email");
+    if (!user) {
+      return res.status(404).json({ message: "User not found" });
+    }
+
+    // Fetch hotel bookings for this user only
+    const bookings = await HotelBooking.find({
+      email: { $regex: new RegExp(`^${user.email}$`, "i") },
+    })
+      .sort({ createdAt: -1 });
+
+    res.json({ bookings });
+  } catch (error) {
+      console.error("Error fetching user hotel bookings:", error.message, error);
+    if (error.name === "JsonWebTokenError") {
+      return res.status(401).json({ message: "Invalid or expired token" });
+    }
+    res.status(500).json({ message: "Server error while fetching hotel bookings" });
   }
 });
 

@@ -2,8 +2,21 @@ import express from "express";
 import { getVisaRequirements } from "../controllers/visaController.js";
 import VisaApplication from "../models/visaApplication.js";
 import upload from "../config/multer.js"; 
+import visaRequirements from "../models/visaRequirements.js";
 
 const router = express.Router();
+
+// Route: GET /api/visa/requirements
+// Public: return all visa requirement entries (countries + visaTypes)
+router.get("/requirements", async (req, res) => {
+  try {
+    const requirements = await visaRequirements.find().sort({ country: 1 });
+    return res.status(200).json({ requirements });
+  } catch (error) {
+    console.error("Error fetching visa requirements list:", error);
+    return res.status(500).json({ message: "Error fetching visa requirements" });
+  }
+});
 
 // Route: GET /api/visa/requirements/:country
 router.get("/requirements/:country", getVisaRequirements);

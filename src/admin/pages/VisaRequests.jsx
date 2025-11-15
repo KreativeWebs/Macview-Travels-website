@@ -2,6 +2,7 @@ import { useEffect, useState } from "react";
 import adminAxios from "../../api/adminAxios";
 import { useAuthStore } from "../../store/authStore";
 import socket from "../../socket";
+import { Link } from "react-router-dom";
 
 export default function VisaRequests() {
   const [applications, setApplications] = useState([]);
@@ -13,10 +14,13 @@ export default function VisaRequests() {
   const [statusFilter, setStatusFilter] = useState('all');
   const [searchTerm, setSearchTerm] = useState('');
   const [refreshing, setRefreshing] = useState(false);
+  const [selectedYear, setSelectedYear] = useState('');
+  const [selectedMonth, setSelectedMonth] = useState('');
+  const [selectedWeek, setSelectedWeek] = useState('');
 
   useEffect(() => {
     fetchApplications();
-  }, [currentPage, statusFilter, searchTerm]);
+  }, [currentPage, statusFilter, searchTerm, selectedYear, selectedMonth, selectedWeek]);
 
   useEffect(() => {
     // Listen for real-time updates
@@ -68,7 +72,10 @@ export default function VisaRequests() {
         page: currentPage,
         limit: 10,
         status: statusFilter,
-        ...(searchTerm && { search: searchTerm })
+        ...(searchTerm && { search: searchTerm }),
+        ...(selectedYear && { year: selectedYear }),
+        ...(selectedMonth && { month: selectedMonth }),
+        ...(selectedWeek && { week: selectedWeek })
       });
 
       const res = await adminAxios.get(`/visa-applications?${params}`);
@@ -116,29 +123,35 @@ export default function VisaRequests() {
         <div className="bg-white p-3 rounded shadow-sm">
           <div className="d-flex justify-content-between align-items-center mb-3">
             <h2 className="fw-bold mb-0">Visa Applications</h2>
-            <button
-              onClick={handleRefresh}
-              disabled={refreshing}
-              className="btn btn-outline-primary btn-sm"
-              title="Refresh applications"
-            >
-              {refreshing ? (
-                <>
-                  <span className="spinner-border spinner-border-sm me-2" role="status" aria-hidden="true"></span>
-                  Refreshing...
-                </>
-              ) : (
-                <>
-                  <i className="fas fa-sync-alt me-2"></i>
-                  Refresh
-                </>
-              )}
-            </button>
+            <div className="d-flex gap-2">
+              <Link to="addnewvisa" className="btn btn-primary btn-sm">
+                <i className="fas fa-plus me-2"></i>
+                New Visa
+              </Link>
+              <button
+                onClick={handleRefresh}
+                disabled={refreshing}
+                className="btn btn-outline-primary btn-sm"
+                title="Refresh applications"
+              >
+                {refreshing ? (
+                  <>
+                    <span className="spinner-border spinner-border-sm me-2" role="status" aria-hidden="true"></span>
+                    Refreshing...
+                  </>
+                ) : (
+                  <>
+                    <i className="fas fa-sync-alt me-2"></i>
+                    Refresh
+                  </>
+                )}
+              </button>
+            </div>
           </div>
 
           {/* Filters */}
           <div className="row g-3 mb-3">
-            <div className="col-md-6">
+            <div className="col-md-3">
               <input
                 type="text"
                 className="form-control form-control-sm"
@@ -147,7 +160,7 @@ export default function VisaRequests() {
                 onChange={(e) => setSearchTerm(e.target.value)}
               />
             </div>
-            <div className="col-md-6">
+            <div className="col-md-3">
               <select
                 className="form-select form-select-sm"
                 value={statusFilter}
@@ -158,6 +171,44 @@ export default function VisaRequests() {
                 <option value="processing">Processing</option>
                 <option value="approved">Approved</option>
                 <option value="rejected">Rejected</option>
+              </select>
+            </div>
+            <div className="col-md-2">
+              <select
+                className="form-select form-select-sm"
+                value={selectedYear}
+                onChange={(e) => setSelectedYear(e.target.value)}
+              >
+                <option value="">All Years</option>
+                {Array.from({ length: 10 }, (_, i) => new Date().getFullYear() - i).map(year => (
+                  <option key={year} value={year}>{year}</option>
+                ))}
+              </select>
+            </div>
+            <div className="col-md-2">
+              <select
+                className="form-select form-select-sm"
+                value={selectedMonth}
+                onChange={(e) => setSelectedMonth(e.target.value)}
+              >
+                <option value="">All Months</option>
+                {Array.from({ length: 12 }, (_, i) => i + 1).map(month => (
+                  <option key={month} value={month}>
+                    {new Date(0, month - 1).toLocaleString('default', { month: 'long' })}
+                  </option>
+                ))}
+              </select>
+            </div>
+            <div className="col-md-2">
+              <select
+                className="form-select form-select-sm"
+                value={selectedWeek}
+                onChange={(e) => setSelectedWeek(e.target.value)}
+              >
+                <option value="">All Weeks</option>
+                {Array.from({ length: 5 }, (_, i) => i + 1).map(week => (
+                  <option key={week} value={week}>Week {week}</option>
+                ))}
               </select>
             </div>
           </div>
@@ -380,8 +431,8 @@ export function VisaDetails({ app, onStatusUpdate }) {
           </div>
           <div className="col-6">
             <small className="text-muted d-block">Payment</small>
-            <span className={`badge ${app.payment?.status === 'paid' ? 'bg-success' : 'bg-warning'}`}>
-              {app.payment?.status || 'pending'}
+            <span className={`badge ${app.payment?.status === 'paid' || app.addedByAdmin ? 'bg-success' : 'bg-warning'}`}>
+              {app.addedByAdmin ? 'paid' : (app.payment?.status || 'pending')}
             </span>
           </div>
         </div>

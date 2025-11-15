@@ -1,5 +1,5 @@
 {
-  "name": "diamondtravels",
+  "name": "macviewtravels",
   "private": true,
   "version": "0.0.0",
   "type": "module",
@@ -30,6 +30,8 @@
     "firebase-admin": "^13.5.0",
     "form-data": "^4.0.4",
     "jsonwebtoken": "^9.0.2",
+    "jspdf": "^3.0.3",
+    "jspdf-autotable": "^5.0.2",
     "mailgun.js": "^12.1.1",
     "mailtrap": "^4.3.0",
     "mongodb": "^6.20.0",

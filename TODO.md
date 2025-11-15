@@ -1,13 +1,9 @@
-# Row Highlighting Implementation
+# TODO: Style ManageBooking.jsx like Admin Dashboard
 
-## Tasks
-- [ ] Add selectedRow state to VisaRequests.jsx
-- [ ] Update openDetails in VisaRequests.jsx to set selectedRow
-- [ ] Add conditional className to table rows in VisaRequests.jsx
-- [ ] Add selectedRow state to FlightBookings.jsx
-- [ ] Update openDetails in FlightBookings.jsx to set selectedRow
-- [ ] Add conditional className to table rows in FlightBookings.jsx
-- [ ] Add selectedRow state to HotelBookings.jsx
-- [ ] Update openDetails in HotelBookings.jsx to set selectedRow
-- [ ] Add conditional className to table rows in HotelBookings.jsx
-- [ ] Test highlighting functionality across all pages
+## Steps to Complete
+
+- [ ] Add fixed header to ManageBooking.jsx (logo, toggle, title, user greeting, logout)
+- [ ] Adjust main container in ManageBooking.jsx to have margin-top for fixed header
+- [ ] Update ManageBooking.css backgrounds and colors to match admin (white, #f8f9fa, shadows, Raleway)
+- [ ] Ensure responsive design matches admin layout
+- [ ] Test the styling by running the app

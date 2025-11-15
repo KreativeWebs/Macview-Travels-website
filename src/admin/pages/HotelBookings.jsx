@@ -1,6 +1,7 @@
 import { useEffect, useState } from "react";
 import adminAxios from "../../api/adminAxios";
 import socket from "../../socket";
+import { Link } from "react-router-dom";
 
 export default function HotelBookings() {
   const [bookings, setBookings] = useState([]);
@@ -11,10 +12,14 @@ export default function HotelBookings() {
   const [totalPages, setTotalPages] = useState(1);
   const [searchTerm, setSearchTerm] = useState('');
   const [refreshing, setRefreshing] = useState(false);
+  const [statusFilter, setStatusFilter] = useState('all');
+  const [selectedYear, setSelectedYear] = useState('');
+  const [selectedMonth, setSelectedMonth] = useState('');
+  const [selectedWeek, setSelectedWeek] = useState('');
 
   useEffect(() => {
     fetchBookings();
-  }, [currentPage, searchTerm]);
+  }, [currentPage, searchTerm, statusFilter, selectedYear, selectedMonth, selectedWeek]);
 
   useEffect(() => {
     // Listen for real-time updates
@@ -55,7 +60,11 @@ export default function HotelBookings() {
       const params = new URLSearchParams({
         page: currentPage,
         limit: 10,
-        ...(searchTerm && { search: searchTerm })
+        status: statusFilter,
+        ...(searchTerm && { search: searchTerm }),
+        ...(selectedYear && { year: selectedYear }),
+        ...(selectedMonth && { month: selectedMonth }),
+        ...(selectedWeek && { week: selectedWeek })
       });
 
       const res = await adminAxios.get(`/hotel-bookings?${params}`);
@@ -90,6 +99,17 @@ export default function HotelBookings() {
     }
   };
 
+  const updatePaymentStatus = async (id, newStatus) => {
+    try {
+      const res = await adminAxios.put(`/hotel-bookings/${id}/payment`, { status: newStatus });
+      // Update local state
+      setBookings(prev => prev.map(b => b._id === id ? { ...b, payment: res.data.booking.payment } : b));
+      if (selected && selected._id === id) setSelected(prev => ({ ...prev, payment: res.data.booking.payment }));
+    } catch (error) {
+      console.error('Error updating payment status:', error);
+    }
+  };
+
   return (
     <div className="row g-4">
       {/* Bookings Table */}
@@ -97,7 +117,13 @@ export default function HotelBookings() {
         <div className="bg-white p-3 rounded shadow-sm">
           <div className="d-flex justify-content-between align-items-center mb-3">
             <h2 className="fw-bold mb-0">Hotel Booking Requests</h2>
-            <button
+            <div className="d-flex gap-2">
+              <Link to="/admin/addnewhotel" className="btn btn-primary btn-sm">
+                <i className="fas fa-plus me-2"></i>
+                New Hotel
+              </Link>
+            
+              <button
               onClick={handleRefresh}
               disabled={refreshing}
               className="btn btn-outline-primary btn-sm"
@@ -116,10 +142,11 @@ export default function HotelBookings() {
               )}
             </button>
           </div>
+          </div>
 
           {/* Search */}
           <div className="row g-3 mb-3">
-            <div className="col-md-12">
+            <div className="col-md-4">
               <input
                 type="text"
                 className="form-control form-control-sm"
@@ -127,6 +154,56 @@ export default function HotelBookings() {
                 value={searchTerm}
                 onChange={(e) => setSearchTerm(e.target.value)}
               />
+            </div>
+            <div className="col-md-2">
+              <select
+                className="form-select form-select-sm"
+                value={statusFilter}
+                onChange={(e) => setStatusFilter(e.target.value)}
+              >
+                <option value="all">All Status</option>
+                <option value="received">Received</option>
+                <option value="booked">Booked</option>
+                <option value="not booked">Not Booked</option>
+              </select>
+            </div>
+            <div className="col-md-2">
+              <select
+                className="form-select form-select-sm"
+                value={selectedYear}
+                onChange={(e) => setSelectedYear(e.target.value)}
+              >
+                <option value="">All Years</option>
+                {Array.from({ length: 10 }, (_, i) => new Date().getFullYear() - i).map(year => (
+                  <option key={year} value={year}>{year}</option>
+                ))}
+              </select>
+            </div>
+            <div className="col-md-2">
+              <select
+                className="form-select form-select-sm"
+                value={selectedMonth}
+                onChange={(e) => setSelectedMonth(e.target.value)}
+              >
+                <option value="">All Months</option>
+                {Array.from({ length: 12 }, (_, i) => i + 1).map(month => (
+                  <option key={month} value={month}>
+                    {new Date(0, month - 1).toLocaleString('default', { month: 'long' })}
+                  </option>
+                ))}
+              </select>
+            </div>
+            <div className="col-md-2">
+              <select
+                className="form-select form-select-sm"
+                value={selectedWeek}
+                onChange={(e) => setSelectedWeek(e.target.value)}
+              >
+                <option value="">All Weeks</option>
+                {Array.from({ length: 5 }, (_, i) => i + 1).map(week => (
+                  <option key={week} value={week}>Week {week}</option>
+                ))}
+              </select>
             </div>
           </div>
 
@@ -247,7 +324,7 @@ export default function HotelBookings() {
                 prevBookings.map(b => b._id === id ? { ...b, status: newStatus } : b)
               );
               setSelected(prevSelected => prevSelected && prevSelected._id === id ? { ...prevSelected, status: newStatus } : prevSelected);
-            }} />
+            }} updatePaymentStatus={updatePaymentStatus} />
           ) : (
             <div className="text-muted small">
               Select a booking to view details
@@ -259,7 +336,7 @@ export default function HotelBookings() {
   );
 }
 
-export function HotelDetails({ booking, onStatusUpdate }) {
+export function HotelDetails({ booking, onStatusUpdate, updatePaymentStatus }) {
   const [status, setStatus] = useState(booking.status);
   const [updating, setUpdating] = useState(false);
 
@@ -325,9 +402,16 @@ export function HotelDetails({ booking, onStatusUpdate }) {
           </div>
           <div className="col-6">
             <small className="text-muted d-block">Payment Status</small>
-            <span className={`badge bg-warning`}>
-              pending
-            </span>
+            <div className="d-flex align-items-center gap-2">
+              <span className={`badge ${booking.payment?.status === 'paid' ? 'bg-success' : booking.payment?.status === 'pending' ? 'bg-warning' : 'bg-danger'}`}>
+                {booking.payment?.status || 'pending'}
+              </span>
+              <select className="form-select form-select-sm w-auto" value={booking.payment?.status || 'pending'} onChange={(e) => updatePaymentStatus(booking._id, e.target.value)}>
+                <option value="pending">Pending</option>
+                <option value="paid">Paid</option>
+                <option value="failed">Failed</option>
+              </select>
+            </div>
           </div>
         </div>
       </div>
