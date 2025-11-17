@@ -9,6 +9,7 @@ import { connectToDB } from "./config/db.js";
 import cookieParser from "cookie-parser";
 import authRouter from "./routes/authRoutes.js";
 import visaRoutes from "./routes/visaRoutes.js";
+import packagesRoutes from "./routes/packagesRoutes.js";
 import adminRoutes from "./routes/adminRoutes.js";
 import path from "path";
 import { fileURLToPath } from "url";
@@ -77,6 +78,7 @@ app.use("/api", authRouter);
 app.use("/api/flight-bookings", flightBookingRoutes);
 app.use("/api/hotel-bookings", hotelRoutes);
 app.use("/api/visa", visaRoutes);
+app.use("/api/packages", packagesRoutes);
 app.use("/api/admin", adminRoutes);
 app.use("/uploads", express.static(path.join(process.cwd(), "uploads")));
 

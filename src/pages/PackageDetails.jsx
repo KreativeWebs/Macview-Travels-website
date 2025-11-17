@@ -183,9 +183,10 @@ export default function PackageDetails() {
                             className="form-control"
                             value={formData[req.label] || ""}
                             onChange={(e) => handleInputChange(e, req.label)}
+                            placeholder={`Enter ${req.label.toLowerCase()}`}
                             required
                           />
-                        ) : (
+                        ) : req.type === "upload" ? (
                           <input
                             type="file"
                             className="form-control"
@@ -193,7 +194,7 @@ export default function PackageDetails() {
                             accept="image/*,.pdf,.doc,.docx"
                             required
                           />
-                        )}
+                        ) : null}
                       </div>
                     ))}
 

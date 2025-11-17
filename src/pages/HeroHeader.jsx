@@ -9,10 +9,7 @@ function HeroHeader({ heroheadertitle, heroheaderdesc, pageName, heroheaderbg })
           display: "flex",
           alignItems: "center",
           justifyContent: "center",
-          background: `linear-gradient(rgba(20, 20, 31, 0.7), rgba(20, 20, 31, 0.83)), url(${heroheaderbg})`,
-          backgroundPosition: "center center",
-          backgroundRepeat: "no-repeat",
-          backgroundSize: "cover",
+          background: `linear-gradient(rgba(20, 20, 31, 0.7), rgba(20, 20, 31, 0.83)), url(${heroheaderbg}) no-repeat center center / cover`,
           height: "70vh",
         }}
       >
