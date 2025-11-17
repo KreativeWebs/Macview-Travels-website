@@ -63,7 +63,7 @@ app.use(cookieParser()); // no secret needed for unsigned cookies
 // -----------------------------
 const authLimiter = rateLimit({
   windowMs: 15 * 60 * 1000, // 15 min
-  max: 1000,
+  max: 5000,
   standardHeaders: true,
   legacyHeaders: false
 });
