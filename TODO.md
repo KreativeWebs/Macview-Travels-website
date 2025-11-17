@@ -1,22 +1,10 @@
-# Dynamic Package Management Implementation
+# TODO: Fix Public Packages Access Issue
 
-## Backend Changes
-- [x] Update backend/config/multer.js - Change Cloudinary folder to "macview-packages" for package images
+## Pending Tasks
+- [x] Create `backend/routes/packagesRoutes.js` with public GET routes for packages (no auth required)
+- [x] Mount the new route in `backend/server.js` as /api/packages
+- [x] Update `src/api/packages.js` to use /api/packages instead of /api/admin/packages
 
-## Admin Dashboard Changes
-- [x] Create src/admin/pages/AddNewPackage.jsx - Form for creating packages with dynamic requirements array
-- [x] Update src/admin/Sidebar.jsx - Add "Packages" menu item
-- [x] Update src/App.jsx - Add admin package routes
-
-## Frontend Changes
-- [x] Create src/api/packages.js - API functions for fetching packages from frontend
-- [x] Update src/App.jsx - Add frontend package details route
-- [x] Update src/pages/FeaturedPackages.jsx - Fetch and render packages dynamically (limit to 3)
-- [x] Update src/pages/Packages.jsx - Fetch and render all packages dynamically
-- [x] Update src/pages/FeaturedPackagesCard.jsx - Change "Book Now" link to /package/:id
-- [x] Create src/pages/PackageDetails.jsx - Package details page with inclusions, requirements, form, and payment proceed
-
-## Testing
-- [ ] Test package creation from admin dashboard
-- [ ] Verify packages display on frontend
-- [ ] Test package details page and booking flow
+## Followup Steps
+- [x] Test that public packages load without authentication
+- [ ] Verify admin package management still works with /api/admin/packages
