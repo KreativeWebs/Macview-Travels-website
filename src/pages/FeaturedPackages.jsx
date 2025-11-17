@@ -1,8 +1,42 @@
-import React from "react";
+import React, { useState, useEffect } from "react";
 import { Link } from "react-router-dom";
 import FeaturedPackagesCard from "./FeaturedPackagesCard";
+import { getPackages } from "../api/packages";
 
 function FeaturedPackages() {
+  const [packages, setPackages] = useState([]);
+  const [loading, setLoading] = useState(true);
+
+  useEffect(() => {
+    const fetchPackages = async () => {
+      try {
+        const data = await getPackages();
+        // Limit to 3 packages for featured section
+        setPackages(data.slice(0, 3));
+      } catch (error) {
+        console.error("Error fetching packages:", error);
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    fetchPackages();
+  }, []);
+
+  if (loading) {
+    return (
+      <div className="container-xxl py-5">
+        <div className="container">
+          <div className="text-center">
+            <div className="spinner-border text-primary" role="status">
+              <span className="visually-hidden">Loading...</span>
+            </div>
+          </div>
+        </div>
+      </div>
+    );
+  }
+
   return (
     <div className="container-xxl py-5">
       <div className="container">
@@ -27,45 +61,30 @@ function FeaturedPackages() {
           </h1>
         </div>
         <div className="row g-4 justify-content-center">
-          <FeaturedPackagesCard
-            packagebg="assets/img/Capetown summer.jpeg"
-            packagecity="Capetown"
-            packagenights="5 Nights"
-            packagepersons="2 Persons"
-            packagetitle="Capetown Luxury Package"
-            packagedesc=" Cape Town is calling! From beaches to breathtaking views, this
-                  summer getaway is your ticket to relaxation, adventure, and
-                  endless sunshine."
-            packageprice="₦509,999"
-          />
-
-          <FeaturedPackagesCard
-            packagebg="assets\img\Lagos bridge.jpeg"
-            packagecity="Lagos"
-            packagenights="1 Day"
-            packagepersons="1 Person"
-            packagetitle=" One Day Lagos City Tour"
-            packagedesc=" Discover the heartbeat of Nigeria in just one day! Experience
-                  the perfect mix of culture, art, food, and city life that
-                  makes Lagos unforgettable."
-            packageprice=" $150.00"
-          />
-
-          <FeaturedPackagesCard
-            packagebg="assets\img\Así es el Banana Island Resort, el alojamiento de lujo en una isla en Doha.jpeg"
-            packagecity="Qatar"
-            packagenights="5 Nights"
-            packagepersons="1 Person"
-            packagetitle="Banana Island Luxury Package"
-            packagedesc=" Escape to Banana Island, Qatar’s hidden paradise of luxury and
-                  tranquility. Indulge in five-star comfort, stunning ocean
-                  views, private beaches, and world-class dining."
-            packageprice="₦6,800,000"
-          />
-
+          {packages.length > 0 ? (
+            packages.map((pkg) => (
+              <FeaturedPackagesCard
+                key={pkg._id}
+                packagebg={pkg.backgroundImage}
+                packagecity={pkg.city}
+                packagenights={`${pkg.nights} Nights`}
+                packagepersons={`${pkg.persons} Persons`}
+                packagetitle={pkg.title}
+                packagedesc={pkg.description}
+                packageprice={`${pkg.currency === "NGN" ? "₦" : "$"}${pkg.price.toLocaleString()}`}
+                packageId={pkg._id}
+              />
+            ))
+          ) : (
+            <div className="col-12 text-center">
+              <p>No packages available at the moment.</p>
+            </div>
+          )}
+        </div>
+        <div className="text-center mt-4">
           <Link
             to="/packages"
-            className="btn btn-secondary py-3 px-1 mt-5"
+            className="btn btn-secondary py-3 px-1"
             style={{
               fontFamily:
                 "'Raleway', system-ui, Avenir, Helvetica, Arial, sans-serif",
@@ -73,8 +92,7 @@ function FeaturedPackages() {
               outline: "none",
               border: "none",
               borderRadius: "4px",
-              width: "170px",
-              marginTop: "10px"
+              width: "170px"
             }}
           >
             See More

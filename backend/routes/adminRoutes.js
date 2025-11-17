@@ -6,6 +6,8 @@ import VisaApplication from "../models/visaApplication.js";
 import FlightBooking from "../models/flightbooking.js";
 import HotelBooking from "../models/HotelBooking.js";
 import VisaRequirement from "../models/visaRequirements.js";
+import Package from "../models/Package.js";
+import upload from "../config/multer.js";
 
 const router = express.Router();
 
@@ -892,5 +894,143 @@ router.delete("/visa-requirements/:id", async (req, res) => {
   }
 });
 
+// Get all packages
+router.get("/packages", async (req, res) => {
+  try {
+    const packages = await Package.find({ isActive: true }).sort({ createdAt: -1 });
+    res.json({ packages });
+  } catch (error) {
+    console.error("Error fetching packages:", error);
+    res.status(500).json({ message: "Error fetching packages" });
+  }
+});
+
+// Get single package by ID
+router.get("/packages/:id", async (req, res) => {
+  try {
+    const packageData = await Package.findById(req.params.id);
+
+    if (!packageData) {
+      return res.status(404).json({ message: "Package not found" });
+    }
+
+    res.json({ package: packageData });
+  } catch (error) {
+    console.error("Error fetching package:", error);
+    res.status(500).json({ message: "Error fetching package" });
+  }
+});
+
+// Create new package
+router.post("/packages", upload.single("backgroundImage"), async (req, res) => {
+  try {
+    const {
+      title,
+      description,
+      city,
+      nights,
+      persons,
+      price,
+      currency,
+      inclusions,
+      requirements,
+    } = req.body;
+
+    let backgroundImageUrl = "";
+    if (req.file) {
+      backgroundImageUrl = req.file.path; // Cloudinary URL
+    }
+
+    const newPackage = new Package({
+      title,
+      description,
+      city,
+      nights: Number(nights),
+      persons: Number(persons),
+      price: Number(price),
+      currency,
+      backgroundImage: backgroundImageUrl,
+      inclusions: inclusions ? JSON.parse(inclusions) : [],
+      requirements: requirements ? JSON.parse(requirements) : [],
+    });
+
+    await newPackage.save();
+
+    res.status(201).json({ package: newPackage });
+  } catch (error) {
+    console.error("Error creating package:", error);
+    if (error.name === 'ValidationError') {
+      return res.status(400).json({ message: error.message });
+    }
+    res.status(500).json({ message: "Error creating package" });
+  }
+});
+
+// Update package
+router.put("/packages/:id", upload.single("backgroundImage"), async (req, res) => {
+  try {
+    const {
+      title,
+      description,
+      city,
+      nights,
+      persons,
+      price,
+      currency,
+      inclusions,
+      requirements,
+    } = req.body;
+
+    const updateData = {
+      title,
+      description,
+      city,
+      nights: Number(nights),
+      persons: Number(persons),
+      price: Number(price),
+      currency,
+      inclusions: inclusions ? JSON.parse(inclusions) : [],
+      requirements: requirements ? JSON.parse(requirements) : [],
+    };
+
+    if (req.file) {
+      updateData.backgroundImage = req.file.path; // Cloudinary URL
+    }
+
+    const packageData = await Package.findByIdAndUpdate(
+      req.params.id,
+      updateData,
+      { new: true }
+    );
+
+    if (!packageData) {
+      return res.status(404).json({ message: "Package not found" });
+    }
+
+    res.json({ package: packageData });
+  } catch (error) {
+    console.error("Error updating package:", error);
+    if (error.name === 'ValidationError') {
+      return res.status(400).json({ message: error.message });
+    }
+    res.status(500).json({ message: "Error updating package" });
+  }
+});
+
+// Delete package
+router.delete("/packages/:id", async (req, res) => {
+  try {
+    const packageData = await Package.findByIdAndDelete(req.params.id);
+
+    if (!packageData) {
+      return res.status(404).json({ message: "Package not found" });
+    }
+
+    res.json({ message: "Package deleted successfully" });
+  } catch (error) {
+    console.error("Error deleting package:", error);
+    res.status(500).json({ message: "Error deleting package" });
+  }
+});
 
 export default router;
