@@ -8,7 +8,8 @@ function FeaturedPackagesCard({
   packageprice,
   packagetitle,
   packagedesc,
-}) 
+  packageId,
+})
 
 {
   return (
@@ -38,7 +39,7 @@ function FeaturedPackagesCard({
                     height: "100%",
                     objectFit: "cover",
                   }}
-                 /> 
+                 />
           </div>
           <div className="d-flex border-bottom">
             <small className="flex-fill text-center border-end py-2">
@@ -58,7 +59,7 @@ function FeaturedPackagesCard({
             <h3 className="mb-0" style={{ fontFamily: "Raleway" }}>
               {packageprice}
             </h3>
-            
+
             <h5
               className="mt-4"
               style={{ fontFamily: "Raleway", color: "#175AA1" }}
@@ -70,7 +71,7 @@ function FeaturedPackagesCard({
             </p>
             <div className="d-flex justify-content-center mb-2">
               <Link
-                to="/booking"
+                to={`/package/${packageId}`}
                 className="btn btn-sm btn-secondary px-5"
                 style={{
                   borderRadius: "12px",

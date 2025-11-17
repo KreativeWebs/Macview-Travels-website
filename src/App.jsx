@@ -44,6 +44,9 @@ import AddNewFlightRequest from "./admin/pages/AddNewFlightRequest.jsx";
 import AddNewHotel from "./admin/pages/AddNewHotel.jsx";
 import VisaRequirements from "./admin/pages/VisaRequirements.jsx";
 import AddNewVisaRequirement from "./admin/pages/AddNewVisaRequirement.jsx";
+import AddNewPackage from "./admin/pages/AddNewPackage";
+import PackagesManagement from "./admin/pages/PackagesManagement";
+import PackageDetails from "./pages/PackageDetails";
 
 function FloatingButtonsController() {
   const location = useLocation();
@@ -93,6 +96,7 @@ export default function App() {
                 <Route path="/aboutus" element={<AboutUs />} />
                 <Route path="/services" element={<Services />} />
                 <Route path="/packages" element={<Packages />} />
+                <Route path="/package/:id" element={<PackageDetails />} />
                 <Route path="/visaprocessing" element={<VisaProcessing />} />
                 <Route path="/flightbooking" element={<FlightBooking />} />
                 <Route path="/hotelbooking" element={<HotelBooking />} />
@@ -141,6 +145,8 @@ export default function App() {
           <Route path="edit-visa-requirement/:id" element={<AddNewVisaRequirement />} />
           
           <Route path="addnewhotel" element={<AddNewHotel />} />
+          <Route path="packages" element={<PackagesManagement />} />
+          <Route path="addnewpackage" element={<AddNewPackage />} />
         </Route>
 
       </Routes>
