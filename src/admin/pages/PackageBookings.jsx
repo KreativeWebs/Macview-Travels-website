@@ -95,15 +95,13 @@ export default function PackageBookings() {
   };
 
   const openDetails = async (booking) => {
-    // If the booking is incomplete (from socket event), fetch full details
-    if (!booking.documents || !booking.packageData) {
-      try {
-        const res = await adminAxios.get(`/package-bookings/${booking._id}`);
-        booking = res.data.booking;
-      } catch (error) {
-        console.error("Error fetching full booking details:", error);
-        return;
-      }
+    // Always fetch full details to ensure all fields are populated
+    try {
+      const res = await adminAxios.get(`/package-bookings/${booking._id}`);
+      booking = res.data.booking;
+    } catch (error) {
+      console.error("Error fetching full booking details:", error);
+      return;
     }
 
     setSelected(booking);
@@ -311,6 +309,9 @@ export default function PackageBookings() {
       <div className="col-12 col-lg-4">
         <div className="bg-white p-3 rounded shadow-sm">
           <h5 className="fw-semibold mb-3">Details</h5>
+          {selected && selected.packageId?.title && (
+            <h6 className="fw-bold mb-3">{selected.packageId.title}</h6>
+          )}
 
           {selected ? (
             <PackageBookingDetails key={selected._id} booking={selected} onStatusUpdate={(id, newStatus) => {
@@ -379,7 +380,7 @@ export function PackageBookingDetails({ booking, onStatusUpdate }) {
 
   return (
     <div>
-      <h6 className="fw-bold">{booking.email || 'N/A'}</h6>
+  
 
       <div className="mb-3">
         <div className="row g-2">

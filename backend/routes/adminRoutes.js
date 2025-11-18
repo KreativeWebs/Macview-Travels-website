@@ -1047,7 +1047,7 @@ router.get("/package-bookings", async (req, res) => {
       conditions.push({ status });
     }
 
-    // Search by fullName, whatsappNumber, or packageTitle if provided
+    // Search by fullName, email, whatsappNumber, or packageTitle if provided
     if (search) {
       let searchTerm = search.trim();
       // Escape regex special characters
@@ -1055,6 +1055,7 @@ router.get("/package-bookings", async (req, res) => {
       conditions.push({
         $or: [
           { fullName: { $regex: searchTerm, $options: 'i' } },
+          { email: { $regex: searchTerm, $options: 'i' } },
           { whatsappNumber: { $regex: searchTerm, $options: 'i' } },
           { packageTitle: { $regex: searchTerm, $options: 'i' } }
         ]
@@ -1098,10 +1099,11 @@ router.get("/package-bookings", async (req, res) => {
 
     const bookings = await PackageBooking.find(query)
       .populate('packageId', 'city')
+      .populate('userId', 'email')
       .sort({ createdAt: -1 })
       .limit(limit * 1)
       .skip((page - 1) * limit)
-      .select('fullName email whatsappNumber travelDate packageTitle packagePrice packageCurrency documents status payment.status payment.amount createdAt');
+      .select('_id fullName email whatsappNumber travelDate packageTitle packagePrice packageCurrency documents status payment.status payment.amount createdAt userId');
 
     const total = await PackageBooking.countDocuments(query);
 

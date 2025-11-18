@@ -390,4 +390,41 @@ router.get("/user/hotel-bookings", async (req, res) => {
   }
 });
 
+/* ================================
+   GET USER'S PACKAGE BOOKINGS (AUTH REQUIRED)
+================================ */
+router.get("/user/package-bookings", async (req, res) => {
+  const authHeader = req.headers.authorization;
+  if (!authHeader) {
+    return res.status(401).json({ message: "No access token provided" });
+  }
+
+  const token = authHeader.split(" ")[1];
+    if (!token) {
+      return res.status(401).json({ message: "Invalid authorization format" });
+    }
+  try {
+    const decoded = jwt.verify(token, process.env.ACCESS_TOKEN_SECRET);
+    const user = await User.findById(decoded.id);
+    if (!user) {
+      return res.status(404).json({ message: "User not found" });
+    }
+
+    // Fetch package bookings for this user only
+    const bookings = await PackageBooking.find({
+      userId: user._id,
+    })
+      .populate('packageId', 'city title')
+      .sort({ createdAt: -1 });
+
+    res.json({ bookings });
+  } catch (error) {
+      console.error("Error fetching user package bookings:", error.message, error);
+    if (error.name === "JsonWebTokenError") {
+      return res.status(401).json({ message: "Invalid or expired token" });
+    }
+    res.status(500).json({ message: "Server error while fetching package bookings" });
+  }
+});
+
 export default router;

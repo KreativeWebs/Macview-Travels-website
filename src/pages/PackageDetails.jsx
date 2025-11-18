@@ -13,6 +13,7 @@ export default function PackageDetails() {
   const [loading, setLoading] = useState(true);
   const [formData, setFormData] = useState({
     fullName: "",
+    email: "",
     whatsappNumber: "",
   });
   const [travelDate, setTravelDate] = useState("");
