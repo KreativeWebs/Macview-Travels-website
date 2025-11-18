@@ -1,17 +1,23 @@
 import React, { useState, useEffect } from "react";
-import { useParams } from "react-router-dom";
+import { useParams, useNavigate } from "react-router-dom";
 import { getPackageById } from "../api/packages";
 import HeroHeader from "./HeroHeader";
+import { toast } from "react-toastify";
+
+const API_BASE_URL = "http://localhost:5000/api";
 
 export default function PackageDetails() {
   const { id } = useParams();
+  const navigate = useNavigate();
   const [packageData, setPackageData] = useState(null);
   const [loading, setLoading] = useState(true);
   const [formData, setFormData] = useState({
     fullName: "",
     whatsappNumber: "",
   });
-  const [uploadedFiles, setUploadedFiles] = useState({});
+  const [travelDate, setTravelDate] = useState("");
+  const [uploadProgress, setUploadProgress] = useState({});
+  const [selectedFiles, setSelectedFiles] = useState({});
 
   useEffect(() => {
     const fetchPackage = async () => {
@@ -38,16 +44,126 @@ export default function PackageDetails() {
     setFormData({ ...formData, [label]: e.target.value });
   };
 
-  const handleFileChange = (e, label) => {
-    setUploadedFiles({ ...uploadedFiles, [label]: e.target.files[0] });
+  const handleTravelDateChange = (e) => {
+    setTravelDate(e.target.value);
+  };
+
+  // Upload file to backend (Cloudinary)
+  const handleFileUpload = async (file, reqLabel, fileIndex) => {
+    const form = new FormData();
+    form.append("file", file);
+
+    // Set initial progress
+    setUploadProgress(prev => ({
+      ...prev,
+      [`${reqLabel}-${fileIndex}`]: { status: 'uploading', progress: 0 }
+    }));
+
+    try {
+      const res = await fetch(`${API_BASE_URL}/packages/upload-document`, {
+        method: "POST",
+        body: form,
+      });
+
+      if (!res.ok) throw new Error("File upload failed");
+      const data = await res.json();
+
+      // Update progress to success
+      setUploadProgress(prev => ({
+        ...prev,
+        [`${reqLabel}-${fileIndex}`]: { status: 'success', progress: 100 }
+      }));
+
+      return {
+        fileUrl: data.fileUrl,
+        originalName: file.name,
+      };
+    } catch (error) {
+      console.error("File upload error:", error);
+      toast.error("File upload failed");
+
+      // Update progress to failed
+      setUploadProgress(prev => ({
+        ...prev,
+        [`${reqLabel}-${fileIndex}`]: { status: 'failed', progress: 0 }
+      }));
+
+      return null;
+    }
+  };
+
+  // Dynamic input change (text & file)
+  const handleDynamicChange = async (e) => {
+    const { name, type, files, value } = e.target;
+
+    if (type === "file") {
+      if (!files || files.length === 0) return;
+
+      // Store selected files for display
+      setSelectedFiles(prev => ({
+        ...prev,
+        [name]: Array.from(files)
+      }));
+
+      const uploadedFiles = [];
+      for (let i = 0; i < files.length; i++) {
+        const file = files[i];
+
+        if (file.size > 10 * 1024 * 1024) {
+          toast.error(`File "${file.name}" is too large! Max 10MB.`);
+          uploadedFiles.push({ fileUrl: null, originalName: file.name, failed: true });
+          setUploadProgress(prev => ({
+            ...prev,
+            [`${name}-${i}`]: { status: 'failed', progress: 0 }
+          }));
+          continue;
+        }
+
+        const uploaded = await handleFileUpload(file, name, i);
+        uploadedFiles.push(uploaded || { fileUrl: null, originalName: file.name, failed: true });
+      }
+
+      setFormData(prev => ({
+        ...prev,
+        [name]: uploadedFiles.length > 1 ? uploadedFiles : uploadedFiles[0],
+      }));
+
+      return;
+    }
+
+    setFormData(prev => ({ ...prev, [name]: value }));
   };
 
   const handleSubmit = (e) => {
     e.preventDefault();
-    // Handle booking submission
-    console.log("Form data:", formData);
-    console.log("Uploaded files:", uploadedFiles);
-    // TODO: Implement booking logic
+
+    if (!formData.fullName || !formData.whatsappNumber || !travelDate) {
+      toast.error("Please fill all required fields");
+      return;
+    }
+
+    // Check if all required files are uploaded successfully
+    const hasFailedUploads = packageData.requirements.some(req => {
+      if (req.type === "upload") {
+        const fieldValue = formData[req.label];
+        if (Array.isArray(fieldValue)) {
+          return fieldValue.some(f => f.failed);
+        } else {
+          return fieldValue && fieldValue.failed;
+        }
+      }
+      return false;
+    });
+
+    if (hasFailedUploads) {
+      toast.error("Please ensure all files are uploaded successfully before proceeding");
+      return;
+    }
+
+    // Navigate to confirmation page
+    navigate("/package-confirmation", {
+      state: { formData, packageData, travelDate },
+    });
   };
 
   if (loading) {
@@ -216,6 +332,8 @@ export default function PackageDetails() {
                       <input
                         type="date"
                         className="form-control"
+                        value={travelDate}
+                        onChange={handleTravelDateChange}
                         min={new Date().toISOString().split('T')[0]}
                         required
                       />
@@ -229,13 +347,47 @@ export default function PackageDetails() {
                             <small className="text-muted d-block">{req.description}</small>
                           )}
                         </label>
-                        <input
-                          type="file"
-                          className="form-control"
-                          onChange={(e) => handleFileChange(e, req.label)}
-                          accept="image/*,.pdf,.doc,.docx"
-                          required
-                        />
+                        <div>
+                          <input
+                            type="file"
+                            name={req.label}
+                            multiple
+                            required={req.required}
+                            onChange={handleDynamicChange}
+                            className="form-control"
+                            accept="image/*,.pdf,.doc,.docx"
+                          />
+                          {selectedFiles[req.label] && selectedFiles[req.label].map((file, fileIndex) => {
+                            const progressKey = `${req.label}-${fileIndex}`;
+                            const progress = uploadProgress[progressKey];
+                            return (
+                              <div key={fileIndex} className="mt-2">
+                                <small className="text-muted">{file.name}</small>
+                                {progress && (
+                                  <div className="progress mt-1" style={{ height: '6px' }}>
+                                    <div
+                                      className={`progress-bar ${progress.status === 'success' ? 'bg-success' : progress.status === 'failed' ? 'bg-danger' : 'bg-primary'}`}
+                                      role="progressbar"
+                                      style={{ width: `${progress.progress}%` }}
+                                      aria-valuenow={progress.progress}
+                                      aria-valuemin="0"
+                                      aria-valuemax="100"
+                                    ></div>
+                                  </div>
+                                )}
+                                {progress && progress.status === 'success' && (
+                                  <small className="text-success">✓ Uploaded successfully</small>
+                                )}
+                                {progress && progress.status === 'failed' && (
+                                  <small className="text-danger">✗ Upload failed</small>
+                                )}
+                                {progress && progress.status === 'uploading' && (
+                                  <small className="text-primary">Uploading...</small>
+                                )}
+                              </div>
+                            );
+                          })}
+                        </div>
                       </div>
                     ))}
 

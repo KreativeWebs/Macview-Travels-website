@@ -15,6 +15,7 @@ export default function Sidebar({ open }) {
       icon: "fa-solid fa-hotel",
     },
     { name: "Packages", path: "packages", icon: "fa-solid fa-suitcase" },
+    { name: "Package Bookings", path: "package-bookings", icon: "fa-solid fa-shopping-cart" },
     { name: "Transfers", path: "transfers", icon: "fa-solid fa-car" },
     { name: "Visa Requirements", path: "visa-requirements", icon: "fa-solid fa-file-alt" },
     { name: "Settings", path: "settings", icon: "fa-solid fa-gear" },

@@ -7,6 +7,7 @@ import FlightBooking from "../models/flightbooking.js";
 import HotelBooking from "../models/HotelBooking.js";
 import VisaRequirement from "../models/visaRequirements.js";
 import Package from "../models/Package.js";
+import PackageBooking from "../models/PackageBooking.js";
 import upload from "../config/multer.js";
 
 const router = express.Router();
@@ -1030,6 +1031,195 @@ router.delete("/packages/:id", async (req, res) => {
   } catch (error) {
     console.error("Error deleting package:", error);
     res.status(500).json({ message: "Error deleting package" });
+  }
+});
+
+// Get package bookings
+router.get("/package-bookings", async (req, res) => {
+  try {
+    const { page = 1, limit = 10, search, status, year, month, week } = req.query;
+
+    let query = {};
+    let conditions = [];
+
+    // Filter by status if provided
+    if (status && status !== 'all') {
+      conditions.push({ status });
+    }
+
+    // Search by fullName, whatsappNumber, or packageTitle if provided
+    if (search) {
+      let searchTerm = search.trim();
+      // Escape regex special characters
+      searchTerm = searchTerm.replace(/[.*+?^${}()|[\\]\\]/g, '\\$&');
+      conditions.push({
+        $or: [
+          { fullName: { $regex: searchTerm, $options: 'i' } },
+          { whatsappNumber: { $regex: searchTerm, $options: 'i' } },
+          { packageTitle: { $regex: searchTerm, $options: 'i' } }
+        ]
+      });
+    }
+
+    if (conditions.length > 0) {
+      query.$and = conditions;
+    }
+
+    // Date filtering by year/month/week
+    if (year || month || week) {
+      let startDate, endDate;
+
+      if (year && month && week) {
+        const parsedYear = parseInt(year, 10);
+        const parsedMonth = parseInt(month, 10) - 1;
+        const parsedWeek = parseInt(week, 10);
+
+        const monthStart = new Date(parsedYear, parsedMonth, 1);
+        const firstDayOfMonth = monthStart.getDay();
+        const weekStartOffset = (parsedWeek - 1) * 7 - (firstDayOfMonth === 0 ? 6 : firstDayOfMonth - 1);
+        startDate = new Date(parsedYear, parsedMonth, 1 + weekStartOffset);
+        endDate = new Date(startDate);
+        endDate.setDate(startDate.getDate() + 6);
+      } else if (year && month) {
+        const parsedYear = parseInt(year, 10);
+        const parsedMonth = parseInt(month, 10) - 1;
+        startDate = new Date(parsedYear, parsedMonth, 1);
+        endDate = new Date(parsedYear, parsedMonth + 1, 1);
+      } else if (year) {
+        const parsedYear = parseInt(year, 10);
+        startDate = new Date(parsedYear, 0, 1);
+        endDate = new Date(parsedYear + 1, 0, 1);
+      }
+
+      if (startDate && endDate) {
+        query.createdAt = { $gte: startDate, $lt: endDate };
+      }
+    }
+
+    const bookings = await PackageBooking.find(query)
+      .populate('packageId', 'city')
+      .sort({ createdAt: -1 })
+      .limit(limit * 1)
+      .skip((page - 1) * limit)
+      .select('fullName email whatsappNumber travelDate packageTitle packagePrice packageCurrency documents status payment.status payment.amount createdAt');
+
+    const total = await PackageBooking.countDocuments(query);
+
+    res.json({
+      bookings,
+      totalPages: Math.ceil(total / limit),
+      currentPage: page,
+      total
+    });
+  } catch (error) {
+    console.error("Error fetching package bookings:", error);
+    res.status(500).json({ message: "Error fetching package bookings" });
+  }
+});
+
+// Get recent package bookings (last 5)
+router.get("/package-bookings/recent", async (req, res) => {
+  try {
+    const bookings = await PackageBooking.find()
+      .sort({ createdAt: -1 })
+      .limit(5)
+      .select('fullName packageTitle travelDate status createdAt');
+
+    res.json({ bookings });
+  } catch (error) {
+    console.error("Error fetching recent package bookings:", error);
+    res.status(500).json({ message: "Error fetching recent package bookings" });
+  }
+});
+
+// Get single package booking by ID
+router.get("/package-bookings/:id", async (req, res) => {
+  try {
+    const booking = await PackageBooking.findById(req.params.id).populate('packageId');
+
+    if (!booking) {
+      return res.status(404).json({ message: "Package booking not found" });
+    }
+
+    res.json({ booking });
+  } catch (error) {
+    console.error("Error fetching package booking:", error);
+    res.status(500).json({ message: "Error fetching package booking" });
+  }
+});
+
+// Update package booking status
+router.put("/package-bookings/:id/status", async (req, res) => {
+  try {
+    const { status } = req.body;
+
+    const booking = await PackageBooking.findByIdAndUpdate(
+      req.params.id,
+      { status },
+      { new: true }
+    );
+
+    if (!booking) {
+      return res.status(404).json({ message: "Package booking not found" });
+    }
+
+    // Emit real-time update to all connected admin clients
+    if (global.io) {
+      global.io.emit("packageBookingStatusUpdate", {
+        id: booking._id,
+        status: booking.status,
+        updatedAt: booking.updatedAt,
+      });
+    }
+
+    res.json({ booking });
+  } catch (error) {
+    console.error("Error updating package booking status:", error);
+    res.status(500).json({ message: "Error updating package booking status" });
+  }
+});
+
+// Get package bookings count for a specific month
+router.get("/package-bookings/count", async (req, res) => {
+  try {
+    const { month, year } = req.query;
+    const startDate = new Date(year, month - 1, 1); // Month is 0-indexed in JS
+    const endDate = new Date(year, month, 1);
+
+    const count = await PackageBooking.countDocuments({
+      createdAt: { $gte: startDate, $lt: endDate }
+    });
+
+    res.json({ count });
+  } catch (error) {
+    console.error("Error fetching package bookings count:", error);
+    res.status(500).json({ message: "Error fetching package bookings count" });
+  }
+});
+
+// Get package bookings for PDF report by month and year
+router.get("/package-bookings/report", async (req, res) => {
+  try {
+    const { month, year } = req.query;
+
+    const parsedMonth = parseInt(month, 10);
+    const parsedYear = parseInt(year, 10);
+
+    if (!month || !year || isNaN(parsedMonth) || isNaN(parsedYear) || parsedMonth < 1 || parsedMonth > 12 || parsedYear < 1900 || parsedYear > 2100) {
+      return res.status(400).json({ message: "Invalid month or year. Month must be 1-12, year must be a valid number." });
+    }
+
+    const startDate = new Date(parsedYear, parsedMonth - 1, 1);
+    const endDate = new Date(parsedYear, parsedMonth, 1);
+
+    const bookings = await PackageBooking.find({ createdAt: { $gte: startDate, $lt: endDate } })
+      .sort({ createdAt: -1 })
+      .select('fullName whatsappNumber packageTitle packagePrice packageCurrency travelDate status createdAt');
+
+    res.json({ bookings, month: parsedMonth, year: parsedYear });
+  } catch (error) {
+    console.error('Error fetching package bookings for report:', error);
+    res.status(500).json({ message: 'Error fetching package bookings for report' });
   }
 });
 
