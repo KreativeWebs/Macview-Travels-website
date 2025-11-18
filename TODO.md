@@ -1,10 +1,11 @@
-# TODO: Fix Public Packages Access Issue
+# TODO: Update Booking Form in PackageDetails Page
 
-## Pending Tasks
-- [x] Create `backend/routes/packagesRoutes.js` with public GET routes for packages (no auth required)
-- [x] Mount the new route in `backend/server.js` as /api/packages
-- [x] Update `src/api/packages.js` to use /api/packages instead of /api/admin/packages
-
-## Followup Steps
-- [x] Test that public packages load without authentication
-- [ ] Verify admin package management still works with /api/admin/packages
+- [x] Add "Requirements" section to the left column in PackageDetails.jsx, similar to the inclusions list
+- [x] Display requirement labels as plain text items
+- [x] Remove text input requirements from booking form, keep only upload inputs
+- [x] Test the updated display by running the application
+- [x] Add full name input field to booking form
+- [x] Add WhatsApp number input field to booking form
+- [x] Remove number of persons input field from booking form
+- [x] Move upload requirements fields to appear after other fields
+- [x] Test the updated booking form

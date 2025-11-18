@@ -7,7 +7,10 @@ export default function PackageDetails() {
   const { id } = useParams();
   const [packageData, setPackageData] = useState(null);
   const [loading, setLoading] = useState(true);
-  const [formData, setFormData] = useState({});
+  const [formData, setFormData] = useState({
+    fullName: "",
+    whatsappNumber: "",
+  });
   const [uploadedFiles, setUploadedFiles] = useState({});
 
   useEffect(() => {
@@ -158,6 +161,21 @@ export default function PackageDetails() {
                     </ul>
                   </div>
                 )}
+
+                {/* Requirements */}
+                {packageData.requirements && packageData.requirements.length > 0 && (
+                  <div className="mb-4">
+                    <h4 className="mb-3">Requirements</h4>
+                    <ul className="list-group">
+                      {packageData.requirements.map((req, index) => (
+                        <li key={index} className="list-group-item">
+                          <i className="fa fa-list text-primary me-2" />
+                          {req.label}
+                        </li>
+                      ))}
+                    </ul>
+                  </div>
+                )}
               </div>
             </div>
 
@@ -169,43 +187,26 @@ export default function PackageDetails() {
                 </div>
                 <div className="card-body">
                   <form onSubmit={handleSubmit}>
-                    {packageData.requirements && packageData.requirements.map((req, index) => (
-                      <div key={index} className="mb-3">
-                        <label className="form-label">
-                          {req.label}
-                          {req.description && (
-                            <small className="text-muted d-block">{req.description}</small>
-                          )}
-                        </label>
-                        {req.type === "text" ? (
-                          <input
-                            type="text"
-                            className="form-control"
-                            value={formData[req.label] || ""}
-                            onChange={(e) => handleInputChange(e, req.label)}
-                            placeholder={`Enter ${req.label.toLowerCase()}`}
-                            required
-                          />
-                        ) : req.type === "upload" ? (
-                          <input
-                            type="file"
-                            className="form-control"
-                            onChange={(e) => handleFileChange(e, req.label)}
-                            accept="image/*,.pdf,.doc,.docx"
-                            required
-                          />
-                        ) : null}
-                      </div>
-                    ))}
+                    <div className="mb-3">
+                      <label className="form-label">Full Name</label>
+                      <input
+                        type="text"
+                        className="form-control"
+                        value={formData.fullName}
+                        onChange={(e) => handleInputChange(e, "fullName")}
+                        placeholder="Enter your full name"
+                        required
+                      />
+                    </div>
 
                     <div className="mb-3">
-                      <label className="form-label">Number of Persons</label>
+                      <label className="form-label">WhatsApp Number</label>
                       <input
-                        type="number"
+                        type="tel"
                         className="form-control"
-                        min="1"
-                        max={packageData.persons}
-                        defaultValue="1"
+                        value={formData.whatsappNumber}
+                        onChange={(e) => handleInputChange(e, "whatsappNumber")}
+                        placeholder="Enter your WhatsApp number"
                         required
                       />
                     </div>
@@ -219,6 +220,24 @@ export default function PackageDetails() {
                         required
                       />
                     </div>
+
+                    {packageData.requirements && packageData.requirements.filter(req => req.type === "upload").map((req, index) => (
+                      <div key={index} className="mb-3">
+                        <label className="form-label">
+                          {req.label}
+                          {req.description && (
+                            <small className="text-muted d-block">{req.description}</small>
+                          )}
+                        </label>
+                        <input
+                          type="file"
+                          className="form-control"
+                          onChange={(e) => handleFileChange(e, req.label)}
+                          accept="image/*,.pdf,.doc,.docx"
+                          required
+                        />
+                      </div>
+                    ))}
 
                     <div className="mb-4">
                       <h5>Total Price: {packageData.currency === "NGN" ? "₦" : "$"}{packageData.price.toLocaleString()}</h5>
