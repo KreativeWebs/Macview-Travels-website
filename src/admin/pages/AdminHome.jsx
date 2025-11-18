@@ -7,6 +7,7 @@ export default function AdminHome() {
     visaApplications: 0,
     flightRequests: 0,
     hotelBookings: 0,
+    packageBookings: 0,
     airportTransfers: 0,
   });
   const [loading, setLoading] = useState(true);
@@ -39,6 +40,7 @@ export default function AdminHome() {
         visaApplications: data.visaApplications || 0,
         flightRequests: data.flightBookings || 0,
         hotelBookings: data.hotelBookings || 0,
+        packageBookings: data.packageBookings || 0,
         airportTransfers: 0, // Not in backend yet
       });
     } catch (error) {
@@ -52,7 +54,7 @@ export default function AdminHome() {
     { title: "Visa Applications", value: stats.visaApplications, loading },
     { title: "Flight Requests", value: stats.flightRequests, loading },
     { title: "Hotel Bookings", value: stats.hotelBookings, loading },
-    { title: "Airport Transfers", value: stats.airportTransfers, loading },
+    { title: "Package Bookings", value: stats.packageBookings, loading },
   ];
 
   return (
@@ -87,24 +89,31 @@ export default function AdminHome() {
 
       {/* Recent Lists */}
       <div className="row g-4">
-        <div className="col-12 col-lg-4">
+        <div className="col-12 col-lg-3">
           <div className="bg-white p-4 rounded shadow-sm">
             <h5 className="fw-semibold mb-3">Recent Visa Applications</h5>
             <MiniVisaList />
           </div>
         </div>
 
-        <div className="col-12 col-lg-4">
+        <div className="col-12 col-lg-3">
           <div className="bg-white p-4 rounded shadow-sm">
             <h5 className="fw-semibold mb-3">Recent Flight Requests</h5>
             <MiniFlightList />
           </div>
         </div>
 
-        <div className="col-12 col-lg-4">
+        <div className="col-12 col-lg-3">
           <div className="bg-white p-4 rounded shadow-sm">
             <h5 className="fw-semibold mb-3">Recent Hotel Bookings</h5>
             <MiniHotelList />
+          </div>
+        </div>
+
+        <div className="col-12 col-lg-3">
+          <div className="bg-white p-4 rounded shadow-sm">
+            <h5 className="fw-semibold mb-3">Recent Package Bookings</h5>
+            <MiniPackageList />
           </div>
         </div>
       </div>
@@ -337,13 +346,82 @@ export function MiniHotelList() {
   );
 }
 
+export function MiniPackageList() {
+  const [items, setItems] = useState([]);
+  const [loading, setLoading] = useState(true);
+
+  useEffect(() => {
+    fetchRecentPackageBookings();
+
+    // Listen for real-time updates
+    socket.on('newPackageBooking', (newBooking) => {
+      setItems(prevItems => [{ ...newBooking, _id: newBooking.id }, ...prevItems.slice(0, 4)]); // Keep only 5 items
+    });
+
+    return () => {
+      socket.off('newPackageBooking');
+    };
+  }, []);
+
+  const fetchRecentPackageBookings = async () => {
+    try {
+      setLoading(true);
+      const res = await adminAxios.get('/package-bookings/recent');
+      setItems(res.data.bookings || []);
+    } catch (error) {
+      console.error("Error fetching recent package bookings:", error);
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  if (loading) {
+    return (
+      <div className="text-center py-3">
+        <div className="spinner-border spinner-border-sm text-primary" role="status">
+          <span className="visually-hidden">Loading...</span>
+        </div>
+      </div>
+    );
+  }
+
+  if (items.length === 0) {
+    return <div className="text-muted small py-3">No recent package bookings</div>;
+  }
+
+  return (
+    <ul className="list-group">
+      {items.map((it) => (
+        <li
+          key={it._id}
+          className="list-group-item d-flex justify-content-between align-items-center"
+        >
+          <div className="d-flex align-items-center">
+            <div>
+              <div className="fw-medium">{it.fullName}</div>
+              <div className="small text-muted">{it.packageTitle}</div>
+            </div>
+            {it.isNew && (
+              <div className="ms-2">
+                <span className="badge bg-primary rounded-circle" style={{ width: '8px', height: '8px', padding: 0 }}>
+                  <span className="visually-hidden">New</span>
+                </span>
+              </div>
+            )}
+          </div>
+          <span className={`badge ${getStatusBadgeClass(it.status)}`}>{it.status}</span>
+        </li>
+      ))}
+    </ul>
+  );
+}
+
 // Helper function for status badges
 const getStatusBadgeClass = (status) => {
   switch (status) {
     case 'received': return 'bg-warning';
-    case 'processing': return 'bg-info';
-    case 'completed': return 'bg-success';
-    case 'rejected': return 'bg-danger';
+    case 'booked': return 'bg-success';
+    case 'not booked': return 'bg-danger';
     default: return 'bg-secondary';
   }
 };

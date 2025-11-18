@@ -24,7 +24,9 @@ import Contact from "./pages/Contact";
 import FlightSuccess from "./pages/FlightSuccess.jsx";
 import HotelSuccess from "./pages/HotelSuccess.jsx";
 import VisaSuccess from "./pages/VisaSuccess.jsx";
+import PackageSuccess from "./pages/PackageSuccess.jsx";
 import VisaPayment from "./pages/VisaPayment";
+import PackageConfirmation from "./pages/PackageConfirmation.jsx";
 import ForgotPassword from "./pages/ForgotPassword.jsx";
 import ResetPassword from "./pages/ResetPassword.jsx";
 import { useAuthStore } from "./store/authStore";
@@ -46,6 +48,7 @@ import VisaRequirements from "./admin/pages/VisaRequirements.jsx";
 import AddNewVisaRequirement from "./admin/pages/AddNewVisaRequirement.jsx";
 import AddNewPackage from "./admin/pages/AddNewPackage";
 import PackagesManagement from "./admin/pages/PackagesManagement";
+import PackageBookings from "./admin/pages/PackageBookings";
 import PackageDetails from "./pages/PackageDetails";
 
 function FloatingButtonsController() {
@@ -112,6 +115,8 @@ export default function App() {
                 <Route path="/flight-success" element={<FlightSuccess />} />
                 <Route path="/hotel-success" element={<HotelSuccess />} />
                 <Route path="/visa-success" element={<VisaSuccess />} />
+                <Route path="/package-success" element={<PackageSuccess />} />
+                <Route path="/package-confirmation" element={<PackageConfirmation />} />
                  <Route path="/visa-payment" element={<VisaPayment />} />
                 <Route path="/forgot-password" element={<ForgotPassword />} />
                 <Route
@@ -146,6 +151,7 @@ export default function App() {
           
           <Route path="addnewhotel" element={<AddNewHotel />} />
           <Route path="packages" element={<PackagesManagement />} />
+          <Route path="package-bookings" element={<PackageBookings />} />
           <Route path="addnewpackage" element={<AddNewPackage />} />
         </Route>
 
