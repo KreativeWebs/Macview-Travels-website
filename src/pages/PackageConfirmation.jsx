@@ -52,14 +52,10 @@ function PackageConfirmation() {
       });
 
       const user = useAuthStore.getState().user;
-      if (!user || !user.email) {
-        alert("Please login to submit your package booking.");
-        return;
-      }
 
       const payload = {
         fullName: formData.fullName,
-        email: user.email,
+        email: formData.email,
         whatsappNumber: formData.whatsappNumber,
         travelDate,
         packageId: packageData._id,

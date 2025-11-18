@@ -58,7 +58,11 @@ router.post("/book", async (req, res) => {
   try {
     const { fullName, whatsappNumber, travelDate, packageId, packageTitle, packagePrice, packageCurrency, documents, email } = req.body;
 
+    // Get userId from authenticated user (if logged in)
+    const userId = req.user ? req.user.id : null;
+
     const newBooking = new PackageBooking({
+      userId,
       fullName,
       email,
       whatsappNumber,
@@ -68,6 +72,7 @@ router.post("/book", async (req, res) => {
       packagePrice,
       packageCurrency,
       documents,
+      payment: req.body.payment,
       status: "received",
     });
 
@@ -77,6 +82,7 @@ router.post("/book", async (req, res) => {
       global.io.emit("newPackageBooking", {
         id: newBooking._id,
         fullName: newBooking.fullName,
+        email: newBooking.email,
         whatsappNumber: newBooking.whatsappNumber,
         travelDate: newBooking.travelDate,
         packageTitle: newBooking.packageTitle,
