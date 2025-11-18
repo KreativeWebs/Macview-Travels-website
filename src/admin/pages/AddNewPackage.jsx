@@ -1,8 +1,10 @@
 import { useState } from "react";
+import { useNavigate } from "react-router-dom";
 import { toast } from "react-toastify";
 import adminAxios from "../../api/adminAxios";
 
 export default function AddNewPackage() {
+   const navigate = useNavigate();
   const [formData, setFormData] = useState({
     title: "",
     description: "",
@@ -88,19 +90,8 @@ export default function AddNewPackage() {
       });
 
       toast.success("Package created successfully!");
-      // Reset form
-      setFormData({
-        title: "",
-        description: "",
-        city: "",
-        nights: "",
-        persons: "",
-        price: "",
-        currency: "NGN",
-        backgroundImage: null,
-        inclusions: [],
-        requirements: [],
-      });
+      navigate("/packages")
+
     } catch (error) {
       console.error("Error creating package:", error);
       toast.error("Failed to create package");
