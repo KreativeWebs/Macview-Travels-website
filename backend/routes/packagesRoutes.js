@@ -2,10 +2,41 @@ import express from "express";
 import Package from "../models/Package.js";
 import PackageBooking from "../models/PackageBooking.js";
 import upload from "../config/multer.js";
+import axios from "axios";  
 
 const router = express.Router();
 
-// Get all active packages (public route - no auth required)
+// -----------------------------------------------------------
+// GET USD → NGN Exchange Rate
+// -----------------------------------------------------------
+router.get("/exchange-rate", async (req, res) => {
+  try {
+    const url = "https://api.exchangerate.host/live?access_key=af79230d873ce3be3626d44397c7ec40&currencies=NGN";
+
+    const response = await axios.get(url);
+
+    // Ensure API success
+    if (!response.data.success) {
+      return res.status(500).json({ message: "Exchange API error", details: response.data.error });
+    }
+
+    // Extract USD→NGN rate
+    const rate = response.data.quotes?.USDNGN;
+
+    if (!rate) {
+      return res.status(500).json({ message: "NGN rate not found in API response" });
+    }
+
+    res.json({ rate });
+  } catch (error) {
+    console.error("Exchange rate error:", error.message);
+    res.status(500).json({ message: "Error getting exchange rate", error: error.message });
+  }
+});
+
+// -----------------------------------------------------------
+// Get all active packages
+// -----------------------------------------------------------
 router.get("/", async (req, res) => {
   try {
     const packages = await Package.find({ isActive: true }).sort({ createdAt: -1 });
@@ -16,7 +47,9 @@ router.get("/", async (req, res) => {
   }
 });
 
-// Get single package by ID (public route - no auth required)
+// -----------------------------------------------------------
+// Get single package by ID
+// -----------------------------------------------------------
 router.get("/:id", async (req, res) => {
   try {
     const packageData = await Package.findById(req.params.id);
@@ -32,10 +65,11 @@ router.get("/:id", async (req, res) => {
   }
 });
 
-// File Upload Route using Cloudinary
+// -----------------------------------------------------------
+// Upload Document to Cloudinary
+// -----------------------------------------------------------
 router.post("/upload-document", upload.single("file"), (req, res) => {
   try {
-    // Check if file was uploaded
     if (!req.file) {
       return res.status(400).json({
         success: false,
@@ -45,7 +79,7 @@ router.post("/upload-document", upload.single("file"), (req, res) => {
 
     return res.json({
       success: true,
-      fileUrl: req.file.path, // Cloudinary file URL returned
+      fileUrl: req.file.path,
     });
   } catch (error) {
     console.error("Upload error:", error);
@@ -53,12 +87,13 @@ router.post("/upload-document", upload.single("file"), (req, res) => {
   }
 });
 
-// Route: POST /api/packages/book
+// -----------------------------------------------------------
+// Book Package
+// -----------------------------------------------------------
 router.post("/book", async (req, res) => {
   try {
     const { fullName, whatsappNumber, travelDate, packageId, packageTitle, packagePrice, packageCurrency, documents, email } = req.body;
 
-    // Get userId from authenticated user (if logged in)
     const userId = req.user ? req.user.id : null;
 
     const newBooking = new PackageBooking({
@@ -78,6 +113,7 @@ router.post("/book", async (req, res) => {
 
     await newBooking.save();
 
+    // Emit Socket.IO notifications
     if (global.io) {
       global.io.emit("newPackageBooking", {
         id: newBooking._id,
@@ -94,8 +130,8 @@ router.post("/book", async (req, res) => {
         isNew: true,
       });
 
-      const PackageBooking = (await import("../models/PackageBooking.js")).default;
-      const bookingCount = await PackageBooking.countDocuments();
+      const PackageBookingModel = (await import("../models/PackageBooking.js")).default;
+      const bookingCount = await PackageBookingModel.countDocuments();
       global.io.emit("statsUpdate", { packageBookings: bookingCount });
     }
 
