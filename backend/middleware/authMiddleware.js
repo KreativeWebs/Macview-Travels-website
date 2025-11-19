@@ -14,11 +14,32 @@ export const authenticateAdmin = async (req, res, next) => {
       // Try to verify as access token first (admin login creates access tokens)
       decoded = jwt.verify(token, process.env.ACCESS_TOKEN_SECRET);
     } catch (accessError) {
-      try {
-        // If access token verification fails, try refresh token secret
-        decoded = jwt.verify(token, process.env.REFRESH_TOKEN_SECRET);
-      } catch (refreshError) {
-        throw new Error("Invalid token signature");
+      if (accessError.name === 'TokenExpiredError') {
+        // Try to refresh using refresh token from cookies
+        const refreshToken = req.cookies.refreshToken;
+        if (refreshToken) {
+          try {
+            const refreshDecoded = jwt.verify(refreshToken, process.env.REFRESH_TOKEN_SECRET);
+            // Create new access token
+            const newAccessToken = jwt.sign({ id: refreshDecoded.id }, process.env.ACCESS_TOKEN_SECRET, {
+              expiresIn: "15m",
+            });
+            // Set the new token in the header for this request
+            req.headers.authorization = `Bearer ${newAccessToken}`;
+            decoded = jwt.verify(newAccessToken, process.env.ACCESS_TOKEN_SECRET);
+          } catch (refreshError) {
+            throw new Error("Invalid token signature");
+          }
+        } else {
+          throw new Error("Invalid token signature");
+        }
+      } else {
+        // Try refresh token secret for backward compatibility
+        try {
+          decoded = jwt.verify(token, process.env.REFRESH_TOKEN_SECRET);
+        } catch (refreshError) {
+          throw new Error("Invalid token signature");
+        }
       }
     }
 
