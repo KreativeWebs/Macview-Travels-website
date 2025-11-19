@@ -2,6 +2,7 @@ import { useLocation, useNavigate } from "react-router-dom";
 import PaystackPayment from "../components/PaystackPayment";
 import axios from "axios";
 import { useAuthStore } from "../store/authStore";
+import { useState, useEffect } from "react";
 
 function PackageConfirmation() {
   const location = useLocation();
@@ -15,6 +16,31 @@ function PackageConfirmation() {
   }
 
   const { formData, packageData, travelDate } = data;
+
+  const [convertedAmount, setConvertedAmount] = useState(packageData.price);
+  const [isConverting, setIsConverting] = useState(false);
+
+  useEffect(() => {
+    const convertCurrency = async () => {
+      if (packageData.currency === "USD") {
+        setIsConverting(true);
+        try {
+          const response = await axios.get(`${import.meta.env.VITE_API_URL}/packages/exchange-rate`);
+          const rate = response.data.rate;
+          const nairaAmount = Math.round(packageData.price * rate);
+          setConvertedAmount(nairaAmount);
+        } catch (error) {
+          console.error("Error fetching exchange rate:", error);
+          // Fallback to original price if conversion fails
+          setConvertedAmount(packageData.price);
+        } finally {
+          setIsConverting(false);
+        }
+      }
+    };
+
+    convertCurrency();
+  }, [packageData.currency, packageData.price]);
 
   const handlePaymentSuccess = async (paymentRef) => {
     try {
@@ -55,7 +81,6 @@ function PackageConfirmation() {
 
       const payload = {
         fullName: formData.fullName,
-        email: formData.email,
         whatsappNumber: formData.whatsappNumber,
         travelDate,
         packageId: packageData._id,
@@ -67,7 +92,7 @@ function PackageConfirmation() {
           status: "paid",
           provider: "paystack",
           transactionId: paymentRef.reference,
-          amount: packageData.price,
+          amount: convertedAmount,
         },
       };
 
@@ -168,12 +193,21 @@ function PackageConfirmation() {
             Back
           </button>
 
-          <PaystackPayment
-            amount={packageData.price}
-            email="ishakad041@example.com"
-            fullName={formData.fullName}
-            onSuccess={handlePaymentSuccess}
-          />
+          {isConverting ? (
+            <div className="text-center">
+              <div className="spinner-border text-primary" role="status">
+                <span className="visually-hidden">Converting currency...</span>
+              </div>
+              <p className="mt-2">Converting currency...</p>
+            </div>
+          ) : (
+            <PaystackPayment
+              amount={convertedAmount}
+              email={formData.email}
+              fullName={formData.fullName}
+              onSuccess={handlePaymentSuccess}
+            />
+          )}
         </div>
       </div>
     </div>
