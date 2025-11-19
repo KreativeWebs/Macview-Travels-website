@@ -154,6 +154,7 @@ export default function App() {
           <Route path="packages" element={<PackagesManagement />} />
           <Route path="package-bookings" element={<PackageBookings />} />
           <Route path="addnewpackage" element={<AddNewPackage />} />
+          <Route path="edit-package/:id" element={<AddNewPackage />} />
           <Route path="createnewsletter" element={<AdminCreateNewsletter />} />
           <Route path="viewnewsletter" element={<AdminNewsletterSubscribers />} />
         </Route>
