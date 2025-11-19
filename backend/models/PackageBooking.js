@@ -25,6 +25,9 @@ const packageBookingSchema = new mongoose.Schema({
     transactionId: String,
     amount: Number,
   },
+  discountApplied: { type: Boolean, default: false },
+  discountPercentage: { type: Number, default: 0 },
+  discountedPrice: { type: Number },
   status: { type: String, enum: ["received", "confirmed", "cancelled"], default: "received" },
   createdAt: { type: Date, default: Date.now }
 });

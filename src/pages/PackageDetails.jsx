@@ -3,6 +3,7 @@ import { useParams, useNavigate } from "react-router-dom";
 import { getPackageById } from "../api/packages";
 import HeroHeader from "./HeroHeader";
 import { toast } from "react-toastify";
+import axios from "axios";
 
 const API_BASE_URL = "http://localhost:5000/api";
 
@@ -15,10 +16,13 @@ export default function PackageDetails() {
     fullName: "",
     email: "",
     whatsappNumber: "",
+    promoCode: "",
   });
   const [travelDate, setTravelDate] = useState("");
   const [uploadProgress, setUploadProgress] = useState({});
   const [selectedFiles, setSelectedFiles] = useState({});
+  const [discountedPrice, setDiscountedPrice] = useState(null);
+  const [promoApplied, setPromoApplied] = useState(false);
 
   useEffect(() => {
     const fetchPackage = async () => {
@@ -41,8 +45,38 @@ export default function PackageDetails() {
     fetchPackage();
   }, [id]);
 
-  const handleInputChange = (e, label) => {
-    setFormData({ ...formData, [label]: e.target.value });
+  const handleInputChange = async (e, label) => {
+    const value = e.target.value;
+    setFormData({ ...formData, [label]: value });
+
+    // Handle promo code validation
+    if (label === "promoCode") {
+      if (value.trim() === "") {
+        setDiscountedPrice(null);
+        setPromoApplied(false);
+      } else {
+        try {
+          const response = await axios.post(`${API_BASE_URL}/packages/${id}/validate-promo`, {
+            promoCode: value
+          });
+
+          if (response.data.valid) {
+            setDiscountedPrice(response.data.discountedPrice);
+            setPromoApplied(true);
+            toast.success(`Promo code applied! ${response.data.discountPercentage}% discount`);
+          } else {
+            setDiscountedPrice(null);
+            setPromoApplied(false);
+            toast.error("Invalid promo code");
+          }
+        } catch (error) {
+          console.error("Error validating promo code:", error);
+          setDiscountedPrice(null);
+          setPromoApplied(false);
+          toast.error("Error validating promo code");
+        }
+      }
+    }
   };
 
   const handleTravelDateChange = (e) => {
@@ -163,7 +197,7 @@ export default function PackageDetails() {
 
     // Navigate to confirmation page
     navigate("/package-confirmation", {
-      state: { formData, packageData, travelDate },
+      state: { formData, packageData, travelDate, discountedPrice, promoApplied },
     });
   };
 
@@ -340,6 +374,17 @@ export default function PackageDetails() {
                       />
                     </div>
 
+                    <div className="mb-3">
+                      <label className="form-label">Promo Code (Optional)</label>
+                      <input
+                        type="text"
+                        className="form-control"
+                        value={formData.promoCode}
+                        onChange={(e) => handleInputChange(e, "promoCode")}
+                        placeholder="Enter promo code for discount"
+                      />
+                    </div>
+
                     {packageData.requirements && packageData.requirements.filter(req => req.type === "upload").map((req, index) => (
                       <div key={index} className="mb-3">
                         <label className="form-label">
@@ -393,7 +438,12 @@ export default function PackageDetails() {
                     ))}
 
                     <div className="mb-4">
-                      <h5>Total Price: {packageData.currency === "NGN" ? "₦" : "$"}{packageData.price.toLocaleString()}</h5>
+                      <h5>Total Price: {packageData.currency === "NGN" ? "₦" : "$"}{(discountedPrice || packageData.price).toLocaleString()}</h5>
+                      {discountedPrice && (
+                        <small className="text-muted">
+                          <s>{packageData.currency === "NGN" ? "₦" : "$"}{packageData.price.toLocaleString()}</s> ({packageData.discountPercentage}% off)
+                        </small>
+                      )}
                     </div>
 
                     <button type="submit" className="btn btn-primary w-100">

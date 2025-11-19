@@ -935,6 +935,8 @@ router.post("/packages", upload.single("backgroundImage"), async (req, res) => {
       currency,
       inclusions,
       requirements,
+      promoCode,
+      discountPercentage,
     } = req.body;
 
     let backgroundImageUrl = "";
@@ -953,6 +955,8 @@ router.post("/packages", upload.single("backgroundImage"), async (req, res) => {
       backgroundImage: backgroundImageUrl,
       inclusions: inclusions ? JSON.parse(inclusions) : [],
       requirements: requirements ? JSON.parse(requirements) : [],
+      promoCode: promoCode || "",
+      discountPercentage: Number(discountPercentage) || 0,
     });
 
     await newPackage.save();
@@ -980,6 +984,8 @@ router.put("/packages/:id", upload.single("backgroundImage"), async (req, res) =
       currency,
       inclusions,
       requirements,
+      promoCode,
+      discountPercentage,
     } = req.body;
 
     const updateData = {
@@ -992,6 +998,8 @@ router.put("/packages/:id", upload.single("backgroundImage"), async (req, res) =
       currency,
       inclusions: inclusions ? JSON.parse(inclusions) : [],
       requirements: requirements ? JSON.parse(requirements) : [],
+      promoCode: promoCode || "",
+      discountPercentage: Number(discountPercentage) || 0,
     };
 
     if (req.file) {

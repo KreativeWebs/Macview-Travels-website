@@ -88,6 +88,38 @@ router.post("/upload-document", upload.single("file"), (req, res) => {
 });
 
 // -----------------------------------------------------------
+// Validate Promo Code
+// -----------------------------------------------------------
+router.post("/:id/validate-promo", async (req, res) => {
+  try {
+    const { promoCode } = req.body;
+    const packageData = await Package.findById(req.params.id);
+
+    if (!packageData) {
+      return res.status(404).json({ message: "Package not found" });
+    }
+
+    if (!packageData.promoCode || packageData.promoCode.toLowerCase() !== promoCode.toLowerCase()) {
+      return res.status(400).json({ valid: false, message: "Invalid promo code" });
+    }
+
+    const discount = (packageData.price * packageData.discountPercentage) / 100;
+    const discountedPrice = packageData.price - discount;
+
+    res.json({
+      valid: true,
+      discountPercentage: packageData.discountPercentage,
+      originalPrice: packageData.price,
+      discountedPrice,
+      currency: packageData.currency
+    });
+  } catch (error) {
+    console.error("Error validating promo code:", error);
+    res.status(500).json({ message: "Error validating promo code" });
+  }
+});
+
+// -----------------------------------------------------------
 // Book Package
 // -----------------------------------------------------------
 router.post("/book", async (req, res) => {

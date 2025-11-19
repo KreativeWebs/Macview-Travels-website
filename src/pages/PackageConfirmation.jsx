@@ -15,9 +15,9 @@ function PackageConfirmation() {
     return null;
   }
 
-  const { formData, packageData, travelDate } = data;
+  const { formData, packageData, travelDate, discountedPrice, promoApplied } = data;
 
-  const [convertedAmount, setConvertedAmount] = useState(packageData.price);
+  const [convertedAmount, setConvertedAmount] = useState(discountedPrice || packageData.price);
   const [isConverting, setIsConverting] = useState(false);
 
   useEffect(() => {
@@ -27,12 +27,12 @@ function PackageConfirmation() {
         try {
           const response = await axios.get(`${import.meta.env.VITE_API_URL}/packages/exchange-rate`);
           const rate = response.data.rate;
-          const nairaAmount = Math.round(packageData.price * rate);
+          const nairaAmount = Math.round((discountedPrice || packageData.price) * rate);
           setConvertedAmount(nairaAmount);
         } catch (error) {
           console.error("Error fetching exchange rate:", error);
           // Fallback to original price if conversion fails
-          setConvertedAmount(packageData.price);
+          setConvertedAmount(discountedPrice || packageData.price);
         } finally {
           setIsConverting(false);
         }
@@ -40,7 +40,7 @@ function PackageConfirmation() {
     };
 
     convertCurrency();
-  }, [packageData.currency, packageData.price]);
+  }, [packageData.currency, packageData.price, discountedPrice]);
 
   const handlePaymentSuccess = async (paymentRef) => {
     try {
@@ -95,6 +95,9 @@ function PackageConfirmation() {
           transactionId: paymentRef.reference,
           amount: convertedAmount,
         },
+        discountApplied: promoApplied,
+        discountPercentage: promoApplied ? packageData.discountPercentage : 0,
+        discountedPrice: promoApplied ? discountedPrice : null,
       };
 
       await axios.post(`${import.meta.env.VITE_API_URL}/packages/book`, payload);
@@ -160,6 +163,9 @@ function PackageConfirmation() {
           <p><strong>Duration:</strong> {packageData.nights} Nights</p>
           <p><strong>Capacity:</strong> {packageData.persons} Persons</p>
           <p><strong>Price:</strong> {packageData.currency === "NGN" ? "₦" : "$"}{packageData.price.toLocaleString()}</p>
+          {promoApplied && discountedPrice && (
+            <p><strong>Discounted Price:</strong> {packageData.currency === "NGN" ? "₦" : "$"}{discountedPrice.toLocaleString()} ({packageData.discountPercentage}% off)</p>
+          )}
 
           <h5 className="mt-4">Documents</h5>
           {packageData.requirements.map((req, idx) => (
