@@ -9,6 +9,7 @@ import PasswordResetToken from "../models/PasswordResetToken.js";
 import VisaApplication from "../models/visaApplication.js";
 import FlightBooking from "../models/flightbooking.js";
 import HotelBooking from "../models/HotelBooking.js";
+import PackageBooking from "../models/PackageBooking.js";
 import { sendPasswordResetEmail, sendWelcomeEmail } from "../utils/sendEmail.js";
 
 const router = express.Router();
@@ -303,12 +304,12 @@ router.get("/user/visa-applications", async (req, res) => {
     }
 
     // Fetch visa applications for this user only
-    const applications = await VisaApplication.find({
+    const bookings = await VisaApplication.find({
       email: { $regex: new RegExp(`^${user.email}$`, "i") },
     })
       .sort({ createdAt: -1 });
 
-    res.json({ applications });
+    res.json({ bookings });
   } catch (error) {
       console.error("Error fetching user visa applications:", error.message, error);
     if (error.name === "JsonWebTokenError") {
@@ -405,14 +406,14 @@ router.get("/user/package-bookings", async (req, res) => {
     }
   try {
     const decoded = jwt.verify(token, process.env.ACCESS_TOKEN_SECRET);
-    const user = await User.findById(decoded.id);
+    const user = await User.findById(decoded.id).select("email");
     if (!user) {
       return res.status(404).json({ message: "User not found" });
     }
 
     // Fetch package bookings for this user only
     const bookings = await PackageBooking.find({
-      userId: user._id,
+      email: { $regex: new RegExp(`^${user.email}$`, "i") },
     })
       .populate('packageId', 'city title')
       .sort({ createdAt: -1 });
