@@ -419,6 +419,10 @@ export function PackageBookingDetails({ booking, onStatusUpdate }) {
             </select>
           </div>
           <div className="col-6">
+            <small className="text-muted d-block">Email</small>
+            <span className="small">{booking.email || 'N/A'}</span>
+          </div>
+          <div className="col-6">
             <small className="text-muted d-block">Payment Status</small>
             <span className={`badge ${booking.payment?.status === 'paid' ? 'bg-success' : 'bg-warning'}`}>
               {booking.payment?.status || 'pending'}
