@@ -109,12 +109,13 @@ export default function PackagesManagement() {
                           <td>{pkg.persons}</td>
                           <td>
                             <div className="btn-group" role="group">
+                  
                               <Link
-                                to={`/package/${pkg._id}`}
-                                className="btn btn-sm btn-outline-primary"
-                                title="View"
+                                to={`/admin/edit-package/${pkg._id}`}
+                                className="btn btn-sm btn-outline-secondary"
+                                title="Edit"
                               >
-                                <i className="fas fa-eye"></i>
+                                <i className="fas fa-edit"></i>
                               </Link>
                               <button
                                 className="btn btn-sm btn-outline-danger"

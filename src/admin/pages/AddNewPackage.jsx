@@ -1,10 +1,12 @@
-import { useState } from "react";
-import { useNavigate } from "react-router-dom";
+import { useState, useEffect } from "react";
+import { useNavigate, useParams } from "react-router-dom";
 import { toast } from "react-toastify";
 import adminAxios from "../../api/adminAxios";
 
 export default function AddNewPackage() {
   const navigate = useNavigate();
+  const { id } = useParams();
+  const [isEdit, setIsEdit] = useState(false);
   const [formData, setFormData] = useState({
     title: "",
     description: "",
@@ -27,6 +29,40 @@ export default function AddNewPackage() {
     description: "",
   });
   const [loading, setLoading] = useState(false);
+
+  useEffect(() => {
+    if (id) {
+      setIsEdit(true);
+      fetchPackage();
+    }
+  }, [id]);
+
+  const fetchPackage = async () => {
+    try {
+      setLoading(true);
+      const response = await adminAxios.get(`/packages/${id}`);
+      const pkg = response.data.package;
+      setFormData({
+        title: pkg.title,
+        description: pkg.description,
+        city: pkg.city,
+        nights: pkg.nights,
+        persons: pkg.persons,
+        price: pkg.price,
+        currency: pkg.currency,
+        backgroundImage: null, // Keep null for file input
+        inclusions: pkg.inclusions,
+        requirements: pkg.requirements,
+        promoCode: pkg.promoCode || "",
+        discountPercentage: pkg.discountPercentage || "",
+      });
+    } catch (error) {
+      console.error("Error fetching package:", error);
+      toast.error("Failed to fetch package details");
+    } finally {
+      setLoading(false);
+    }
+  };
 
   const handleInputChange = (e) => {
     const { name, value } = e.target;
@@ -99,15 +135,22 @@ export default function AddNewPackage() {
         }
       });
 
-      await adminAxios.post("/packages", submitData, {
-        headers: { "Content-Type": "multipart/form-data" },
-      });
+      if (isEdit && id) {
+        await adminAxios.put(`/packages/${id}`, submitData, {
+          headers: { "Content-Type": "multipart/form-data" },
+        });
+        toast.success("Package updated successfully!");
+      } else {
+        await adminAxios.post("/packages", submitData, {
+          headers: { "Content-Type": "multipart/form-data" },
+        });
+        toast.success("Package created successfully!");
+      }
 
-      toast.success("Package created successfully!");
-      navigate("/package-bookings");
+      navigate("/admin/packages");
     } catch (error) {
-      console.error("Error creating package:", error);
-      toast.error("Failed to create package");
+      console.error("Error saving package:", error);
+      toast.error("Failed to save package");
     } finally {
       setLoading(false);
     }
@@ -119,7 +162,7 @@ export default function AddNewPackage() {
         <div className="col-12">
           <div className="card">
             <div className="card-header">
-              <h4 className="card-title">Add New Package</h4>
+              <h4 className="card-title">{isEdit ? "Edit Package" : "Add New Package"}</h4>
             </div>
             <div className="card-body">
               <form onSubmit={handleSubmit}>
@@ -267,7 +310,7 @@ export default function AddNewPackage() {
                     className="form-control"
                     accept="image/*"
                     onChange={handleFileChange}
-                    required
+                    required={!isEdit}
                   />
                 </div>
 
@@ -395,7 +438,7 @@ export default function AddNewPackage() {
                   className="btn btn-primary"
                   disabled={loading}
                 >
-                  {loading ? "Creating..." : "Create Package"}
+                  {loading ? (isEdit ? "Updating..." : "Creating...") : (isEdit ? "Update Package" : "Create Package")}
                 </button>
               </form>
             </div>
