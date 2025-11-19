@@ -1,9 +1,7 @@
 import React, { useState, useEffect } from "react";
 import { useAuthStore } from "../store/authStore";
-import axios from "axios";
 import { toast } from "react-toastify";
-
-const API_BASE_URL = "http://localhost:5000/api";
+import userAxios from "../api/userAxios";
 
 export default function ManageBookings() {
   const { user, accessToken } = useAuthStore();
@@ -26,9 +24,7 @@ export default function ManageBookings() {
       else if (type === "hotel") endpoint = "/user/hotel-bookings";
       else if (type === "package") endpoint = "/user/package-bookings";
 
-      const res = await axios.get(`${API_BASE_URL}${endpoint}`, {
-        headers: { Authorization: `Bearer ${accessToken}` },
-      });
+      const res = await userAxios.get(endpoint);
 
       setBookings(res.data.bookings || []);
     } catch (error) {
@@ -71,10 +67,14 @@ export default function ManageBookings() {
               <td>{booking.destinationCountry}</td>
               <td>{booking.visaType}</td>
               <td>
-                <span className={getStatusBadge(booking.status)}>{booking.status}</span>
+                <span className={getStatusBadge(booking.status)}>
+                  {booking.status}
+                </span>
               </td>
               <td>
-                <span className={getStatusBadge(booking.payment?.status)}>{booking.payment?.status}</span>
+                <span className={getStatusBadge(booking.payment?.status)}>
+                  {booking.payment?.status}
+                </span>
               </td>
               <td>{new Date(booking.createdAt).toLocaleDateString()}</td>
             </tr>
@@ -106,12 +106,20 @@ export default function ManageBookings() {
               <td>{booking.tripType}</td>
               <td>{booking.departureCity}</td>
               <td>{booking.destinationCity}</td>
-              <td>{booking.departureDate ? new Date(booking.departureDate).toLocaleDateString() : "N/A"}</td>
               <td>
-                <span className={getStatusBadge(booking.status)}>{booking.status}</span>
+                {booking.departureDate
+                  ? new Date(booking.departureDate).toLocaleDateString()
+                  : "N/A"}
               </td>
               <td>
-                <span className={getStatusBadge(booking.payment?.status)}>{booking.payment?.status}</span>
+                <span className={getStatusBadge(booking.status)}>
+                  {booking.status}
+                </span>
+              </td>
+              <td>
+                <span className={getStatusBadge(booking.payment?.status)}>
+                  {booking.payment?.status}
+                </span>
               </td>
               <td>{new Date(booking.createdAt).toLocaleDateString()}</td>
             </tr>
@@ -142,15 +150,27 @@ export default function ManageBookings() {
             <tr key={booking._id}>
               <td>{booking.fullName}</td>
               <td>{booking.destination}</td>
-              <td>{booking.checkInDate ? new Date(booking.checkInDate).toLocaleDateString() : "N/A"}</td>
-              <td>{booking.checkOutDate ? new Date(booking.checkOutDate).toLocaleDateString() : "N/A"}</td>
+              <td>
+                {booking.checkInDate
+                  ? new Date(booking.checkInDate).toLocaleDateString()
+                  : "N/A"}
+              </td>
+              <td>
+                {booking.checkOutDate
+                  ? new Date(booking.checkOutDate).toLocaleDateString()
+                  : "N/A"}
+              </td>
               <td>{booking.rooms}</td>
               <td>{booking.guests}</td>
               <td>
-                <span className={getStatusBadge(booking.status)}>{booking.status}</span>
+                <span className={getStatusBadge(booking.status)}>
+                  {booking.status}
+                </span>
               </td>
               <td>
-                <span className={getStatusBadge(booking.payment?.status)}>{booking.payment?.status}</span>
+                <span className={getStatusBadge(booking.payment?.status)}>
+                  {booking.payment?.status}
+                </span>
               </td>
               <td>{new Date(booking.createdAt).toLocaleDateString()}</td>
             </tr>
@@ -181,13 +201,24 @@ export default function ManageBookings() {
               <td>{booking.fullName}</td>
               <td>{booking.packageTitle}</td>
               <td>{booking.packageId?.city || "N/A"}</td>
-              <td>{booking.travelDate ? new Date(booking.travelDate).toLocaleDateString() : "N/A"}</td>
-              <td>{booking.packageCurrency === "NGN" ? "₦" : "$"}{booking.packagePrice?.toLocaleString()}</td>
               <td>
-                <span className={getStatusBadge(booking.status)}>{booking.status}</span>
+                {booking.travelDate
+                  ? new Date(booking.travelDate).toLocaleDateString()
+                  : "N/A"}
               </td>
               <td>
-                <span className={getStatusBadge(booking.payment?.status)}>{booking.payment?.status}</span>
+                {booking.packageCurrency === "NGN" ? "₦" : "$"}
+                {booking.packagePrice?.toLocaleString()}
+              </td>
+              <td>
+                <span className={getStatusBadge(booking.status)}>
+                  {booking.status}
+                </span>
+              </td>
+              <td>
+                <span className={getStatusBadge(booking.payment?.status)}>
+                  {booking.payment?.status}
+                </span>
               </td>
               <td>{new Date(booking.createdAt).toLocaleDateString()}</td>
             </tr>
