@@ -50,6 +50,8 @@ import AddNewPackage from "./admin/pages/AddNewPackage";
 import PackagesManagement from "./admin/pages/PackagesManagement";
 import PackageBookings from "./admin/pages/PackageBookings";
 import PackageDetails from "./pages/PackageDetails";
+import AdminCreateNewsletter from "./admin/pages/AdminCreateNewsletter.jsx";
+import AdminNewsletterSubscribers from "./admin/pages/AdminNewsletterSubscribers.jsx";
 
 function FloatingButtonsController() {
   const location = useLocation();
@@ -148,11 +150,12 @@ export default function App() {
           <Route path="visa-requirements" element={<VisaRequirements />} />
           <Route path="add-visa-requirement" element={<AddNewVisaRequirement />} />
           <Route path="edit-visa-requirement/:id" element={<AddNewVisaRequirement />} />
-          
           <Route path="addnewhotel" element={<AddNewHotel />} />
           <Route path="packages" element={<PackagesManagement />} />
           <Route path="package-bookings" element={<PackageBookings />} />
           <Route path="addnewpackage" element={<AddNewPackage />} />
+          <Route path="createnewsletter" element={<AdminCreateNewsletter />} />
+          <Route path="viewnewsletter" element={<AdminNewsletterSubscribers />} />
         </Route>
 
       </Routes>

@@ -49,3 +49,27 @@ export const sendWelcomeEmail = async (email, firstName = null) => {
     throw new Error("Failed to send welcome email");
   }
 };
+
+export const sendNewsletterEmail = async (email, subject, message) => {
+  const recipients = [{ email }];
+
+  try {
+    await mailtrapClient.send({
+      from: sender,
+      to: recipients,
+      subject: subject,
+      html: `
+        <div style="font-family: Arial, sans-serif; max-width: 600px; margin: 0 auto;">
+          <h2>Newsletter from Macview Travels</h2>
+          <div>${message.replace(/\n/g, '<br>')}</div>
+          <p>Best regards,<br>Macview Travels Team</p>
+          <p>If you no longer wish to receive our newsletters, please contact us.</p>
+        </div>
+      `,
+      category: "Newsletter",
+    });
+  } catch (error) {
+    console.error("Error sending newsletter email:", error);
+    throw new Error("Failed to send newsletter email");
+  }
+};
