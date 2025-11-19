@@ -200,7 +200,7 @@ export default function VisaCatalogue() {
                         {visa.desc}
                       </p>
                       <Link
-                        to="/visa"
+                        to="/visaprocessing"
                         className="btn btn-sm btn-primary px-4"
                         style={{
                           borderRadius: "8px",

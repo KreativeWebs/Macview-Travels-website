@@ -1,12 +1,18 @@
-# Promo Code Feature Implementation
+# Newsletter Feature Implementation
 
-## Tasks
-- [x] Update Package model to add promoCode and discountPercentage fields
-- [x] Add promo code and discount percentage fields to AddNewPackage.jsx form
-- [x] Add promo code input field to PackageDetails.jsx booking form
-- [x] Implement real-time promo code validation and price update in PackageDetails.jsx
-- [x] Update backend routes to handle new package fields
-- [x] Add promo code validation endpoint
-- [x] Update package booking to store applied discount
-- [x] Start backend server (port 5000 already in use, server likely running)
-- [ ] Test promo code functionality
+## Backend Changes
+- [ ] Update backend/models/User.js to add newsletterSubscribed field
+- [ ] Add newsletter routes in backend/routes/adminRoutes.js
+- [ ] Add controller functions in backend/controllers/adminController.js for getting subscribers and sending newsletters
+- [ ] Update backend/utils/sendEmail.js to add sendNewsletterEmail function
+
+## Frontend Changes
+- [ ] Update src/pages/Newsletter.jsx to make API call for subscription
+- [ ] Create src/admin/pages/CreateNewsletter.jsx for admins to create and send newsletters
+- [ ] Create src/admin/pages/ViewSubscribers.jsx for admins to view subscribed users
+- [ ] Update src/admin/Sidebar.jsx to include links to new newsletter sections
+
+## Testing
+- [ ] Test user subscription via Newsletter.jsx
+- [ ] Test admin sending newsletter
+- [ ] Test admin viewing subscribers

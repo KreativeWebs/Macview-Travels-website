@@ -82,7 +82,7 @@ function FeaturedHotels() {
                   </h1>
                   <div className="d-flex justify-content-center mb-2">
                     <Link
-                      to="/booking"
+                      to="/hotelbooking"
                       className="btn btn-sm btn-secondary px-5"
                       style={{
                         borderRadius: "12px",

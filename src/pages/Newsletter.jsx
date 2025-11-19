@@ -1,18 +1,35 @@
 import React, { useState } from "react";
+import { toast } from "react-toastify";
+import axios from "axios";
+
+const API_BASE_URL = "http://localhost:5000/api";
 
 function Newsletter() {
   const [email, setEmail] = useState("");
   const [name, setName] = useState("");
   const [submitted, setSubmitted] = useState(false);
+  const [loading, setLoading] = useState(false);
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
-    if (email) {
-      // Handle newsletter subscription logic here (API call)
-      console.log("Subscribed:", { name, email });
-      setSubmitted(true);
+    if (!email) return toast.error("Please enter your email");
+
+    setLoading(true);
+    try {
+      const response = await axios.post(
+        `${API_BASE_URL}/newsletter/subscribe`,
+        { email }
+      );
+      toast.success(response.data.message || "Subscribed successfully!");
       setEmail("");
-      setName("");
+      setSubmitted(true);
+    } catch (error) {
+      console.error("Newsletter subscription error:", error);
+      const msg =
+        error?.response?.data?.message || "Subscription failed. Try again.";
+      toast.error(msg);
+    } finally {
+      setLoading(false);
     }
   };
 
@@ -20,7 +37,11 @@ function Newsletter() {
     <div className="container-xxl py-5 wow fadeInUp" data-wow-delay="0.1s">
       <div
         className="container p-0"
-        style={{ borderRadius: "15px", overflow: "hidden", boxShadow: "0 0 20px rgba(0,0,0,0.1)" }}
+        style={{
+          borderRadius: "15px",
+          overflow: "hidden",
+          boxShadow: "0 0 20px rgba(0,0,0,0.1)",
+        }}
       >
         <div className="row g-0">
           {/* Left Side - Text with Background Image */}

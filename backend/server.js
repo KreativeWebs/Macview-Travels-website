@@ -11,6 +11,8 @@ import authRouter from "./routes/authRoutes.js";
 import visaRoutes from "./routes/visaRoutes.js";
 import packagesRoutes from "./routes/packagesRoutes.js";
 import adminRoutes from "./routes/adminRoutes.js";
+import newsletterRoutes from "./routes/newsletterRoutes.js";
+import adminNewsletterRoutes from "./routes/adminNewsletterRoutes.js";
 import path from "path";
 import { fileURLToPath } from "url";
 import cors from "cors";
@@ -80,6 +82,8 @@ app.use("/api/hotel-bookings", hotelRoutes);
 app.use("/api/visa", visaRoutes);
 app.use("/api/packages", packagesRoutes);
 app.use("/api/admin", adminRoutes);
+app.use("/api/newsletter", newsletterRoutes);
+app.use("/api/admin/newsletter", adminNewsletterRoutes);
 app.use("/uploads", express.static(path.join(process.cwd(), "uploads")));
 
 // -----------------------------
