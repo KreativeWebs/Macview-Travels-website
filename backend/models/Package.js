@@ -65,6 +65,17 @@ const packageSchema = new mongoose.Schema(
       type: Boolean,
       default: true,
     },
+    promoCode: {
+      type: String,
+      trim: true,
+      default: "",
+    },
+    discountPercentage: {
+      type: Number,
+      min: 0,
+      max: 100,
+      default: 0,
+    },
   },
   {
     timestamps: true,

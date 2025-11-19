@@ -4,7 +4,7 @@ import { toast } from "react-toastify";
 import adminAxios from "../../api/adminAxios";
 
 export default function AddNewPackage() {
-   const navigate = useNavigate();
+  const navigate = useNavigate();
   const [formData, setFormData] = useState({
     title: "",
     description: "",
@@ -16,6 +16,8 @@ export default function AddNewPackage() {
     backgroundImage: null,
     inclusions: [],
     requirements: [],
+    promoCode: "",
+    discountPercentage: "",
   });
 
   const [inclusionInput, setInclusionInput] = useState("");
@@ -76,12 +78,24 @@ export default function AddNewPackage() {
     try {
       const submitData = new FormData();
       Object.keys(formData).forEach((key) => {
+        const value = formData[key];
+
         if (key === "inclusions" || key === "requirements") {
-          submitData.append(key, JSON.stringify(formData[key]));
-        } else if (key === "backgroundImage" && formData[key]) {
-          submitData.append(key, formData[key]);
-        } else if (key !== "backgroundImage") {
-          submitData.append(key, formData[key]);
+          submitData.append(key, JSON.stringify(value));
+        } else if (key === "backgroundImage" && value) {
+          submitData.append(key, value);
+        } else {
+          // Handle promoCode and discountPercentage properly
+          if (key === "promoCode") {
+            submitData.append("promoCode", value.trim());
+          } else if (key === "discountPercentage") {
+            submitData.append(
+              "discountPercentage",
+              value === "" ? 0 : Number(value)
+            );
+          } else {
+            submitData.append(key, value);
+          }
         }
       });
 
@@ -90,8 +104,7 @@ export default function AddNewPackage() {
       });
 
       toast.success("Package created successfully!");
-      navigate("/packages")
-
+      navigate("/package-bookings");
     } catch (error) {
       console.error("Error creating package:", error);
       toast.error("Failed to create package");
@@ -207,6 +220,42 @@ export default function AddNewPackage() {
                         <option value="NGN">NGN</option>
                         <option value="USD">USD</option>
                       </select>
+                    </div>
+                  </div>
+                </div>
+
+                <div className="row">
+                  <div className="col-md-6">
+                    <div className="mb-3">
+                      <label className="form-label">
+                        Promo Code (Optional)
+                      </label>
+                      <input
+                        type="text"
+                        className="form-control"
+                        name="promoCode"
+                        value={formData.promoCode}
+                        onChange={handleInputChange}
+                        placeholder="Enter promo code"
+                      />
+                    </div>
+                  </div>
+                  <div className="col-md-6">
+                    <div className="mb-3">
+                      <label className="form-label">
+                        Discount Percentage (Optional)
+                      </label>
+                      <input
+                        type="number"
+                        className="form-control"
+                        name="discountPercentage"
+                        value={formData.discountPercentage}
+                        onChange={handleInputChange}
+                        min="0"
+                        max="100"
+                        step="0.01"
+                        placeholder="e.g., 10 for 10% discount"
+                      />
                     </div>
                   </div>
                 </div>
