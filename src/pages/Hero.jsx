@@ -16,7 +16,7 @@ function Hero() {
               Explore breathtaking destinations, curated tours, and
               unforgettable experiences. Your journey begins here!
             </p>
-            <div className="position-relative w-75 mx-auto animated slideInDown">
+            {/* <div className="position-relative w-75 mx-auto animated slideInDown">
               <input
                 className="form-control border-0 rounded-pill w-100 py-3 ps-4 pe-5"
                 type="text"
@@ -29,7 +29,7 @@ function Hero() {
               >
                 Search
               </button>
-            </div>
+            </div> */}
           </div>
         </div>
       </div>
