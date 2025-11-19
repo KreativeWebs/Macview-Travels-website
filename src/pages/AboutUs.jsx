@@ -230,7 +230,7 @@ function AboutUs() {
                 </div>
                 <div className="text-center p-4">
                   <h5 className="mb-0" style={{fontFamily: "Raleway" }}>Mr Noah Godwin</h5>
-                  <small>CCO</small>
+                  <small>COO</small>
                 </div>
               </div>
             </div>
