@@ -81,6 +81,7 @@ function PackageConfirmation() {
 
       const payload = {
         fullName: formData.fullName,
+        email: user?.email,
         whatsappNumber: formData.whatsappNumber,
         travelDate,
         packageId: packageData._id,
