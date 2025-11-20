@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from "react";
 import { useParams, useNavigate } from "react-router-dom";
 import { Container, Card, Button, Form, Alert, Row, Col } from "react-bootstrap";
-import axios from "axios";
+import userAxios from "../api/userAxios";
 
 function FlashSaleDetails() {
   const { id } = useParams();
@@ -23,7 +23,7 @@ function FlashSaleDetails() {
 
   const fetchFlashSale = async () => {
     try {
-      const response = await axios.get(`/api/flash-sales/${id}`);
+      const response = await userAxios.get(`/flash-sales/${id}`);
       setFlashSale(response.data.flashSale);
     } catch (error) {
       console.error("Error fetching flash sale:", error);
@@ -44,7 +44,7 @@ function FlashSaleDetails() {
     setMessage("");
 
     try {
-      await axios.post("/api/flash-sales/book", {
+      await userAxios.post("/flash-sales/book", {
         ...formData,
         flashSaleId: id,
       });
