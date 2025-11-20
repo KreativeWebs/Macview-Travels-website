@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from "react";
 import { Link } from "react-router-dom";
 import { Carousel } from "react-bootstrap";
-import axios from "axios";
+import userAxios from "../api/userAxios";
 
 function FlashSales() {
   const [flashSales, setFlashSales] = useState([]);
