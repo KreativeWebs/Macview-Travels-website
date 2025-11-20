@@ -1,5 +1,5 @@
 import express from "express";
-import { getOverviewData } from "../controllers/adminController.js";
+import { getOverviewData, getFlashSaleBookings, createFlashSale, updateFlashSale, deleteFlashSale, getFlashSales } from "../controllers/adminController.js";
 import { getFlightBookings } from "../controllers/flightbookingController.js";
 import { authenticateAdmin } from "../middleware/authMiddleware.js";
 import VisaApplication from "../models/visaApplication.js";
@@ -9,6 +9,7 @@ import VisaRequirement from "../models/visaRequirements.js";
 import Package from "../models/Package.js";
 import PackageBooking from "../models/PackageBooking.js";
 import upload from "../config/multer.js";
+import FlashSale from "../models/FlashSale.js";
 
 const router = express.Router();
 
@@ -1230,6 +1231,308 @@ router.get("/package-bookings/report", async (req, res) => {
   } catch (error) {
     console.error('Error fetching package bookings for report:', error);
     res.status(500).json({ message: 'Error fetching package bookings for report' });
+  }
+});
+
+// Get flash sale bookings
+router.get("/flash-sale-bookings", async (req, res) => {
+  try {
+    const { page = 1, limit = 10, search, status, year, month, week } = req.query;
+
+    let query = {};
+    let conditions = [];
+
+    // Filter by status if provided
+    if (status && status !== 'all') {
+      conditions.push({ status });
+    }
+
+    // Search by name or whatsappNumber if provided
+    if (search) {
+      let searchTerm = search.trim();
+      searchTerm = searchTerm.replace(/[.*+?^${}()|[\\]\\]/g, '\\$&');
+      conditions.push({
+        $or: [
+          { name: { $regex: searchTerm, $options: 'i' } },
+          { whatsappNumber: { $regex: searchTerm, $options: 'i' } }
+        ]
+      });
+    }
+
+    if (conditions.length > 0) {
+      query.$and = conditions;
+    }
+
+    // Date filtering by year/month/week
+    if (year || month || week) {
+      let startDate, endDate;
+
+      if (year && month && week) {
+        const parsedYear = parseInt(year, 10);
+        const parsedMonth = parseInt(month, 10) - 1;
+        const parsedWeek = parseInt(week, 10);
+
+        const monthStart = new Date(parsedYear, parsedMonth, 1);
+        const firstDayOfMonth = monthStart.getDay();
+        const weekStartOffset = (parsedWeek - 1) * 7 - (firstDayOfMonth === 0 ? 6 : firstDayOfMonth - 1);
+        startDate = new Date(parsedYear, parsedMonth, 1 + weekStartOffset);
+        endDate = new Date(startDate);
+        endDate.setDate(startDate.getDate() + 6);
+      } else if (year && month) {
+        const parsedYear = parseInt(year, 10);
+        const parsedMonth = parseInt(month, 10) - 1;
+        startDate = new Date(parsedYear, parsedMonth, 1);
+        endDate = new Date(parsedYear, parsedMonth + 1, 1);
+      } else if (year) {
+        const parsedYear = parseInt(year, 10);
+        startDate = new Date(parsedYear, 0, 1);
+        endDate = new Date(parsedYear + 1, 0, 1);
+      }
+
+      if (startDate && endDate) {
+        query.createdAt = { $gte: startDate, $lt: endDate };
+      }
+    }
+
+    const bookings = await FlashSaleBooking.find(query)
+      .populate('flashSaleId', 'destinationCity airline price')
+      .sort({ createdAt: -1 })
+      .limit(limit * 1)
+      .skip((page - 1) * limit)
+      .select('_id name whatsappNumber dateOfBirth gender flashSaleId status payment createdAt');
+
+    const total = await FlashSaleBooking.countDocuments(query);
+
+    res.json({
+      bookings,
+      totalPages: Math.ceil(total / limit),
+      currentPage: page,
+      total
+    });
+  } catch (error) {
+    console.error("Error fetching flash sale bookings:", error);
+    res.status(500).json({ message: "Error fetching flash sale bookings" });
+  }
+});
+
+// Get recent flash sale bookings (last 5)
+router.get("/flash-sale-bookings/recent", async (req, res) => {
+  try {
+    const bookings = await FlashSaleBooking.find()
+      .populate('flashSaleId', 'destinationCity')
+      .sort({ createdAt: -1 })
+      .limit(5)
+      .select('name flashSaleId status createdAt');
+
+    res.json({ bookings });
+  } catch (error) {
+    console.error("Error fetching recent flash sale bookings:", error);
+    res.status(500).json({ message: "Error fetching recent flash sale bookings" });
+  }
+});
+
+// Get single flash sale booking by ID
+router.get("/flash-sale-bookings/:id", async (req, res) => {
+  try {
+    const booking = await FlashSaleBooking.findById(req.params.id).populate('flashSaleId');
+
+    if (!booking) {
+      return res.status(404).json({ message: "Flash sale booking not found" });
+    }
+
+    res.json({ booking });
+  } catch (error) {
+    console.error("Error fetching flash sale booking:", error);
+    res.status(500).json({ message: "Error fetching flash sale booking" });
+  }
+});
+
+// Update flash sale booking status
+router.put("/flash-sale-bookings/:id/status", async (req, res) => {
+  try {
+    const { status } = req.body;
+
+    const booking = await FlashSaleBooking.findByIdAndUpdate(
+      req.params.id,
+      { status },
+      { new: true }
+    );
+
+    if (!booking) {
+      return res.status(404).json({ message: "Flash sale booking not found" });
+    }
+
+    // Emit real-time update to all connected admin clients
+    if (global.io) {
+      global.io.emit("flashSaleBookingStatusUpdate", {
+        id: booking._id,
+        status: booking.status,
+        updatedAt: booking.updatedAt,
+      });
+    }
+
+    res.json({ booking });
+  } catch (error) {
+    console.error("Error updating flash sale booking status:", error);
+    res.status(500).json({ message: "Error updating flash sale booking status" });
+  }
+});
+
+// Get flash sale bookings count for a specific month
+router.get("/flash-sale-bookings/count", async (req, res) => {
+  try {
+    const { month, year } = req.query;
+    const startDate = new Date(year, month - 1, 1);
+    const endDate = new Date(year, month, 1);
+
+    const count = await FlashSaleBooking.countDocuments({
+      createdAt: { $gte: startDate, $lt: endDate }
+    });
+
+    res.json({ count });
+  } catch (error) {
+    console.error("Error fetching flash sale bookings count:", error);
+    res.status(500).json({ message: "Error fetching flash sale bookings count" });
+  }
+});
+
+// Get flash sale bookings for PDF report by month and year
+router.get("/flash-sale-bookings/report", async (req, res) => {
+  try {
+    const { month, year } = req.query;
+
+    const parsedMonth = parseInt(month, 10);
+    const parsedYear = parseInt(year, 10);
+
+    if (!month || !year || isNaN(parsedMonth) || isNaN(parsedYear) || parsedMonth < 1 || parsedMonth > 12 || parsedYear < 1900 || parsedYear > 2100) {
+      return res.status(400).json({ message: "Invalid month or year. Month must be 1-12, year must be a valid number." });
+    }
+
+    const startDate = new Date(parsedYear, parsedMonth - 1, 1);
+    const endDate = new Date(parsedYear, parsedMonth, 1);
+
+    const bookings = await FlashSaleBooking.find({ createdAt: { $gte: startDate, $lt: endDate } })
+      .populate('flashSaleId', 'destinationCity airline price')
+      .sort({ createdAt: -1 })
+      .select('name whatsappNumber flashSaleId status createdAt');
+
+    res.json({ bookings, month: parsedMonth, year: parsedYear });
+  } catch (error) {
+    console.error('Error fetching flash sale bookings for report:', error);
+    res.status(500).json({ message: 'Error fetching flash sale bookings for report' });
+  }
+});
+
+// Get all flash sales
+router.get("/flash-sales", async (req, res) => {
+  try {
+    const flashSales = await FlashSale.find({ isActive: true }).sort({ createdAt: -1 });
+    res.json({ flashSales });
+  } catch (error) {
+    console.error("Error fetching flash sales:", error);
+    res.status(500).json({ message: "Error fetching flash sales" });
+  }
+});
+
+// Get single flash sale by ID
+router.get("/flash-sales/:id", async (req, res) => {
+  try {
+    const flashSale = await FlashSale.findById(req.params.id);
+
+    if (!flashSale) {
+      return res.status(404).json({ message: "Flash sale not found" });
+    }
+
+    res.json({ flashSale });
+  } catch (error) {
+    console.error("Error fetching flash sale:", error);
+    res.status(500).json({ message: "Error fetching flash sale" });
+  }
+});
+
+// Create new flash sale
+router.post("/flash-sales", upload.single("backgroundImage"), async (req, res) => {
+  try {
+    const { price, destinationCity, departureCity, dateValid, airline } = req.body;
+
+    let backgroundImageUrl = "";
+    if (req.file) {
+      backgroundImageUrl = req.file.path; // Cloudinary URL
+    } else {
+      return res.status(400).json({ message: "Background image is required" });
+    }
+
+    const newFlashSale = new FlashSale({
+      backgroundImage: backgroundImageUrl,
+      price: Number(price),
+      destinationCity,
+      departureCity,
+      dateValid: new Date(dateValid),
+      airline,
+    });
+
+    await newFlashSale.save();
+
+    res.status(201).json({ flashSale: newFlashSale });
+  } catch (error) {
+    console.error("Error creating flash sale:", error);
+    if (error.name === 'ValidationError') {
+      return res.status(400).json({ message: error.message });
+    }
+    res.status(500).json({ message: "Error creating flash sale" });
+  }
+});
+
+// Update flash sale
+router.put("/flash-sales/:id", upload.single("backgroundImage"), async (req, res) => {
+  try {
+    const { price, destinationCity, departureCity, dateValid, airline } = req.body;
+
+    const updateData = {
+      price: Number(price),
+      destinationCity,
+      departureCity,
+      dateValid: new Date(dateValid),
+      airline,
+    };
+
+    if (req.file) {
+      updateData.backgroundImage = req.file.path; // Cloudinary URL
+    }
+
+    const flashSale = await FlashSale.findByIdAndUpdate(
+      req.params.id,
+      updateData,
+      { new: true }
+    );
+
+    if (!flashSale) {
+      return res.status(404).json({ message: "Flash sale not found" });
+    }
+
+    res.json({ flashSale });
+  } catch (error) {
+    console.error("Error updating flash sale:", error);
+    if (error.name === 'ValidationError') {
+      return res.status(400).json({ message: error.message });
+    }
+    res.status(500).json({ message: "Error updating flash sale" });
+  }
+});
+
+// Delete flash sale
+router.delete("/flash-sales/:id", async (req, res) => {
+  try {
+    const flashSale = await FlashSale.findByIdAndDelete(req.params.id);
+
+    if (!flashSale) {
+      return res.status(404).json({ message: "Flash sale not found" });
+    }
+
+    res.json({ message: "Flash sale deleted successfully" });
+  } catch (error) {
+    console.error("Error deleting flash sale:", error);
+    res.status(500).json({ message: "Error deleting flash sale" });
   }
 });
 

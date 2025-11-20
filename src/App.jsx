@@ -48,8 +48,12 @@ import VisaRequirements from "./admin/pages/VisaRequirements.jsx";
 import AddNewVisaRequirement from "./admin/pages/AddNewVisaRequirement.jsx";
 import AddNewPackage from "./admin/pages/AddNewPackage";
 import PackagesManagement from "./admin/pages/PackagesManagement";
+import AddNewFlashSale from "./admin/pages/AddNewFlashSale";
+import FlashSalesManagement from "./admin/pages/FlashSalesManagement";
 import PackageBookings from "./admin/pages/PackageBookings";
 import PackageDetails from "./pages/PackageDetails";
+import FlashSales from "./pages/FlashSales";
+import FlashSaleDetails from "./pages/FlashSaleDetails";
 import AdminCreateNewsletter from "./admin/pages/AdminCreateNewsletter.jsx";
 import AdminNewsletterSubscribers from "./admin/pages/AdminNewsletterSubscribers.jsx";
 
@@ -125,6 +129,8 @@ export default function App() {
                   path="/reset-password/:token"
                   element={<ResetPassword />}
                 />
+                <Route path="/flash-sales" element={<FlashSales />} />
+                <Route path="/flash-sale/:id" element={<FlashSaleDetails />} />
               </Routes>
               <Footer />
             </>
@@ -157,6 +163,8 @@ export default function App() {
           <Route path="edit-package/:id" element={<AddNewPackage />} />
           <Route path="createnewsletter" element={<AdminCreateNewsletter />} />
           <Route path="viewnewsletter" element={<AdminNewsletterSubscribers />} />
+          <Route path="add-flash-sale" element={<AddNewFlashSale />} />
+          <Route path="flash-sales-bookings" element={<FlashSalesManagement />} />
         </Route>
 
       </Routes>
