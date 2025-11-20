@@ -1,114 +1,106 @@
 import React, { useState, useEffect } from "react";
-import { Container, Table, Button, Alert, Badge } from "react-bootstrap";
-import axios from "axios";
+import { Container, Row, Col, Card, Button, Alert } from "react-bootstrap";
+import { Link } from "react-router-dom";
+import userAxios from "../../api/userAxios";
 
 function FlashSalesManagement() {
-  const [bookings, setBookings] = useState([]);
+  const [flashSales, setFlashSales] = useState([]);
   const [loading, setLoading] = useState(true);
-  const [message, setMessage] = useState("");
+  const [error, setError] = useState("");
 
   useEffect(() => {
-    fetchBookings();
+    const fetchFlashSales = async () => {
+      try {
+        const response = await userAxios.get("/admin/flash-sales");
+        setFlashSales(response.data.flashSales || []);
+      } catch (err) {
+        console.error("Error fetching flash sales:", err);
+        setError("Failed to fetch flash sales");
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    fetchFlashSales();
   }, []);
 
-  const fetchBookings = async () => {
+  const handleDelete = async (id) => {
+    if (!window.confirm("Are you sure you want to delete this flash sale?")) return;
+
     try {
-      const response = await axios.get("/api/admin/flash-sales-bookings", {
-        headers: {
-          Authorization: `Bearer ${localStorage.getItem("token")}`,
-        },
-      });
-      setBookings(response.data.bookings);
-    } catch (error) {
-      console.error("Error fetching bookings:", error);
-      setMessage("Error fetching bookings.");
-    } finally {
-      setLoading(false);
+      await userAxios.delete(`/admin/flash-sales/${id}`);
+      setFlashSales(flashSales.filter((sale) => sale._id !== id));
+    } catch (err) {
+      console.error("Error deleting flash sale:", err);
+      setError("Failed to delete flash sale");
     }
   };
 
-  const updateBookingStatus = async (id, status) => {
+  const toggleActive = async (id, currentStatus) => {
     try {
-      await axios.put(`/api/admin/flash-sales-bookings/${id}`, { status }, {
-        headers: {
-          Authorization: `Bearer ${localStorage.getItem("token")}`,
-        },
-      });
-      setMessage("Booking status updated successfully!");
-      fetchBookings(); // Refresh the list
-    } catch (error) {
-      console.error("Error updating booking:", error);
-      setMessage("Error updating booking status.");
+      await userAxios.patch(`/admin/flash-sales/${id}`, { isActive: !currentStatus });
+      setFlashSales(
+        flashSales.map((sale) =>
+          sale._id === id ? { ...sale, isActive: !currentStatus } : sale
+        )
+      );
+    } catch (err) {
+      console.error("Error updating flash sale:", err);
+      setError("Failed to update flash sale");
     }
   };
 
   if (loading) {
-    return (
-      <Container className="py-5 text-center">
-        <div className="spinner-border text-primary" role="status">
-          <span className="visually-hidden">Loading...</span>
-        </div>
-      </Container>
-    );
+    return <Container className="py-5 text-center"><div>Loading...</div></Container>;
+  }
+
+  if (error) {
+    return <Container className="py-5"><Alert variant="danger">{error}</Alert></Container>;
   }
 
   return (
     <Container className="py-5">
-      <h2>Flash Sales Bookings</h2>
-      {message && <Alert variant={message.includes("successfully") ? "success" : "danger"}>{message}</Alert>}
-      {!bookings || bookings.length === 0 ? (
-        <p>No bookings found.</p>
+      <Row className="mb-4">
+        <Col>
+          <h2>All Flash Sales</h2>
+        </Col>
+        <Col xs="auto">
+          <Link to="/admin/add-flash-sale">
+            <Button variant="primary">Add Flash Sale</Button>
+          </Link>
+        </Col>
+      </Row>
+      {flashSales.length === 0 ? (
+        <Alert variant="info">No flash sales found.</Alert>
       ) : (
-        <Table striped bordered hover responsive>
-          <thead>
-            <tr>
-              <th>Name</th>
-              <th>WhatsApp</th>
-              <th>Date of Birth</th>
-              <th>Gender</th>
-              <th>Flash Sale</th>
-              <th>Status</th>
-              <th>Actions</th>
-            </tr>
-          </thead>
-          <tbody>
-            {bookings.map((booking) => (
-              <tr key={booking._id}>
-                <td>{booking.name}</td>
-                <td>{booking.whatsappNumber}</td>
-                <td>{new Date(booking.dateOfBirth).toLocaleDateString()}</td>
-                <td>{booking.gender}</td>
-                <td>{booking.flashSaleId?.destinationCity || "N/A"}</td>
-                <td>
-                  <Badge bg={booking.status === "confirmed" ? "success" : booking.status === "cancelled" ? "danger" : "warning"}>
-                    {booking.status}
-                  </Badge>
-                </td>
-                <td>
-                  {booking.status === "received" && (
-                    <>
-                      <Button
-                        variant="success"
-                        size="sm"
-                        onClick={() => updateBookingStatus(booking._id, "confirmed")}
-                        className="me-2"
-                      >
-                        Confirm
-                      </Button>
-                      <Button
-                        variant="danger"
-                        size="sm"
-                        onClick={() => updateBookingStatus(booking._id, "cancelled")}
-                      >
-                        Cancel
-                      </Button>
-                    </>
-                  )}
-                </td>
-              </tr>
-            ))}
-          </tbody>
-        </Table>
+        <Row>
+          {flashSales.map((sale) => (
+            <Col md={4} key={sale._id} className="mb-4">
+              <Card>
+                <Card.Img variant="top" src={sale.backgroundImage} alt={sale.destinationCity} />
+                <Card.Body>
+                  <Card.Title>{sale.destinationCity}</Card.Title>
+                  <Card.Text>
+                    Price: ₦{sale.price}<br />
+                    Airline: {sale.airline}<br />
+                    Valid Until: {new Date(sale.dateValid).toLocaleDateString()}<br />
+                    Status: {sale.isActive ? "Active" : "Inactive"}
+                  </Card.Text>
+                  <Button
+                    variant={sale.isActive ? "warning" : "success"}
+                    onClick={() => toggleActive(sale._id, sale.isActive)}
+                    className="me-2"
+                  >
+                    {sale.isActive ? "Deactivate" : "Activate"}
+                  </Button>
+                  <Button variant="danger" onClick={() => handleDelete(sale._id)}>
+                    Delete
+                  </Button>
+                </Card.Body>
+              </Card>
+            </Col>
+          ))}
+        </Row>
       )}
     </Container>
   );

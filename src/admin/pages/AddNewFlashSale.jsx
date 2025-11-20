@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 import { Container, Form, Button, Alert, Card } from "react-bootstrap";
-import axios from "axios";
+import userAxios from "../../api/userAxios";
 
 function AddNewFlashSale() {
   const [formData, setFormData] = useState({
@@ -39,9 +39,8 @@ function AddNewFlashSale() {
     }
 
     try {
-      const response = await axios.post("http://localhost:5000/api/admin/flash-sales", data, {
+      const response = await userAxios.post("/admin/flash-sales", data, {
         headers: {
-          Authorization: `Bearer ${localStorage.getItem("token")}`,
           "Content-Type": "multipart/form-data",
         },
       });

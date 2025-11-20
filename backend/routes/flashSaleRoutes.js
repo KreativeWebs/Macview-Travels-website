@@ -4,10 +4,10 @@ import { getFlashSaleById, createFlashSaleBooking } from "../controllers/adminCo
 
 const router = express.Router();
 
-// Get all active flash sales
+// Get all flash sales
 router.get("/", async (req, res) => {
   try {
-    const flashSales = await FlashSale.find({ isActive: true }).sort({ createdAt: -1 });
+    const flashSales = await FlashSale.find().sort({ createdAt: -1 });
     res.json({ flashSales });
   } catch (error) {
     console.error("Error fetching flash sales:", error);

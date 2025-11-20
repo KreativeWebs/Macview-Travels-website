@@ -91,7 +91,7 @@ function FlashSaleDetails() {
             <Card.Body>
               <Card.Title>{flashSale.destinationCity} Flash Sale</Card.Title>
               <Card.Text>
-                <strong>Price:</strong> ${flashSale.price}<br />
+                <strong>Price:</strong> ₦{flashSale.price}<br />
                 <strong>From:</strong> {flashSale.departureCity}<br />
                 <strong>To:</strong> {flashSale.destinationCity}<br />
                 <strong>Airline:</strong> {flashSale.airline}<br />
