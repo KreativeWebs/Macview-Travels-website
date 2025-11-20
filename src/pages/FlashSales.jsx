@@ -10,7 +10,7 @@ function FlashSales() {
   useEffect(() => {
     const fetchFlashSales = async () => {
       try {
-        const response = await axios.get("/api/flash-sales");
+        const response = await userAxios.get("/flash-sales");
         setFlashSales(response.data.flashSales || []);
       } catch (error) {
         console.error("Error fetching flash sales:", error);

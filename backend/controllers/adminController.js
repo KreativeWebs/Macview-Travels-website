@@ -76,6 +76,16 @@ export const deleteFlashSale = async (req, res) => {
   }
 };
 
+export const getAllFlashSales = async (req, res) => {
+  try {
+    const flashSales = await FlashSale.find().sort({ createdAt: -1 });
+    res.json({ flashSales });
+  } catch (error) {
+    console.error("Error fetching flash sales:", error);
+    res.status(500).json({ message: "Error fetching flash sales" });
+  }
+};
+
 export const getFlashSales = async (req, res) => {
   try {
     const flashSales = await FlashSale.find({ isActive: true }).sort({ createdAt: -1 });

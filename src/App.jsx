@@ -50,6 +50,7 @@ import AddNewPackage from "./admin/pages/AddNewPackage";
 import PackagesManagement from "./admin/pages/PackagesManagement";
 import AddNewFlashSale from "./admin/pages/AddNewFlashSale";
 import FlashSalesManagement from "./admin/pages/FlashSalesManagement";
+import FlashSalesList from "./admin/pages/FlashSalesList";
 import PackageBookings from "./admin/pages/PackageBookings";
 import PackageDetails from "./pages/PackageDetails";
 import FlashSales from "./pages/FlashSales";
