@@ -20,6 +20,16 @@ export default function Sidebar({ open }) {
       path: "package-bookings",
       icon: "fa-solid fa-shopping-cart",
     },
+    {
+      name: "Flash Sales",
+      path: "flash-sales-bookings",
+      icon: "fa-solid fa-bolt",
+    },
+    {
+      name: "Add Flash Sale",
+      path: "add-flash-sale",
+      icon: "fa-solid fa-plus",
+    },
     { name: "Transfers", path: "transfers", icon: "fa-solid fa-car" },
     {
       name: "Visa Requirements",
