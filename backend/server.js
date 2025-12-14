@@ -119,6 +119,7 @@ io.on("connection", (socket) => {
 
 global.io = io;
 
+
 // -----------------------------
 // Start server after DB connection
 // -----------------------------
