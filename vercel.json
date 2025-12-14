@@ -1,5 +1,13 @@
 {
-  "rewrites": [
-    { "source": "/", "destination": "/maintenance/index.html" }
+  "version": 2,
+  "builds": [
+    {
+      "src": "maintenance/index.html",
+      "use": "@vercel/static"
+    }
+  ],
+  "routes": [
+    { "src": "/", "dest": "/maintenance/index.html" },
+    { "src": "/(.*)", "dest": "/maintenance/index.html" }
   ]
 }
