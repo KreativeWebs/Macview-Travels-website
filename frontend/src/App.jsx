@@ -58,7 +58,6 @@ import FlashSaleDetails from "./pages/FlashSaleDetails";
 import AdminCreateNewsletter from "./admin/pages/AdminCreateNewsletter.jsx";
 import AdminNewsletterSubscribers from "./admin/pages/AdminNewsletterSubscribers.jsx";
 
-import MaintenanceCover from "./pages/MaintenanceCover.jsx";
 
 function FloatingButtonsController() {
   const location = useLocation();
@@ -95,7 +94,6 @@ export default function App() {
       <AuthInitializer />
       <FloatingButtonsController />
       <Routes>
-       
 
         {/* Public Website Layout */}
         <Route
