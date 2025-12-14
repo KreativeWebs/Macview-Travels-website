@@ -95,7 +95,8 @@ function FlashSaleDetails() {
                 <strong>From:</strong> {flashSale.departureCity}<br />
                 <strong>To:</strong> {flashSale.destinationCity}<br />
                 <strong>Airline:</strong> {flashSale.airline}<br />
-                <strong>Valid Until:</strong> {new Date(flashSale.dateValid).toLocaleDateString()}
+                <strong>Valid From:</strong> {flashSale.dateValidFrom ? new Date(flashSale.dateValidFrom).toLocaleDateString() : 'N/A'}<br />
+                <strong>Valid Until:</strong> {flashSale.dateValid ? new Date(flashSale.dateValid).toLocaleDateString() : 'N/A'}
               </Card.Text>
             </Card.Body>
           </Card>

@@ -1453,7 +1453,7 @@ router.get("/flash-sales/:id", async (req, res) => {
 // Create new flash sale
 router.post("/flash-sales", upload.single("backgroundImage"), async (req, res) => {
   try {
-    const { price, destinationCity, departureCity, dateValid, airline } = req.body;
+    const { price, destinationCity, departureCity, dateValidFrom, dateValid, airline } = req.body;
 
     let backgroundImageUrl = "";
     if (req.file) {
@@ -1467,6 +1467,7 @@ router.post("/flash-sales", upload.single("backgroundImage"), async (req, res) =
       price: Number(price),
       destinationCity,
       departureCity,
+      dateValidFrom: new Date(dateValidFrom),
       dateValid: new Date(dateValid),
       airline,
     });
@@ -1486,12 +1487,13 @@ router.post("/flash-sales", upload.single("backgroundImage"), async (req, res) =
 // Update flash sale
 router.put("/flash-sales/:id", upload.single("backgroundImage"), async (req, res) => {
   try {
-    const { price, destinationCity, departureCity, dateValid, airline } = req.body;
+    const { price, destinationCity, departureCity, dateValidFrom, dateValid, airline } = req.body;
 
     const updateData = {
       price: Number(price),
       destinationCity,
       departureCity,
+      dateValidFrom: new Date(dateValidFrom),
       dateValid: new Date(dateValid),
       airline,
     };

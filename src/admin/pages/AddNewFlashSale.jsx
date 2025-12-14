@@ -8,6 +8,7 @@ function AddNewFlashSale() {
     price: "",
     destinationCity: "",
     departureCity: "",
+    dateValidFrom: "",
     dateValid: "",
     airline: "",
   });
@@ -32,6 +33,7 @@ function AddNewFlashSale() {
     data.append("price", formData.price);
     data.append("destinationCity", formData.destinationCity);
     data.append("departureCity", formData.departureCity);
+    data.append("dateValidFrom", formData.dateValidFrom);
     data.append("dateValid", formData.dateValid);
     data.append("airline", formData.airline);
     if (formData.backgroundImage) {
@@ -50,6 +52,7 @@ function AddNewFlashSale() {
         price: "",
         destinationCity: "",
         departureCity: "",
+        dateValidFrom: "",
         dateValid: "",
         airline: "",
       });
@@ -111,6 +114,16 @@ function AddNewFlashSale() {
                 value={formData.departureCity}
                 onChange={handleInputChange}
                 placeholder="Enter departure city"
+                required
+              />
+            </Form.Group>
+            <Form.Group className="mb-3">
+              <Form.Label>Valid From</Form.Label>
+              <Form.Control
+                type="date"
+                name="dateValidFrom"
+                value={formData.dateValidFrom}
+                onChange={handleInputChange}
                 required
               />
             </Form.Group>

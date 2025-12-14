@@ -21,6 +21,10 @@ const flashSaleSchema = new mongoose.Schema(
       required: true,
       trim: true,
     },
+    dateValidFrom: {
+      type: Date,
+      required: true,
+    },
     dateValid: {
       type: Date,
       required: true,

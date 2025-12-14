@@ -58,15 +58,17 @@ import FlashSaleDetails from "./pages/FlashSaleDetails";
 import AdminCreateNewsletter from "./admin/pages/AdminCreateNewsletter.jsx";
 import AdminNewsletterSubscribers from "./admin/pages/AdminNewsletterSubscribers.jsx";
 
+import MaintenanceCover from "./pages/MaintenanceCover.jsx";
+
 function FloatingButtonsController() {
   const location = useLocation();
 
   useEffect(() => {
-    const floatingButtons = document.getElementById('floating-buttons');
+    const floatingButtons = document.getElementById("floating-buttons");
     if (floatingButtons) {
       // Show floating buttons only on public website routes (not admin routes)
-      const isAdminRoute = location.pathname.startsWith('/admin');
-      floatingButtons.style.display = isAdminRoute ? 'none' : 'block';
+      const isAdminRoute = location.pathname.startsWith("/admin");
+      floatingButtons.style.display = isAdminRoute ? "none" : "block";
     }
   }, [location]);
 
@@ -87,14 +89,15 @@ function AuthInitializer() {
   return null;
 }
 
-
-
 export default function App() {
   return (
     <div>
       <AuthInitializer />
       <FloatingButtonsController />
       <Routes>
+        {/* GLOBAL MAINTENANCE MODE */}
+        <Route path="*" element={<MaintenanceCover />} />
+
         {/* Public Website Layout */}
         <Route
           path="/*"
@@ -123,8 +126,11 @@ export default function App() {
                 <Route path="/hotel-success" element={<HotelSuccess />} />
                 <Route path="/visa-success" element={<VisaSuccess />} />
                 <Route path="/package-success" element={<PackageSuccess />} />
-                <Route path="/package-confirmation" element={<PackageConfirmation />} />
-                 <Route path="/visa-payment" element={<VisaPayment />} />
+                <Route
+                  path="/package-confirmation"
+                  element={<PackageConfirmation />}
+                />
+                <Route path="/visa-payment" element={<VisaPayment />} />
                 <Route path="/forgot-password" element={<ForgotPassword />} />
                 <Route
                   path="/reset-password/:token"
@@ -151,23 +157,34 @@ export default function App() {
           <Route path="visa/addnewvisa" element={<AddNewVisa />} />
           <Route path="flights" element={<FlightBookings />} />
           <Route path="addnewflight" element={<AddNewFlightRequest />} />
-           <Route path="hotels" element={<HotelBookings />} />
+          <Route path="hotels" element={<HotelBookings />} />
           <Route path="transfers" element={<Transfers />} />
           <Route path="settings" element={<Settings />} />
           <Route path="visa-requirements" element={<VisaRequirements />} />
-          <Route path="add-visa-requirement" element={<AddNewVisaRequirement />} />
-          <Route path="edit-visa-requirement/:id" element={<AddNewVisaRequirement />} />
+          <Route
+            path="add-visa-requirement"
+            element={<AddNewVisaRequirement />}
+          />
+          <Route
+            path="edit-visa-requirement/:id"
+            element={<AddNewVisaRequirement />}
+          />
           <Route path="addnewhotel" element={<AddNewHotel />} />
           <Route path="packages" element={<PackagesManagement />} />
           <Route path="package-bookings" element={<PackageBookings />} />
           <Route path="addnewpackage" element={<AddNewPackage />} />
           <Route path="edit-package/:id" element={<AddNewPackage />} />
           <Route path="createnewsletter" element={<AdminCreateNewsletter />} />
-          <Route path="viewnewsletter" element={<AdminNewsletterSubscribers />} />
+          <Route
+            path="viewnewsletter"
+            element={<AdminNewsletterSubscribers />}
+          />
           <Route path="add-flash-sale" element={<AddNewFlashSale />} />
-          <Route path="flash-sales-bookings" element={<FlashSalesManagement />} />
+          <Route
+            path="flash-sales-bookings"
+            element={<FlashSalesManagement />}
+          />
         </Route>
-
       </Routes>
 
       <ToastContainer
