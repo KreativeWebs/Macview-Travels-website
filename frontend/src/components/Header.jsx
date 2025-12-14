@@ -1,13 +1,15 @@
-import React from "react";
+import React, { useEffect, useRef } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import Signup from "../pages/signup";
 import Login from "../pages/Login";
 import { useAuthStore } from "../store/authStore";
 import Modal from "bootstrap/js/dist/modal";
+import Collapse from "bootstrap/js/dist/collapse";
 
 function Header() {
   const { user, logout } = useAuthStore();
   const navigate = useNavigate();
+  const navbarCollapseRef = useRef(null);
 
   const getInitialsFromEmail = (email) => {
     if (!email) return "";
@@ -56,6 +58,23 @@ function Header() {
       }
     }
   };
+
+  useEffect(() => {
+    const handleClickOutside = (event) => {
+      if (navbarCollapseRef.current && !navbarCollapseRef.current.contains(event.target)) {
+        const navbarCollapseElement = document.getElementById("navbarCollapse");
+        if (navbarCollapseElement && navbarCollapseElement.classList.contains("show")) {
+          const collapseInstance = Collapse.getOrCreateInstance(navbarCollapseElement);
+          collapseInstance.hide();
+        }
+      }
+    };
+
+    document.addEventListener("mousedown", handleClickOutside);
+    return () => {
+      document.removeEventListener("mousedown", handleClickOutside);
+    };
+  }, []);
 
   return (
     <div>
@@ -124,7 +143,7 @@ function Header() {
     <span className="fa fa-bars" />
   </button>
 
-  <div className="collapse navbar-collapse" id="navbarCollapse">
+  <div className="collapse navbar-collapse" id="navbarCollapse" ref={navbarCollapseRef}>
     <div className="navbar-nav ms-auto py-0 d-flex align-items-lg-center">
       <Link
         to="/"

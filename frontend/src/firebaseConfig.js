@@ -3,7 +3,7 @@ import { getAuth, GoogleAuthProvider } from "firebase/auth";
 
 const firebaseConfig = {
   apiKey: "AIzaSyBGc_lHYl8Z3mSpDrPkLC_pEe8sbGy3aOg",
-  authDomain: "macviewtravel.com",
+  authDomain: "macviewtravels-2020.firebaseapp.com",
   projectId: "macviewtravels-2020",
   storageBucket: "macviewtravels-2020.firebasestorage.app",
   messagingSenderId: "865149352401",
@@ -15,7 +15,7 @@ const app = initializeApp(firebaseConfig);
 const auth = getAuth(app);
 const googleProvider = new GoogleAuthProvider();
 
-// ✅ Force account selection every time
+//Force account selection every time
 googleProvider.setCustomParameters({
   prompt: 'select_account'
 });
