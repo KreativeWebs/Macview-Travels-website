@@ -91,7 +91,7 @@ function FlashSales() {
                   fontSize: "14px",
                 }}
               >
-                Flash Sale - ${sale.price}
+                Flash Sale
               </div>
             </Link>
           </Carousel.Item>

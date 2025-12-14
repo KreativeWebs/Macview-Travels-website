@@ -17,7 +17,7 @@ export const getFlashSaleBookings = async (req, res) => {
 
 export const createFlashSale = async (req, res) => {
   try {
-    const { price, destinationCity, departureCity, dateValid, airline } = req.body;
+    const { price, destinationCity, departureCity, dateValidFrom, dateValid, airline } = req.body;
     const backgroundImage = req.file ? req.file.path : null; // Assuming multer handles file upload
 
     if (!backgroundImage) {
@@ -29,6 +29,7 @@ export const createFlashSale = async (req, res) => {
       price,
       destinationCity,
       departureCity,
+      dateValidFrom,
       dateValid,
       airline,
     });
