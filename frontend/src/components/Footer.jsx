@@ -24,7 +24,7 @@ export default function Footer() {
               <a className="btn btn-link" href="/contact">
                 Contact Us
               </a>
-              <a className="btn btn-link" href="/privacy">
+              <a className="btn btn-link" href="/privacy-policy">
                 Privacy Policy
               </a>
               <a className="btn btn-link" href="/terms">
