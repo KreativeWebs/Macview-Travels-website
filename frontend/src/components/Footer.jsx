@@ -31,7 +31,7 @@ export default function Footer() {
               <Link className="btn btn-link" to="/privacy-policy">
                 Privacy Policy
               </Link>
-              <Link className="btn btn-link" to="/terms">
+              <Link className="btn btn-link" to="/terms-and-conditions">
                 Terms &amp; Conditions
               </Link>
               <Link className="btn btn-link" to="/faq">
