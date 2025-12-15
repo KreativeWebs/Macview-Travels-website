@@ -3,6 +3,7 @@ import { ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import "@fortawesome/fontawesome-free/css/all.min.css";
 import { useEffect } from "react";
+import { useAuthStore } from "./store/authStore";
 import Header from "./components/Header";
 import Footer from "./components/Footer";
 import Home from "./pages/Home";
@@ -29,8 +30,8 @@ import VisaPayment from "./pages/VisaPayment";
 import PackageConfirmation from "./pages/PackageConfirmation.jsx";
 import ForgotPassword from "./pages/ForgotPassword.jsx";
 import ResetPassword from "./pages/ResetPassword.jsx";
-// import PrivacyPolicy from "./pages/PrivacyPolicy.jsx";
-import { useAuthStore } from "./store/authStore";
+import PrivacyPolicy from "./pages/PrivacyPolicy.jsx";
+import TermsAndConditions from "./pages/TermsandConditions.jsx";
 
 import AdminLayout from "./admin/AdminLayout";
 import Dashboard from "./admin/pages/AdminHome";
@@ -119,7 +120,6 @@ export default function App() {
                 <Route path="/managebookings" element={<ManageBookings />} />
                 <Route path="/team" element={<Team />} />
                 <Route path="/testimonial" element={<Testimonial />} />
-                {/* <Route path="/privacy-policy" element={<PrivacyPolicy />} /> */}
                 <Route path="/contact" element={<Contact />} />
                 <Route path="/flight-success" element={<FlightSuccess />} />
                 <Route path="/hotel-success" element={<HotelSuccess />} />
@@ -135,8 +135,12 @@ export default function App() {
                   path="/reset-password/:token"
                   element={<ResetPassword />}
                 />
+
+                <Route path="/privacy-policy" element={<PrivacyPolicy />} />
+                <Route path="/terms-and-conditions" element={<TermsAndConditions />} />
                 <Route path="/flash-sales" element={<FlashSales />} />
                 <Route path="/flash-sale/:id" element={<FlashSaleDetails />} />
+                
               </Routes>
               <Footer />
             </>
