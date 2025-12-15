@@ -29,6 +29,7 @@ import VisaPayment from "./pages/VisaPayment";
 import PackageConfirmation from "./pages/PackageConfirmation.jsx";
 import ForgotPassword from "./pages/ForgotPassword.jsx";
 import ResetPassword from "./pages/ResetPassword.jsx";
+// import PrivacyPolicy from "./pages/PrivacyPolicy.jsx";
 import { useAuthStore } from "./store/authStore";
 
 import AdminLayout from "./admin/AdminLayout";
@@ -118,6 +119,7 @@ export default function App() {
                 <Route path="/managebookings" element={<ManageBookings />} />
                 <Route path="/team" element={<Team />} />
                 <Route path="/testimonial" element={<Testimonial />} />
+                {/* <Route path="/privacy-policy" element={<PrivacyPolicy />} /> */}
                 <Route path="/contact" element={<Contact />} />
                 <Route path="/flight-success" element={<FlightSuccess />} />
                 <Route path="/hotel-success" element={<HotelSuccess />} />

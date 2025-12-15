@@ -1,4 +1,5 @@
 import React from "react";
+import { Link } from "react-router-dom";
 
 export default function Footer() {
   return (
@@ -12,32 +13,37 @@ export default function Footer() {
           <div className="row g-5">
             {/* About Section */}
             <div className="col-lg-4 col-md-6">
-              <h4 className="text-white mb-3"  style={{fontFamily: "Raleway"}}>Macview Travels</h4>
+              <h4 className="text-white mb-3" style={{ fontFamily: "Raleway" }}>
+                Macview Travels
+              </h4>
               <p>
                 Your trusted partner for unforgettable journeys. We offer
                 curated travel packages, expert guides, and personalized service
                 to make your adventures seamless and memorable.
               </p>
-              <a className="btn btn-link" href="/aboutus">
+
+              <Link className="btn btn-link" to="/aboutus">
                 About Us
-              </a>
-              <a className="btn btn-link" href="/contact">
+              </Link>
+              <Link className="btn btn-link" to="/contact">
                 Contact Us
-              </a>
-              <a className="btn btn-link" href="/privacy-policy">
+              </Link>
+              <Link className="btn btn-link" to="/privacy-policy">
                 Privacy Policy
-              </a>
-              <a className="btn btn-link" href="/terms">
+              </Link>
+              <Link className="btn btn-link" to="/terms">
                 Terms &amp; Conditions
-              </a>
-              <a className="btn btn-link" href="/faq">
+              </Link>
+              <Link className="btn btn-link" to="/faq">
                 FAQs &amp; Help
-              </a>
+              </Link>
             </div>
 
             {/* Contact Section */}
             <div className="col-lg-4 col-md-6">
-              <h4 className="text-white mb-3" style={{fontFamily: "Raleway"}}>Contact</h4>
+              <h4 className="text-white mb-3" style={{ fontFamily: "Raleway" }}>
+                Contact
+              </h4>
               <p className="mb-2">
                 <i className="fa fa-map-marker-alt me-3" />
                 Suite 436, Ikeja Plaza, Lagos, Nigeria
@@ -50,22 +56,30 @@ export default function Footer() {
                 <i className="fa fa-envelope me-3" />
                 info@macviewtravel.com
               </p>
+
+              {/* External links stay as <a> */}
               <div className="d-flex pt-2">
                 <a
                   className="btn btn-outline-light btn-social"
                   href="https://facebook.com/macviewtravels"
+                  target="_blank"
+                  rel="noopener noreferrer"
                 >
                   <i className="fab fa-facebook-f" />
                 </a>
                 <a
                   className="btn btn-outline-light btn-social"
                   href="https://instagram.com/macviewtravels"
+                  target="_blank"
+                  rel="noopener noreferrer"
                 >
                   <i className="fab fa-instagram" />
                 </a>
                 <a
                   className="btn btn-outline-light btn-social"
                   href="https://linkedin.com/company/macviewtravels"
+                  target="_blank"
+                  rel="noopener noreferrer"
                 >
                   <i className="fab fa-linkedin-in" />
                 </a>
@@ -74,12 +88,14 @@ export default function Footer() {
 
             {/* Google Map Section */}
             <div className="col-lg-4 col-md-12">
-              <h4 className="text-white mb-3"  style={{fontFamily: "Raleway"}}>Our Location</h4>
+              <h4 className="text-white mb-3" style={{ fontFamily: "Raleway" }}>
+                Our Location
+              </h4>
               <div
                 style={{
                   position: "relative",
                   width: "100%",
-                  paddingBottom: "56.25%", // 16:9 ratio
+                  paddingBottom: "56.25%",
                   height: 0,
                 }}
               >
@@ -109,20 +125,21 @@ export default function Footer() {
             <div className="row">
               <div className="col-md-6 text-center text-md-start mb-3 mb-md-0">
                 ©{" "}
-                <a className="border-bottom" href="/">
+                <Link className="border-bottom" to="/">
                   Macview Travels
-                </a>
+                </Link>
                 , All Rights Reserved. Designed by{" "}
-                <a className="border-bottom" href="/">
+                <Link className="border-bottom" to="/">
                   David Ishaka
-                </a>
+                </Link>
               </div>
+
               <div className="col-md-6 text-center text-md-end">
                 <div className="footer-menu">
-                  <a href="/">Home</a>
-                  <a href="/cookies">Cookies</a>
-                  <a href="/help">Help</a>
-                  <a href="/faq">FAQs</a>
+                  <Link to="/">Home</Link>
+                  <Link to="/cookies">Cookies</Link>
+                  <Link to="/help">Help</Link>
+                  <Link to="/faq">FAQs</Link>
                 </div>
               </div>
             </div>
