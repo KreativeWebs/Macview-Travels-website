@@ -59,7 +59,6 @@ import FlashSaleDetails from "./pages/FlashSaleDetails";
 import AdminCreateNewsletter from "./admin/pages/AdminCreateNewsletter.jsx";
 import AdminNewsletterSubscribers from "./admin/pages/AdminNewsletterSubscribers.jsx";
 
-import Maintenance from "./pages/Maintenance.jsx";
 
 function FloatingButtonsController() {
   const location = useLocation();
@@ -90,13 +89,9 @@ function AuthInitializer() {
   return null;
 }
 
-const isMaintenance = import.meta.env.VITE_MAINTENANCE_MODE === "true";
 
 export default function App() {
 
-  if (isMaintenance) {
-    return <Maintenance />;
-  }
   return (
     <div>
       <AuthInitializer />
