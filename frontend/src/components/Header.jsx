@@ -1,6 +1,6 @@
 import React, { useEffect, useRef } from "react";
 import { Link, useNavigate } from "react-router-dom";
-import Signup from "../pages/signup";
+import Signup from "../pages/Signup";
 import Login from "../pages/Login";
 import { useAuthStore } from "../store/authStore";
 import Modal from "bootstrap/js/dist/modal";
