@@ -93,7 +93,7 @@ function AuthInitializer() {
 const isMaintenance = import.meta.env.VITE_MAINTENANCE_MODE === "true";
 
 export default function App() {
-  // Maintenance gate (runs first)
+
   if (isMaintenance) {
     return <Maintenance />;
   }
