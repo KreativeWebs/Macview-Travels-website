@@ -4,8 +4,7 @@ import "react-toastify/dist/ReactToastify.css";
 import "@fortawesome/fontawesome-free/css/all.min.css";
 import { useEffect } from "react";
 import { useAuthStore } from "./store/authStore";
-import Header from "./components/Header";
-import Footer from "./components/Footer";
+import PublicLayout from "./components/PublicLayout";
 import Home from "./pages/Home";
 import AboutUs from "./pages/AboutUs";
 import Services from "./pages/Services";
@@ -60,6 +59,7 @@ import FlashSaleDetails from "./pages/FlashSaleDetails";
 import AdminCreateNewsletter from "./admin/pages/AdminCreateNewsletter.jsx";
 import AdminNewsletterSubscribers from "./admin/pages/AdminNewsletterSubscribers.jsx";
 
+import Maintenance from "./pages/Maintenance.jsx";
 
 function FloatingButtonsController() {
   const location = useLocation();
@@ -90,71 +90,64 @@ function AuthInitializer() {
   return null;
 }
 
+const isMaintenance = import.meta.env.VITE_MAINTENANCE_MODE === "true";
+
 export default function App() {
+  // Maintenance gate (runs first)
+  if (isMaintenance) {
+    return <Maintenance />;
+  }
   return (
     <div>
       <AuthInitializer />
       <FloatingButtonsController />
       <Routes>
+        {/* Public website */}
+        <Route element={<PublicLayout />}>
+          <Route path="/" element={<Home />} />
+          <Route path="/aboutus" element={<AboutUs />} />
+          <Route path="/services" element={<Services />} />
+          <Route path="/packages" element={<Packages />} />
+          <Route path="/package/:id" element={<PackageDetails />} />
+          <Route path="/visaprocessing" element={<VisaProcessing />} />
+          <Route path="/flightbooking" element={<FlightBooking />} />
+          <Route path="/hotelbooking" element={<HotelBooking />} />
+          <Route path="/studyabroad" element={<StudyAbroad />} />
+          <Route path="/airporttransfer" element={<AirportTransfer />} />
+          <Route path="/travelinsurance" element={<TravelInsurance />} />
+          <Route path="/protocolservice" element={<ProtocolService />} />
+          <Route path="/destination" element={<Destination />} />
+          <Route path="/managebookings" element={<ManageBookings />} />
+          <Route path="/team" element={<Team />} />
+          <Route path="/testimonial" element={<Testimonial />} />
+          <Route path="/contact" element={<Contact />} />
+          <Route path="/flight-success" element={<FlightSuccess />} />
+          <Route path="/hotel-success" element={<HotelSuccess />} />
+          <Route path="/visa-success" element={<VisaSuccess />} />
+          <Route path="/package-success" element={<PackageSuccess />} />
+          <Route
+            path="/package-confirmation"
+            element={<PackageConfirmation />}
+          />
+          <Route path="/visa-payment" element={<VisaPayment />} />
+          <Route path="/forgot-password" element={<ForgotPassword />} />
+          <Route path="/reset-password/:token" element={<ResetPassword />} />
+          <Route path="/privacy-policy" element={<PrivacyPolicy />} />
+          <Route
+            path="/terms-and-conditions"
+            element={<TermsAndConditions />}
+          />
+          <Route path="/flash-sales" element={<FlashSales />} />
+          <Route path="/flash-sale/:id" element={<FlashSaleDetails />} />
+        </Route>
 
-        {/* Public Website Layout */}
-        <Route
-          path="/*"
-          element={
-            <>
-              <Header />
-              <Routes>
-                <Route path="/" element={<Home />} />
-                <Route path="/aboutus" element={<AboutUs />} />
-                <Route path="/services" element={<Services />} />
-                <Route path="/packages" element={<Packages />} />
-                <Route path="/package/:id" element={<PackageDetails />} />
-                <Route path="/visaprocessing" element={<VisaProcessing />} />
-                <Route path="/flightbooking" element={<FlightBooking />} />
-                <Route path="/hotelbooking" element={<HotelBooking />} />
-                <Route path="/studyabroad" element={<StudyAbroad />} />
-                <Route path="/airporttransfer" element={<AirportTransfer />} />
-                <Route path="/travelinsurance" element={<TravelInsurance />} />
-                <Route path="/protocolservice" element={<ProtocolService />} />
-                <Route path="/destination" element={<Destination />} />
-                <Route path="/managebookings" element={<ManageBookings />} />
-                <Route path="/team" element={<Team />} />
-                <Route path="/testimonial" element={<Testimonial />} />
-                <Route path="/contact" element={<Contact />} />
-                <Route path="/flight-success" element={<FlightSuccess />} />
-                <Route path="/hotel-success" element={<HotelSuccess />} />
-                <Route path="/visa-success" element={<VisaSuccess />} />
-                <Route path="/package-success" element={<PackageSuccess />} />
-                <Route
-                  path="/package-confirmation"
-                  element={<PackageConfirmation />}
-                />
-                <Route path="/visa-payment" element={<VisaPayment />} />
-                <Route path="/forgot-password" element={<ForgotPassword />} />
-                <Route
-                  path="/reset-password/:token"
-                  element={<ResetPassword />}
-                />
-
-                <Route path="/privacy-policy" element={<PrivacyPolicy />} />
-                <Route path="/terms-and-conditions" element={<TermsAndConditions />} />
-                <Route path="/flash-sales" element={<FlashSales />} />
-                <Route path="/flash-sale/:id" element={<FlashSaleDetails />} />
-                
-              </Routes>
-              <Footer />
-            </>
-          }
-        />
-
-        {/* Admin Login Route (outside admin layout) */}
+        {/* Admin login */}
         <Route path="/adminlogin" element={<AdminLogin />} />
 
-        {/* Admin Routes */}
+        {/* Admin routes */}
         <Route path="/admin" element={<AdminLayout />}>
           <Route index element={<Dashboard />} />
           <Route path="clients" element={<Clients />} />
-
           <Route path="clients/:id" element={<ClientProfile />} />
           <Route path="visa" element={<VisaRequests />} />
           <Route path="visa/addnewvisa" element={<AddNewVisa />} />
