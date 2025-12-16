@@ -4,7 +4,7 @@ import { signInWithPopup } from "firebase/auth";
 import { auth, googleProvider } from "../firebaseConfig";
 import { Carousel } from "react-bootstrap";
 import { useAuthStore } from "../store/authStore";
-import Modal from "bootstrap/js/dist/modal";
+// Modal is loaded from CDN, so use window.Modal
 import PasswordStrength from '../components/PasswordStrength';
 import { toast } from 'react-toastify';
 
@@ -25,11 +25,13 @@ function Signup() {
     if (!modalElement) return;
 
     // Initialize modal instance
-    modalInstanceRef.current = new Modal(modalElement, {
-      backdrop: true,
-      keyboard: true,
-      focus: true,
-    });
+    if (typeof Modal !== 'undefined') {
+      modalInstanceRef.current = new Modal(modalElement, {
+        backdrop: true,
+        keyboard: true,
+        focus: true,
+      });
+    }
 
     const clearFormOnShow = () => {
       setEmail("");
@@ -216,7 +218,7 @@ function Signup() {
           <Carousel interval={5000} fade>
             <Carousel.Item>
               <img
-                src="assets/img/2151747475.jpg"
+                src="/assets/img/2151747475.jpg"
                 className="d-block w-100"
                 alt="Slide 1"
                 style={{ objectFit: "cover", height: "250px" }}
@@ -224,7 +226,7 @@ function Signup() {
             </Carousel.Item>
             <Carousel.Item>
               <img
-                src="assets/img/2151747444.jpg"
+                src="/assets/img/2151747444.jpg"
                 className="d-block w-100"
                 alt="Slide 2"
                 style={{ objectFit: "cover", height: "250px" }}
@@ -232,9 +234,9 @@ function Signup() {
             </Carousel.Item>
             <Carousel.Item>
               <img
-                src="assets/img/2151747469.jpg"
+                src="/assets/img/2151747469.jpg"
                 className="d-block w-100"
-                alt="Slide 2"
+                alt="Slide 3"
                 style={{ objectFit: "cover", height: "250px" }}
               />
             </Carousel.Item>
@@ -341,7 +343,7 @@ function Signup() {
                 ) : (
                   <>
                     <img
-                      src="assets/img/google-icon.png"
+                      src="/assets/img/google-icon.png"
                       alt=""
                       style={{ width: "30px" }}
                     />{" "}

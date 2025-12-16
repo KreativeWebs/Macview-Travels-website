@@ -14,7 +14,7 @@ function About() {
             <div className="position-relative h-100">
               <img
                 className="img-fluid position-absolute w-100 h-100"
-                src="assets/img/passport-flight-businessman-standing-airport-checking-departure-times-schedule-travel-work-trip-professional-african-male-waiting-by-terminal-with-his-ticket-board-plane.jpg"
+                src="/assets/img/passport-flight-businessman-standing-airport-checking-departure-times-schedule-travel-work-trip-professional-african-male-waiting-by-terminal-with-his-ticket-board-plane.jpg"
                 alt="Travelers enjoying a scenic view"
                 style={{ objectFit: "cover", borderRadius: "8px" }}
               />
