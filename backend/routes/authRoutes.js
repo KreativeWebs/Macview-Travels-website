@@ -10,7 +10,10 @@ import VisaApplication from "../models/visaApplication.js";
 import FlightBooking from "../models/flightbooking.js";
 import HotelBooking from "../models/HotelBooking.js";
 import PackageBooking from "../models/PackageBooking.js";
-import { sendPasswordResetEmail, sendWelcomeEmail } from "../utils/sendEmail.js";
+import {
+  sendPasswordResetEmail,
+  sendWelcomeEmail,
+} from "../utils/sendEmail.js";
 
 const router = express.Router();
 
@@ -43,31 +46,57 @@ const setRefreshCookie = (res, token) => {
    SIGNUP
 ================================ */
 router.post("/signup", async (req, res) => {
-  const { email, password } = req.body;
+  const { firstName, email, password } = req.body;
+
   try {
-    if (!email || !password)
-      return res.status(400).json({ success: false, message: "Email & password required" });
+    if (!firstName || !email || !password) {
+      return res.status(400).json({
+        success: false,
+        message: "First name, email & password are required",
+      });
+    }
 
     const emailExists = await User.findOne({ email });
-    if (emailExists)
-      return res.status(400).json({ success: false, message: "Email already exists" });
+    if (emailExists) {
+      return res.status(400).json({
+        success: false,
+        message: "Email already exists",
+      });
+    }
 
     const hashedPassword = await bcryptjs.hash(password, 10);
-    const user = await User.create({ email, password: hashedPassword });
+
+    const user = await User.create({
+      firstName,
+      email,
+      password: hashedPassword,
+    });
 
     // Send welcome email (non-blocking)
-    try { await sendWelcomeEmail(user.email); } catch (err) { console.error("Welcome email failed:", err); }
+    try {
+      await sendWelcomeEmail(user.email, user.firstName);
+    } catch (err) {
+      console.error("Welcome email failed:", err);
+    }
 
     const accessToken = createAccessToken(user._id);
     const refreshToken = createRefreshToken(user._id);
     setRefreshCookie(res, refreshToken);
 
-    res.status(201).json({ success: true, user, accessToken });
+    res.status(201).json({
+      success: true,
+      user,
+      accessToken,
+    });
   } catch (error) {
     console.error("Signup error:", error);
-    res.status(500).json({ success: false, message: "Server error" });
+    res.status(500).json({
+      success: false,
+      message: "Server error",
+    });
   }
 });
+
 
 /* ================================
    LOGIN
@@ -76,10 +105,16 @@ router.post("/login", async (req, res) => {
   const { email, password } = req.body;
   try {
     const user = await User.findOne({ email });
-    if (!user) return res.status(400).json({ success: false, message: "Invalid credentials" });
+    if (!user)
+      return res
+        .status(400)
+        .json({ success: false, message: "Invalid credentials" });
 
     const isPasswordValid = await bcryptjs.compare(password, user.password);
-    if (!isPasswordValid) return res.status(400).json({ success: false, message: "Invalid credentials" });
+    if (!isPasswordValid)
+      return res
+        .status(400)
+        .json({ success: false, message: "Invalid credentials" });
 
     const accessToken = createAccessToken(user._id);
     const refreshToken = createRefreshToken(user._id);
@@ -119,7 +154,8 @@ router.post("/refresh", async (req, res) => {
 ================================ */
 router.get("/fetchuser", async (req, res) => {
   const authHeader = req.headers.authorization;
-  if (!authHeader) return res.status(401).json({ message: "No access token provided" });
+  if (!authHeader)
+    return res.status(401).json({ message: "No access token provided" });
 
   const token = authHeader.split(" ")[1];
   try {
@@ -142,7 +178,8 @@ router.post("/google-login", async (req, res) => {
   const { idToken, email } = req.body;
   try {
     const decodedToken = await admin.auth().verifyIdToken(idToken);
-    if (decodedToken.email !== email) return res.status(400).json({ message: "Email mismatch" });
+    if (decodedToken.email !== email)
+      return res.status(400).json({ message: "Email mismatch" });
 
     let user = await User.findOne({ email });
     let isNewUser = false;
@@ -155,13 +192,20 @@ router.post("/google-login", async (req, res) => {
       isNewUser = true;
     }
 
-    if (isNewUser) try { await sendWelcomeEmail(user.email); } catch (err) { console.error(err); }
+    if (isNewUser)
+      try {
+        await sendWelcomeEmail(user.email);
+      } catch (err) {
+        console.error(err);
+      }
 
     const accessToken = createAccessToken(user._id);
     const refreshToken = createRefreshToken(user._id);
     setRefreshCookie(res, refreshToken);
 
-    res.status(200).json({ user, accessToken, message: "Google login successful" });
+    res
+      .status(200)
+      .json({ user, accessToken, message: "Google login successful" });
   } catch (error) {
     console.error("Google login error:", error);
     res.status(401).json({ message: "Invalid Google token" });
@@ -192,11 +236,20 @@ router.post("/forgot-password", async (req, res) => {
     await PasswordResetToken.deleteMany({ userId: user._id });
 
     const resetToken = crypto.randomBytes(32).toString("hex");
-    const hashedToken = crypto.createHash("sha256").update(resetToken).digest("hex");
+    const hashedToken = crypto
+      .createHash("sha256")
+      .update(resetToken)
+      .digest("hex");
 
-    await PasswordResetToken.create({ userId: user._id, token: hashedToken });
+    await PasswordResetToken.create({
+      userId: user._id,
+      token: hashedToken,
+      expiresAt: Date.now() + 60 * 60 * 1000, // 1 hour
+    });
 
-    const resetURL = `${process.env.CLIENT_URL || "http://localhost:5173"}/reset-password/${resetToken}`;
+    const resetURL = `${
+      process.env.CLIENT_URL || "http://localhost:5173"
+    }/reset-password/${resetToken}`;
     await sendPasswordResetEmail(user.email, resetURL);
 
     res.json({ message: "Password reset email sent successfully" });
@@ -214,21 +267,36 @@ router.post("/reset-password/:token", async (req, res) => {
   const { password } = req.body;
 
   if (!password || password.length < 8)
-    return res.status(400).json({ success: false, message: "Password must be at least 8 characters" });
+    return res
+      .status(400)
+      .json({
+        success: false,
+        message: "Password must be at least 8 characters",
+      });
 
   try {
     const hashedToken = crypto.createHash("sha256").update(token).digest("hex");
     const resetToken = await PasswordResetToken.findOne({ token: hashedToken });
-    if (!resetToken) return res.status(400).json({ success: false, message: "Invalid or expired link" });
+    if (!resetToken)
+      return res
+        .status(400)
+        .json({ success: false, message: "Invalid or expired link" });
 
     const hashedPassword = await bcryptjs.hash(password, 10);
-    await User.findByIdAndUpdate(resetToken.userId, { password: hashedPassword });
+    await User.findByIdAndUpdate(resetToken.userId, {
+      password: hashedPassword,
+    });
     await PasswordResetToken.deleteOne({ _id: resetToken._id });
 
-    res.json({ success: true, message: "Password reset successful! You can now login." });
+    res.json({
+      success: true,
+      message: "Password reset successful! You can now login.",
+    });
   } catch (error) {
     console.error("Reset password error:", error);
-    res.status(500).json({ success: false, message: "Server error. Please try again." });
+    res
+      .status(500)
+      .json({ success: false, message: "Server error. Please try again." });
   }
 });
 
@@ -239,25 +307,38 @@ router.post("/admin/login", async (req, res) => {
   const { email, password } = req.body;
   try {
     const adminUser = await Admin.findOne({ email });
-    if (!adminUser) return res.status(400).json({ success: false, message: "Invalid admin credentials" });
+    if (!adminUser)
+      return res
+        .status(400)
+        .json({ success: false, message: "Invalid admin credentials" });
 
     if (adminUser.lockUntil && adminUser.lockUntil > Date.now())
-      return res.status(423).json({ success: false, message: "Admin account temporarily locked" });
+      return res
+        .status(423)
+        .json({ success: false, message: "Admin account temporarily locked" });
 
-    const isPasswordValid = await bcryptjs.compare(password, adminUser.password);
+    const isPasswordValid = await bcryptjs.compare(
+      password,
+      adminUser.password
+    );
     if (!isPasswordValid) {
       adminUser.loginAttempts += 1;
-      if (adminUser.loginAttempts >= 3) adminUser.lockUntil = Date.now() + 60 * 60 * 1000;
+      if (adminUser.loginAttempts >= 3)
+        adminUser.lockUntil = Date.now() + 60 * 60 * 1000;
       await adminUser.save();
-      return res.status(400).json({ success: false, message: "Invalid admin credentials" });
+      return res
+        .status(400)
+        .json({ success: false, message: "Invalid admin credentials" });
     }
 
     adminUser.loginAttempts = 0;
     adminUser.lockUntil = undefined;
     adminUser.lastLogin = new Date();
 
-    const clientIP = req.ip || req.connection.remoteAddress || req.socket?.remoteAddress;
-    if (clientIP && !adminUser.ipAddresses.includes(clientIP)) adminUser.ipAddresses.push(clientIP);
+    const clientIP =
+      req.ip || req.connection.remoteAddress || req.socket?.remoteAddress;
+    if (clientIP && !adminUser.ipAddresses.includes(clientIP))
+      adminUser.ipAddresses.push(clientIP);
 
     await adminUser.save();
 
@@ -293,9 +374,9 @@ router.get("/user/visa-applications", async (req, res) => {
   }
 
   const token = authHeader.split(" ")[1];
-    if (!token) {
-      return res.status(401).json({ message: "Invalid authorization format" });
-    }
+  if (!token) {
+    return res.status(401).json({ message: "Invalid authorization format" });
+  }
   try {
     const decoded = jwt.verify(token, process.env.ACCESS_TOKEN_SECRET);
     const user = await User.findById(decoded.id).select("email");
@@ -306,16 +387,21 @@ router.get("/user/visa-applications", async (req, res) => {
     // Fetch visa applications for this user only
     const bookings = await VisaApplication.find({
       email: { $regex: new RegExp(`^${user.email}$`, "i") },
-    })
-      .sort({ createdAt: -1 });
+    }).sort({ createdAt: -1 });
 
     res.json({ bookings });
   } catch (error) {
-      console.error("Error fetching user visa applications:", error.message, error);
+    console.error(
+      "Error fetching user visa applications:",
+      error.message,
+      error
+    );
     if (error.name === "JsonWebTokenError") {
       return res.status(401).json({ message: "Invalid or expired token" });
     }
-    res.status(500).json({ message: "Server error while fetching visa applications" });
+    res
+      .status(500)
+      .json({ message: "Server error while fetching visa applications" });
   }
 });
 
@@ -329,9 +415,9 @@ router.get("/user/flight-bookings", async (req, res) => {
   }
 
   const token = authHeader.split(" ")[1];
-    if (!token) {
-      return res.status(401).json({ message: "Invalid authorization format" });
-    }
+  if (!token) {
+    return res.status(401).json({ message: "Invalid authorization format" });
+  }
   try {
     const decoded = jwt.verify(token, process.env.ACCESS_TOKEN_SECRET);
     const user = await User.findById(decoded.id).select("email");
@@ -342,16 +428,17 @@ router.get("/user/flight-bookings", async (req, res) => {
     // Fetch flight bookings for this user only
     const bookings = await FlightBooking.find({
       email: { $regex: new RegExp(`^${user.email}$`, "i") },
-    })
-      .sort({ createdAt: -1 });
+    }).sort({ createdAt: -1 });
 
     res.json({ bookings });
   } catch (error) {
-      console.error("Error fetching user flight bookings:", error.message, error);
+    console.error("Error fetching user flight bookings:", error.message, error);
     if (error.name === "JsonWebTokenError") {
       return res.status(401).json({ message: "Invalid or expired token" });
     }
-    res.status(500).json({ message: "Server error while fetching flight bookings" });
+    res
+      .status(500)
+      .json({ message: "Server error while fetching flight bookings" });
   }
 });
 
@@ -365,9 +452,9 @@ router.get("/user/hotel-bookings", async (req, res) => {
   }
 
   const token = authHeader.split(" ")[1];
-    if (!token) {
-      return res.status(401).json({ message: "Invalid authorization format" });
-    }
+  if (!token) {
+    return res.status(401).json({ message: "Invalid authorization format" });
+  }
   try {
     const decoded = jwt.verify(token, process.env.ACCESS_TOKEN_SECRET);
     const user = await User.findById(decoded.id).select("email");
@@ -378,16 +465,17 @@ router.get("/user/hotel-bookings", async (req, res) => {
     // Fetch hotel bookings for this user only
     const bookings = await HotelBooking.find({
       email: { $regex: new RegExp(`^${user.email}$`, "i") },
-    })
-      .sort({ createdAt: -1 });
+    }).sort({ createdAt: -1 });
 
     res.json({ bookings });
   } catch (error) {
-      console.error("Error fetching user hotel bookings:", error.message, error);
+    console.error("Error fetching user hotel bookings:", error.message, error);
     if (error.name === "JsonWebTokenError") {
       return res.status(401).json({ message: "Invalid or expired token" });
     }
-    res.status(500).json({ message: "Server error while fetching hotel bookings" });
+    res
+      .status(500)
+      .json({ message: "Server error while fetching hotel bookings" });
   }
 });
 
@@ -401,9 +489,9 @@ router.get("/user/package-bookings", async (req, res) => {
   }
 
   const token = authHeader.split(" ")[1];
-    if (!token) {
-      return res.status(401).json({ message: "Invalid authorization format" });
-    }
+  if (!token) {
+    return res.status(401).json({ message: "Invalid authorization format" });
+  }
   try {
     const decoded = jwt.verify(token, process.env.ACCESS_TOKEN_SECRET);
     const user = await User.findById(decoded.id).select("email");
@@ -415,16 +503,22 @@ router.get("/user/package-bookings", async (req, res) => {
     const bookings = await PackageBooking.find({
       email: { $regex: new RegExp(`^${user.email}$`, "i") },
     })
-      .populate('packageId', 'city title')
+      .populate("packageId", "city title")
       .sort({ createdAt: -1 });
 
     res.json({ bookings });
   } catch (error) {
-      console.error("Error fetching user package bookings:", error.message, error);
+    console.error(
+      "Error fetching user package bookings:",
+      error.message,
+      error
+    );
     if (error.name === "JsonWebTokenError") {
       return res.status(401).json({ message: "Invalid or expired token" });
     }
-    res.status(500).json({ message: "Server error while fetching package bookings" });
+    res
+      .status(500)
+      .json({ message: "Server error while fetching package bookings" });
   }
 });
 

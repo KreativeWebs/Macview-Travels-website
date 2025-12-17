@@ -137,8 +137,7 @@ export default function Footer() {
               <div className="col-md-6 text-center text-md-end">
                 <div className="footer-menu">
                   <Link to="/">Home</Link>
-                  <Link to="/cookies">Cookies</Link>
-                  <Link to="/help">Help</Link>
+                  <Link to="/contact">Help</Link>
                   <Link to="/faq">FAQs</Link>
                 </div>
               </div>

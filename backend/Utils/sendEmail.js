@@ -7,20 +7,14 @@ export const sendPasswordResetEmail = async (email, resetURL) => {
     await mailtrapClient.send({
       from: sender,
       to: recipients,
-      subject: "Password Reset Request",
-      html: `
-        <div style="font-family: Arial, sans-serif; max-width: 600px; margin: 0 auto;">
-          <h2>Password Reset Request</h2>
-          <p>You requested a password reset for your Macview Travels account.</p>
-          <p>Click the link below to reset your password:</p>
-          <a href="${resetURL}" style="background-color: #175aa1; color: white; padding: 10px 20px; text-decoration: none; border-radius: 5px; display: inline-block;">Reset Password</a>
-          <p>This link will expire in 1 hour.</p>
-          <p>If you didn't request this, please ignore this email.</p>
-          <p>Questions? Contact <a href="https://wa.me/2348169056956" target="_blank">Support Team</a></p>
-          <p>Best regards,<br>Macview Travels Team</p>
-        </div>
-      `,
-      category: "Password Reset",
+      template_uuid: "dbc13ce9-458f-495c-9475-ff19a9195277",
+      template_variables: {
+        reset_url: resetURL,
+        company_name: "Macview Travels",
+        support_whatsapp: "https://wa.me/2348169056956",
+        expiry_time: "1 hour",
+      },
+     
     });
   } catch (error) {
     console.error("Error sending password reset email:", error);
@@ -42,7 +36,9 @@ export const sendWelcomeEmail = async (email, firstName = null) => {
         company_name: "Macview Travels",
         login_url: process.env.CLIENT_URL || 'http://localhost:5173',
         support_email: "support@macviewtravels.com"
-      }
+      },
+
+    
     });
   } catch (error) {
     console.error("Error sending welcome email:", error);
