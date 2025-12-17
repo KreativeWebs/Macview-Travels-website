@@ -31,6 +31,7 @@ import ForgotPassword from "./pages/ForgotPassword.jsx";
 import ResetPassword from "./pages/ResetPassword.jsx";
 import PrivacyPolicy from "./pages/PrivacyPolicy.jsx";
 import TermsAndConditions from "./pages/Terms.jsx";
+import FAQ from "./pages/FAQ.jsx";
 
 import AdminLayout from "./admin/AdminLayout";
 import Dashboard from "./admin/pages/AdminHome";
@@ -132,6 +133,8 @@ export default function App() {
             path="/terms-and-conditions"
             element={<TermsAndConditions />}
           />
+
+          <Route path="/faq" element={<FAQ />} />
           <Route path="/flash-sales" element={<FlashSales />} />
           <Route path="/flash-sale/:id" element={<FlashSaleDetails />} />
         </Route>
@@ -183,6 +186,9 @@ export default function App() {
         autoClose={3000}
         hideProgressBar={false}
       />
+
+      {/* Floating Buttons */}
+      
     </div>
   );
 }
