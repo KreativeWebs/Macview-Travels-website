@@ -373,20 +373,36 @@ router.post("/admin/login", async (req, res) => {
 
 
 /* ================================
-   CONTACT FORM
+   CONTACT FORM (AUTH REQUIRED)
 ================================ */
 router.post("/contact", async (req, res) => {
-  const { name, email, subject, message } = req.body;
+  const authHeader = req.headers.authorization;
+  if (!authHeader) {
+    return res.status(401).json({ message: "No access token provided" });
+  }
 
-  if (!name || !email || !subject || !message) {
+  const token = authHeader.split(" ")[1];
+  if (!token) {
+    return res.status(401).json({ message: "Invalid authorization format" });
+  }
+
+  const { name, subject, message } = req.body;
+
+  if (!name || !subject || !message) {
     return res.status(400).json({
       success: false,
-      message: "All fields are required",
+      message: "Name, subject and message are required",
     });
   }
 
   try {
-    await sendContactEmail(name, email, subject, message);
+    const decoded = jwt.verify(token, process.env.ACCESS_TOKEN_SECRET);
+    const user = await User.findById(decoded.id).select("email firstName");
+    if (!user) {
+      return res.status(404).json({ message: "User not found" });
+    }
+
+    await sendContactEmail(name, user.email, subject, message);
 
     res.status(200).json({
       success: true,
@@ -394,6 +410,9 @@ router.post("/contact", async (req, res) => {
     });
   } catch (error) {
     console.error("Contact email error:", error);
+    if (error.name === "JsonWebTokenError") {
+      return res.status(401).json({ message: "Invalid or expired token" });
+    }
     res.status(500).json({
       success: false,
       message: "Failed to send message",
