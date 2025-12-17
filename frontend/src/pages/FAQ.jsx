@@ -10,7 +10,7 @@ function FAQ() {
     >
       <HeroHeader
         heroheadertitle="Frequently Asked Questions"
-        heroheaderbg="assets/img/7626.jpg"
+        heroheaderbg="/assets/img/bg-hero2.jpg"
         heroheaderdesc="Answers to common questions about our services and processes."
         pageName="FAQs"
       />
