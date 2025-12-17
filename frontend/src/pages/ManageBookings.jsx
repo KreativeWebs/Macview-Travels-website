@@ -242,8 +242,12 @@ export default function ManageBookings() {
 
   return (
     <div className="container-xxl py-5">
-      <div className="container">
-        <h2 className="mt-5 mb-4">My Bookings</h2>
+      <div className="container" style={{
+        marginBottom: "50px"
+      }}>
+        <h2 className="mb-4" style={{
+          marginTop: "100px",
+        }}>My Bookings</h2>
 
         <ul className="nav nav-tabs mb-4">
           <li className="nav-item">
