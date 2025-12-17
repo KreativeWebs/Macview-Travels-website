@@ -10,7 +10,7 @@ function PrivacyPolicy() {
     >
       <HeroHeader
         heroheadertitle="Privacy Policy"
-        heroheaderbg="assets/img/7626.jpg"
+        heroheaderbg="/assets/img/bg hero2.jpg"
         heroheaderdesc="Your privacy is important to us. This policy explains how we handle your data."
         pageName="Privacy Policy"
       />

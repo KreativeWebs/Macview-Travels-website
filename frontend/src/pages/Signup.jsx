@@ -344,11 +344,11 @@ function Signup() {
               >
                 By signing in or registering, I confirm that i have read and{" "}
                 <br /> agreed to Macview's{" "}
-                <a href="#" style={{ color: "#175aa1" }}>
+                <a href="/terms-and-conditions" style={{ color: "#175aa1" }}>
                   Terms and Conditions
                 </a>{" "}
                 and{" "}
-                <a href="#" style={{ color: "#175aa1" }}>
+                <a href="privacy-policy" style={{ color: "#175aa1" }}>
                   Privacy Policy
                 </a>
               </p>
