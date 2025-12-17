@@ -69,3 +69,30 @@ export const sendNewsletterEmail = async (email, subject, message) => {
     throw new Error("Failed to send newsletter email");
   }
 };
+
+export const sendContactEmail = async (name, email, subject, message) => {
+  const recipients = [{ email: "macviewtravels@gmail.com" }];
+
+  try {
+    await mailtrapClient.send({
+      from: sender,
+      to: recipients,
+      reply_to: { email },
+      subject: subject,
+      html: `
+        <div style="font-family: Arial, sans-serif; line-height: 1.6;">
+          <h2>New Contact Form Message</h2>
+          <p><strong>Name:</strong> ${name}</p>
+          <p><strong>Email:</strong> ${email}</p>
+          <hr />
+          <p><strong>Message:</strong></p>
+          <p>${message.replace(/\n/g, '<br>')}</p>
+        </div>
+      `,
+      category: "Contact",
+    });
+  } catch (error) {
+    console.error("Error sending contact email:", error);
+    throw new Error("Failed to send contact email");
+  }
+};

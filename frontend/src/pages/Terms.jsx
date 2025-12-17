@@ -11,7 +11,7 @@ function TermsAndConditions() {
     >
       <HeroHeader
         heroheadertitle="Terms & Conditions"
-        heroheaderbg="assets/img/7626.jpg"
+        heroheaderbg="/assets/img/bg-hero2.jpg"
         heroheaderdesc="Please read these terms carefully before using our services."
         pageName="Terms & Conditions"
       />
