@@ -101,33 +101,48 @@ function Signup() {
   };
 
   const loginWithGoogle = async () => {
-    try {
-      setGoogleLoading(true);
-      const result = await signInWithPopup(auth, googleProvider);
-      const idToken = await result.user.getIdToken();
+  try {
+    setGoogleLoading(true);
 
-      const response = await fetch("http://localhost:5000/api/google-login", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        credentials: "include",
-        body: JSON.stringify({ idToken, email: result.user.email }),
-      });
+    const result = await signInWithPopup(auth, googleProvider);
+    const fullName = result.user.displayName || "";
+    const googleFirstName = fullName.split(" ")[0];
+    const idToken = await result.user.getIdToken();
 
-      const data = await response.json();
-      setGoogleLoading(false);
+    const response = await fetch("http://localhost:5000/api/google-login", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      credentials: "include",
+      body: JSON.stringify({
+        idToken,
+        email: result.user.email,
+        firstName: googleFirstName,
+      }),
+    });
 
-      if (response.ok) {
-        toast.success("Signup successful");
-        modalInstanceRef.current?.hide();
-        navigate("/");
-      } else {
-        toast.error(data.message);
-      }
-    } catch {
-      toast.error("Google signup failed");
-      setGoogleLoading(false);
+    const data = await response.json();
+    setGoogleLoading(false);
+
+    if (!response.ok) {
+      toast.error(data.message);
+      return;
     }
-  };
+
+   
+    const authStore = useAuthStore.getState();
+    authStore.user = data.user; 
+    authStore.accessToken = data.accessToken; 
+
+    toast.success("Signup successful");
+    modalInstanceRef.current?.hide();
+    navigate("/");
+  } catch (err) {
+    console.error(err);
+    toast.error("Google signup failed");
+    setGoogleLoading(false);
+  }
+};
+
 
   return (
     <div className="modal fade" id="signupModal" tabIndex="-1">
@@ -166,9 +181,9 @@ function Signup() {
               id="signupModalLabel"
               style={{ fontFamily: "Raleway", color: "#175aa1" }}
             >
-              {" "}
-              Sign Up{" "}
-            </h5>{" "}
+              Sign Up
+            </h5>
+
             <p
               style={{
                 textAlign: "center",
@@ -177,9 +192,9 @@ function Signup() {
                 color: "#494747ff",
               }}
             >
-              {" "}
-              Your next experience starts with an account.{" "}
+              Your next experience starts with an account.
             </p>
+
             <form onSubmit={step === 1 ? handleNextStep : handleSignup}>
               {step === 1 && (
                 <>
@@ -335,7 +350,7 @@ function Signup() {
                 and{" "}
                 <a href="#" style={{ color: "#175aa1" }}>
                   Privacy Policy
-                </a>{" "}
+                </a>
               </p>
             </form>
           </div>

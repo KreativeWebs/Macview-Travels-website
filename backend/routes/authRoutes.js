@@ -97,7 +97,6 @@ router.post("/signup", async (req, res) => {
   }
 });
 
-
 /* ================================
    LOGIN
 ================================ */
@@ -172,40 +171,49 @@ router.get("/fetchuser", async (req, res) => {
 });
 
 /* ================================
-   GOOGLE LOGIN
+   GOOGLE LOGIN / SIGNUP
 ================================ */
 router.post("/google-login", async (req, res) => {
-  const { idToken, email } = req.body;
+  const { idToken, email, firstName } = req.body;
+
   try {
     const decodedToken = await admin.auth().verifyIdToken(idToken);
-    if (decodedToken.email !== email)
+
+    if (decodedToken.email !== email) {
       return res.status(400).json({ message: "Email mismatch" });
+    }
 
     let user = await User.findOne({ email });
     let isNewUser = false;
+
     if (!user) {
       user = await User.create({
         email,
         password: await bcryptjs.hash(Math.random().toString(36), 10),
+        firstName: firstName || decodedToken.name?.split(" ")[0] || "",
         authProvider: "google",
       });
+
       isNewUser = true;
     }
 
-    if (isNewUser)
+    if (isNewUser) {
       try {
-        await sendWelcomeEmail(user.email);
+        await sendWelcomeEmail(user.email, user.firstName);
       } catch (err) {
-        console.error(err);
+        console.error("Welcome email failed:", err);
       }
+    }
 
     const accessToken = createAccessToken(user._id);
     const refreshToken = createRefreshToken(user._id);
     setRefreshCookie(res, refreshToken);
 
-    res
-      .status(200)
-      .json({ user, accessToken, message: "Google login successful" });
+    res.status(200).json({
+      user,
+      accessToken,
+      message: "Google login successful",
+    });
   } catch (error) {
     console.error("Google login error:", error);
     res.status(401).json({ message: "Invalid Google token" });
@@ -267,12 +275,10 @@ router.post("/reset-password/:token", async (req, res) => {
   const { password } = req.body;
 
   if (!password || password.length < 8)
-    return res
-      .status(400)
-      .json({
-        success: false,
-        message: "Password must be at least 8 characters",
-      });
+    return res.status(400).json({
+      success: false,
+      message: "Password must be at least 8 characters",
+    });
 
   try {
     const hashedToken = crypto.createHash("sha256").update(token).digest("hex");
