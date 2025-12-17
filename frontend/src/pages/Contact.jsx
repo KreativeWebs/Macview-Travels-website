@@ -1,15 +1,21 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import HeroHeader from "./HeroHeader";
+import { toast } from "react-toastify";
+import { useAuthStore } from "../store/authStore";
+import Modal from "bootstrap/js/dist/modal";
 
 function Contact() {
+  const { user, accessToken } = useAuthStore();
+
   const [formData, setFormData] = useState({
     name: "",
-    email: "",
     subject: "",
     message: "",
   });
 
   const [loading, setLoading] = useState(false);
+
+
 
   const handleChange = (e) => {
     setFormData({ ...formData, [e.target.id]: e.target.value });
@@ -17,12 +23,27 @@ function Contact() {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
+
+    // Check if user is authenticated before submitting
+    if (!user || !accessToken) {
+      // Show login modal for unauthenticated users
+      const loginModalElement = document.getElementById("loginModal");
+      if (loginModalElement) {
+        const loginModal = Modal.getOrCreateInstance(loginModalElement);
+        loginModal.show();
+      }
+      return; // Don't proceed with form submission
+    }
+
     setLoading(true);
 
     try {
       const response = await fetch("http://localhost:5000/api/contact", {
         method: "POST",
-        headers: { "Content-Type": "application/json" },
+        headers: {
+          "Content-Type": "application/json",
+          "Authorization": `Bearer ${accessToken}`
+        },
         body: JSON.stringify(formData),
       });
 
@@ -32,10 +53,10 @@ function Contact() {
         throw new Error(data.message || "Failed to send message");
       }
 
-      alert("Message sent successfully");
-      setFormData({ name: "", email: "", subject: "", message: "" });
+     toast.success("Message sent successfully");
+      setFormData({ name: "", subject: "", message: "" });
     } catch (error) {
-      alert(error.message);
+      toast.error(error.message);
     } finally {
       setLoading(false);
     }
@@ -89,7 +110,7 @@ function Contact() {
             <div className="col-lg-4 col-md-12 wow fadeInUp" data-wow-delay="0.5s">
               <form onSubmit={handleSubmit}>
                 <div className="row g-3">
-                  <div className="col-md-6">
+                  <div className="col-12">
                     <div className="form-floating">
                       <input
                         type="text"
@@ -109,25 +130,7 @@ function Contact() {
                     </div>
                   </div>
 
-                  <div className="col-md-6">
-                    <div className="form-floating">
-                      <input
-                        type="email"
-                        className="form-control"
-                        id="email"
-                        placeholder="Your Email"
-                        value={formData.email}
-                        onChange={handleChange}
-                        required
-                        style={{
-                          borderRadius: "4px",
-                          boxShadow: "none",
-                          borderColor: "#c9b5b5ff",
-                        }}
-                      />
-                      <label htmlFor="email">Your Email</label>
-                    </div>
-                  </div>
+
 
                   <div className="col-12">
                     <div className="form-floating">
