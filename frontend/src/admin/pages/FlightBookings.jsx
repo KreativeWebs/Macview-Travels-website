@@ -48,10 +48,19 @@ export default function FlightBookings() {
       );
     });
 
+    // Listen for payment status updates
+    socket.on('flightBookingPaymentUpdate', ({ id, payment }) => {
+      console.log('FlightBookings: Payment updated for booking:', id, payment);
+      setBookings(prevBookings =>
+        prevBookings.map(b => b._id === id ? { ...b, payment } : b)
+      );
+    });
+
     return () => {
       socket.off('newFlightBooking');
       socket.off('globalRefresh');
       socket.off('flightBookingStatusUpdate');
+      socket.off('flightBookingPaymentUpdate');
     };
   }, []);
 
@@ -93,6 +102,17 @@ export default function FlightBookings() {
       setBookings(prevBookings =>
         prevBookings.map(b => b._id === booking._id ? { ...b, isNew: false } : b)
       );
+    }
+  };
+
+  const updatePaymentStatus = async (id, newStatus) => {
+    try {
+      const res = await adminAxios.put(`/flight-bookings/${id}/payment`, { status: newStatus });
+      // Update local state
+      setBookings(prev => prev.map(b => b._id === id ? { ...b, payment: res.data.booking.payment } : b));
+      if (selected && selected._id === id) setSelected(prev => ({ ...prev, payment: res.data.booking.payment }));
+    } catch (error) {
+      console.error('Error updating payment status:', error);
     }
   };
 
@@ -322,7 +342,7 @@ export default function FlightBookings() {
                 prevBookings.map(b => b._id === id ? { ...b, status: newStatus } : b)
               );
               setSelected(prevSelected => prevSelected && prevSelected._id === id ? { ...prevSelected, status: newStatus } : prevSelected);
-            }} />
+            }} updatePaymentStatus={updatePaymentStatus} />
           ) : (
             <div className="text-muted small">
               Select a booking to view details
@@ -334,13 +354,19 @@ export default function FlightBookings() {
   );
 }
 
-export function FlightDetails({ booking, onStatusUpdate }) {
+export function FlightDetails({ booking, onStatusUpdate, updatePaymentStatus }) {
   const [status, setStatus] = useState(booking.status);
   const [updating, setUpdating] = useState(false);
+  const [paymentStatus, setPaymentStatus] = useState(booking.payment?.status || 'pending');
+  const [updatingPayment, setUpdatingPayment] = useState(false);
 
   useEffect(() => {
     setStatus(booking.status);
   }, [booking.status]);
+
+  useEffect(() => {
+    setPaymentStatus(booking.payment?.status || 'pending');
+  }, [booking.payment?.status]);
 
   const handleStatusUpdate = async (newStatus) => {
     try {
@@ -352,6 +378,18 @@ export function FlightDetails({ booking, onStatusUpdate }) {
       console.error("Error updating flight booking status:", error);
     } finally {
       setUpdating(false);
+    }
+  };
+
+  const handlePaymentStatusUpdate = async (newStatus) => {
+    try {
+      setUpdatingPayment(true);
+      await updatePaymentStatus(booking._id, newStatus);
+      setPaymentStatus(newStatus);
+    } catch (error) {
+      console.error("Error updating payment status:", error);
+    } finally {
+      setUpdatingPayment(false);
     }
   };
 
@@ -415,9 +453,16 @@ export function FlightDetails({ booking, onStatusUpdate }) {
           </div>
           <div className="col-6">
             <small className="text-muted d-block">Payment Status</small>
-            <span className={`badge ${booking.payment?.status === 'pending' ? 'bg-warning' : booking.payment?.status === 'paid' ? 'bg-success' : 'bg-danger'}`}>
-              {booking.payment?.status || 'pending'}
-            </span>
+            <select
+              className="form-select form-select-sm"
+              value={paymentStatus}
+              onChange={(e) => handlePaymentStatusUpdate(e.target.value)}
+              disabled={updatingPayment}
+            >
+              <option value="pending">Pending</option>
+              <option value="paid">Paid</option>
+              <option value="failed">Failed</option>
+            </select>
           </div>
         </div>
       </div>

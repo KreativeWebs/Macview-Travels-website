@@ -137,7 +137,7 @@ export default function App() {
           <Route path="/unsubscribe/:email" element={<Unsubscribe />} />
 
           <Route path="/faq" element={<FAQ />} />
-          {/* <Route path="/flashsalelist" element={<FlashSalesList />} /> */}
+         
           <Route path="/flash-sales" element={<FlashSales />} />
           <Route path="/flash-sale/:id" element={<FlashSaleDetails />} />
         </Route>
@@ -181,6 +181,7 @@ export default function App() {
             path="flash-sales-bookings"
             element={<FlashSalesManagement />}
           />
+          <Route path="flash-sales" element={<FlashSalesList />} />
         </Route>
       </Routes>
 

@@ -10,6 +10,7 @@ import Package from "../models/Package.js";
 import PackageBooking from "../models/PackageBooking.js";
 import upload from "../config/multer.js";
 import FlashSale from "../models/FlashSale.js";
+import FlashSaleBooking from "../models/FlashSaleBooking.js";
 
 const router = express.Router();
 
@@ -349,6 +350,29 @@ router.put("/visa-applications/:id/status", async (req, res) => {
   } catch (error) {
     console.error("Error updating visa application status:", error);
     res.status(500).json({ message: "Error updating visa application status" });
+  }
+});
+
+// Update visa application payment status
+router.put('/visa-applications/:id/payment', async (req, res) => {
+  try {
+    const { status } = req.body; // expected 'paid' or 'pending' or 'failed'
+
+    const application = await VisaApplication.findById(req.params.id);
+    if (!application) return res.status(404).json({ message: 'Visa application not found' });
+
+    application.payment = application.payment || {};
+    application.payment.status = status;
+    await application.save();
+
+    if (global.io) {
+      global.io.emit('visaApplicationPaymentUpdate', { id: application._id, payment: application.payment });
+    }
+
+    res.json({ application });
+  } catch (error) {
+    console.error('Error updating visa application payment status:', error);
+    res.status(500).json({ message: 'Error updating payment status' });
   }
 });
 
@@ -763,6 +787,29 @@ router.put("/flight-bookings/:id/status", async (req, res) => {
   } catch (error) {
     console.error("Error updating flight booking status:", error);
     res.status(500).json({ message: "Error updating flight booking status" });
+  }
+});
+
+// Update flight booking payment status
+router.put('/flight-bookings/:id/payment', async (req, res) => {
+  try {
+    const { status } = req.body; // expected 'paid' or 'pending' or 'failed'
+
+    const booking = await FlightBooking.findById(req.params.id);
+    if (!booking) return res.status(404).json({ message: 'Flight booking not found' });
+
+    booking.payment = booking.payment || {};
+    booking.payment.status = status;
+    await booking.save();
+
+    if (global.io) {
+      global.io.emit('flightBookingPaymentUpdate', { id: booking._id, payment: booking.payment });
+    }
+
+    res.json({ booking });
+  } catch (error) {
+    console.error('Error updating flight booking payment status:', error);
+    res.status(500).json({ message: 'Error updating payment status' });
   }
 });
 
@@ -1190,6 +1237,29 @@ router.put("/package-bookings/:id/status", async (req, res) => {
   }
 });
 
+// Update package booking payment status
+router.put('/package-bookings/:id/payment', async (req, res) => {
+  try {
+    const { status } = req.body; // expected 'paid' or 'pending' or 'failed'
+
+    const booking = await PackageBooking.findById(req.params.id);
+    if (!booking) return res.status(404).json({ message: 'Package booking not found' });
+
+    booking.payment = booking.payment || {};
+    booking.payment.status = status;
+    await booking.save();
+
+    if (global.io) {
+      global.io.emit('packageBookingPaymentUpdate', { id: booking._id, payment: booking.payment });
+    }
+
+    res.json({ booking });
+  } catch (error) {
+    console.error('Error updating package booking payment status:', error);
+    res.status(500).json({ message: 'Error updating payment status' });
+  }
+});
+
 // Get package bookings count for a specific month
 router.get("/package-bookings/count", async (req, res) => {
   try {
@@ -1375,6 +1445,29 @@ router.put("/flash-sale-bookings/:id/status", async (req, res) => {
   } catch (error) {
     console.error("Error updating flash sale booking status:", error);
     res.status(500).json({ message: "Error updating flash sale booking status" });
+  }
+});
+
+// Update flash sale booking payment status
+router.put('/flash-sale-bookings/:id/payment', async (req, res) => {
+  try {
+    const { status } = req.body; // expected 'paid' or 'pending' or 'failed'
+
+    const booking = await FlashSaleBooking.findById(req.params.id);
+    if (!booking) return res.status(404).json({ message: 'Flash sale booking not found' });
+
+    booking.payment = booking.payment || {};
+    booking.payment.status = status;
+    await booking.save();
+
+    if (global.io) {
+      global.io.emit('flashSaleBookingPaymentUpdate', { id: booking._id, payment: booking.payment });
+    }
+
+    res.json({ booking });
+  } catch (error) {
+    console.error('Error updating flash sale booking payment status:', error);
+    res.status(500).json({ message: 'Error updating payment status' });
   }
 });
 
