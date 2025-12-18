@@ -1,17 +1,30 @@
 import React, { useState } from "react";
 import { toast } from "react-toastify";
 import axios from "axios";
+import { useAuthStore } from "../store/authStore";
+import Modal from "bootstrap/js/dist/modal";
 
 const API_BASE_URL = "http://localhost:5000/api";
 
 function Newsletter() {
-  const [email, setEmail] = useState("");
-  const [name, setName] = useState("");
-  const [submitted, setSubmitted] = useState(false);
+  const { user } = useAuthStore();
+  const [email, setEmail] = useState(user ? user.email : "");
+  const [name, setName] = useState(user ? user.firstName : "");
   const [loading, setLoading] = useState(false);
 
   const handleSubmit = async (e) => {
     e.preventDefault();
+
+    if (!user) {
+      // Open login modal if not logged in
+      const loginModalElement = document.getElementById("loginModal");
+      if (loginModalElement) {
+        const loginModal = Modal.getOrCreateInstance(loginModalElement);
+        loginModal.show();
+      }
+      return;
+    }
+
     if (!email) return toast.error("Please enter your email");
 
     setLoading(true);
@@ -22,7 +35,7 @@ function Newsletter() {
       );
       toast.success(response.data.message || "Subscribed successfully!");
       setEmail("");
-      setSubmitted(true);
+      setName("");
     } catch (error) {
       console.error("Newsletter subscription error:", error);
       const msg =
@@ -94,11 +107,7 @@ function Newsletter() {
                 Get the latest travel deals, tips, and updates delivered
                 directly to your inbox.
               </p>
-              {submitted && (
-                <p className="" style={{ color: "#ffffff" }}>
-                  Thank you for subscribing!
-                </p>
-              )}
+            
             </div>
           </div>
 
