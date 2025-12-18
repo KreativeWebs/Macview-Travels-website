@@ -84,7 +84,9 @@ function FlashSaleDetails() {
 
   return (
     <Container className="py-5">
-      <Row>
+      <Row style={{
+        marginTop: "100px"
+      }}>
         <Col lg={8}>
           <Card>
             <Card.Img variant="top" src={flashSale.backgroundImage} alt={flashSale.destinationCity} />
