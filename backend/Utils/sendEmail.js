@@ -14,7 +14,6 @@ export const sendPasswordResetEmail = async (email, resetURL) => {
         support_whatsapp: "https://wa.me/2348169056956",
         expiry_time: "1 hour",
       },
-     
     });
   } catch (error) {
     console.error("Error sending password reset email:", error);
@@ -24,7 +23,7 @@ export const sendPasswordResetEmail = async (email, resetURL) => {
 
 export const sendWelcomeEmail = async (email, firstName = null) => {
   const recipients = [{ email }];
-  const displayName = firstName || email.split('@')[0];
+  const displayName = firstName || email.split("@")[0];
 
   try {
     await mailtrapClient.send({
@@ -34,11 +33,9 @@ export const sendWelcomeEmail = async (email, firstName = null) => {
       template_variables: {
         username: displayName,
         company_name: "Macview Travels",
-        login_url: process.env.CLIENT_URL || 'http://localhost:5173',
-        support_email: "support@macviewtravels.com"
+        login_url: process.env.CLIENT_URL || "http://localhost:5173",
+        support_email: "macviewtravels@gmail.com",
       },
-
-    
     });
   } catch (error) {
     console.error("Error sending welcome email:", error);
@@ -46,24 +43,21 @@ export const sendWelcomeEmail = async (email, firstName = null) => {
   }
 };
 
-export const sendNewsletterEmail = async (email, subject, message) => {
+export const sendWelcomeNewsletterEmail = async (email, subject, message) => {
   const recipients = [{ email }];
+  const unsubscribeUrl = `${process.env.CLIENT_URL || "http://localhost:5173"}/unsubscribe/${encodeURIComponent(email)}`;
 
   try {
     await mailtrapClient.send({
       from: sender,
       to: recipients,
-      subject: subject,
-      html: `
-        <div style="font-family: Arial, sans-serif; max-width: 600px; margin: 0 auto;">
-          <h2>Newsletter from Macview Travels</h2>
-          <div>${message.replace(/\n/g, '<br>')}</div>
-          <p>Best regards,<br>Macview Travels Team</p>
-          <p>If you no longer wish to receive our newsletters, please contact us.</p>
-        </div>
-      `,
-      category: "Newsletter",
-    });
+      template_uuid: "fe4a604e-a560-4c10-9eb7-d6f3d3f07b8b",
+      template_variables: {
+        company_name: "Macview Travels",
+        support_email: "macviewtravels@gmail.com",
+        unsubscribe_url: unsubscribeUrl,
+    }
+  });
   } catch (error) {
     console.error("Error sending newsletter email:", error);
     throw new Error("Failed to send newsletter email");
@@ -77,7 +71,6 @@ export const sendContactEmail = async (name, email, subject, message) => {
     await mailtrapClient.send({
       from: sender,
       to: recipients,
-      reply_to: { email },
       subject: subject,
       html: `
         <div style="font-family: Arial, sans-serif; line-height: 1.6;">
@@ -86,7 +79,7 @@ export const sendContactEmail = async (name, email, subject, message) => {
           <p><strong>Email:</strong> ${email}</p>
           <hr />
           <p><strong>Message:</strong></p>
-          <p>${message.replace(/\n/g, '<br>')}</p>
+          <p>${message.replace(/\n/g, "<br>")}</p>
         </div>
       `,
       category: "Contact",

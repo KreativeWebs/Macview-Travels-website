@@ -1,6 +1,6 @@
 import express from "express";
 import Newsletter from "../models/Newsletter.js";
-import { sendNewsletterEmail } from "../utils/sendEmail.js";
+import { sendWelcomeNewsletterEmail } from "../utils/sendEmail.js";
 
 const router = express.Router();
 
@@ -14,7 +14,7 @@ router.post("/send-newsletter", async (req, res) => {
     const subscribers = await Newsletter.find().select("email");
 
     await Promise.all(
-      subscribers.map((sub) => sendNewsletterEmail(sub.email, subject, message))
+      subscribers.map((sub) => sendWelcomeNewsletterEmail(sub.email, subject, message))
     );
 
     res.json({ message: "Newsletter sent successfully!" });

@@ -1,6 +1,6 @@
 import express from "express";
 import Newsletter from "../models/Newsletter.js";
-import { sendNewsletterEmail } from "../utils/sendEmail.js";
+import { sendWelcomeNewsletterEmail } from "../utils/sendEmail.js";
 
 const router = express.Router();
 
@@ -15,18 +15,20 @@ router.post("/subscribe", async (req, res) => {
       return res.status(400).json({ message: "Email is required" });
     }
 
-    const exists = await Newsletter.findOne({ email });
+    const normalizedEmail = email.trim().toLowerCase();
+
+    const exists = await Newsletter.findOne({ email: normalizedEmail });
     if (exists) {
       return res.status(400).json({ message: "Email already subscribed" });
     }
 
-    await Newsletter.create({ email });
+    await Newsletter.create({ email: normalizedEmail });
 
-    // Send welcome newsletter email
-    await sendNewsletterEmail(
-      email,
-      "Welcome to our Newsletter!",
-      "🎉 You're now subscribed!<br>You will now receive updates and new package alerts from us."
+    // ALWAYS send welcome email on successful subscription
+    await sendWelcomeNewsletterEmail(
+      normalizedEmail,
+      "Welcome to Macview Travels Newsletter ✈️",
+      "You're now subscribed and will receive travel updates, deals, and offers."
     );
 
     res.json({ message: "Subscribed successfully!" });
@@ -59,6 +61,31 @@ router.post("/send-newsletter", async (req, res) => {
   } catch (error) {
     console.error("Send newsletter error:", error);
     res.status(500).json({ message: "Failed to send newsletter" });
+  }
+});
+
+// ------------------------
+// UNSUBSCRIBE USER
+// ------------------------
+router.delete("/unsubscribe/:email", async (req, res) => {
+  try {
+    const email = decodeURIComponent(req.params.email).trim().toLowerCase();
+
+    console.log("📩 UNSUBSCRIBE HIT");
+    console.log("📧 Email received:", email);
+
+    const deleted = await Newsletter.deleteOne({ email });
+
+    console.log("🗑️ Delete result:", deleted);
+
+    if (deleted.deletedCount === 0) {
+      return res.status(404).json({ message: "Email not found" });
+    }
+
+    res.json({ message: "Unsubscribed successfully" });
+  } catch (error) {
+    console.error("Unsubscribe error:", error);
+    res.status(500).json({ message: "Failed to unsubscribe" });
   }
 });
 
