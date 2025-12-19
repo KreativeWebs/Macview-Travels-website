@@ -27,6 +27,10 @@ const hotelBookingSchema = new mongoose.Schema(
       type: String,
       required: true,
     },
+    passportPhotograph: {
+      type: Object,
+      required: true,
+    },
     destination: {
       type: String,
       required: true,
