@@ -15,6 +15,7 @@ export const createFlightBooking = async (req, res) => {
         phoneNumber: data.phoneNumber,
         gender: data.gender || "",
         dob: data.dob || "",
+        passportDatapage: data.passportDatapage,
         preferredAirline: data.preferredAirline || "",
         travelClass: data.travelClass,
         adults: data.adults,
@@ -75,6 +76,7 @@ export const createFlightBooking = async (req, res) => {
       phoneNumber: data.phoneNumber,
       gender: data.gender || "",
       dob: data.dob || "",
+      passportDatapage: data.passportDatapage,
       preferredAirline: data.preferredAirline || "",
       travelClass: data.travelClass,
       adults: data.adults,
@@ -133,5 +135,22 @@ export const getFlightBookings = async (req, res) => {
   } catch (error) {
     console.error("Error fetching flight bookings:", error);
     res.status(500).json({ message: "Error fetching flight bookings" });
+  }
+};
+
+//Get single flight booking by ID (for admin)
+export const getFlightBookingById = async (req, res) => {
+  try {
+    const { id } = req.params;
+    const booking = await FlightBooking.findById(id);
+
+    if (!booking) {
+      return res.status(404).json({ message: "Flight booking not found" });
+    }
+
+    return res.status(200).json(booking);
+  } catch (error) {
+    console.error("Error fetching flight booking:", error);
+    res.status(500).json({ message: "Error fetching flight booking" });
   }
 };

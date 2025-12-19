@@ -23,6 +23,7 @@ import Testimonial from "./pages/Testimonial";
 import Contact from "./pages/Contact";
 import FlightSuccess from "./pages/FlightSuccess.jsx";
 import HotelSuccess from "./pages/HotelSuccess.jsx";
+import HotelBookingConfirmation from "./pages/HotelBookingConfirmation.jsx";
 import VisaSuccess from "./pages/VisaSuccess.jsx";
 import PackageSuccess from "./pages/PackageSuccess.jsx";
 import VisaPayment from "./pages/VisaPayment";
@@ -120,6 +121,7 @@ export default function App() {
           <Route path="/contact" element={<Contact />} />
           <Route path="/flight-success" element={<FlightSuccess />} />
           <Route path="/hotel-success" element={<HotelSuccess />} />
+          <Route path="/hotel-booking-confirmation" element={<HotelBookingConfirmation />} />
           <Route path="/visa-success" element={<VisaSuccess />} />
           <Route path="/package-success" element={<PackageSuccess />} />
           <Route

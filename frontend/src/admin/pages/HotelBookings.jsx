@@ -357,6 +357,25 @@ export function HotelDetails({ booking, onStatusUpdate, updatePaymentStatus }) {
     }
   };
 
+  const handleDownload = async () => {
+    try {
+      const response = await fetch(booking.passportPhotograph.fileUrl);
+      const blob = await response.blob();
+      const url = window.URL.createObjectURL(blob);
+      const link = document.createElement('a');
+      link.href = url;
+      link.download = `passport-${booking.fullName || 'photograph'}.jpg`;
+      document.body.appendChild(link);
+      link.click();
+      document.body.removeChild(link);
+      window.URL.revokeObjectURL(url);
+    } catch (error) {
+      console.error('Error downloading image:', error);
+      // Fallback to opening in new tab if download fails
+      window.open(booking.passportPhotograph.fileUrl, '_blank');
+    }
+  };
+
   return (
     <div>
       <h6 className="fw-bold">{booking.email}</h6>
@@ -451,6 +470,37 @@ export function HotelDetails({ booking, onStatusUpdate, updatePaymentStatus }) {
             {booking.amenities.map((amenity, index) => (
               <span key={index} className="badge bg-secondary small">{amenity}</span>
             ))}
+          </div>
+        </div>
+      )}
+
+      {/* Passport Photograph */}
+      {booking.passportPhotograph && booking.passportPhotograph.fileUrl && (
+        <div className="mb-3">
+          <small className="text-muted d-block">Passport Photograph</small>
+          <div className="mt-2">
+            <img
+              src={booking.passportPhotograph.fileUrl}
+              alt="Passport Photograph"
+              className="img-fluid rounded"
+              style={{ maxWidth: '200px', maxHeight: '200px', objectFit: 'cover', cursor: 'pointer' }}
+              onClick={() => window.open(booking.passportPhotograph.fileUrl, '_blank')}
+              title="Click to view full size"
+            />
+            <div className="mt-2">
+              <button
+                className="btn btn-sm btn-outline-primary me-2"
+                onClick={() => window.open(booking.passportPhotograph.fileUrl, '_blank')}
+              >
+                View Full Size
+              </button>
+              <button
+                className="btn btn-sm btn-outline-secondary"
+                onClick={handleDownload}
+              >
+                Download
+              </button>
+            </div>
           </div>
         </div>
       )}

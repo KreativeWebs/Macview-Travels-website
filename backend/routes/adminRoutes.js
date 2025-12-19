@@ -1,6 +1,6 @@
 import express from "express";
 import { getOverviewData, getFlashSaleBookings, createFlashSale, updateFlashSale, deleteFlashSale, getFlashSales } from "../controllers/adminController.js";
-import { getFlightBookings } from "../controllers/flightbookingController.js";
+import { getFlightBookings, getFlightBookingById } from "../controllers/flightbookingController.js";
 import { authenticateAdmin } from "../middleware/authMiddleware.js";
 import VisaApplication from "../models/visaApplication.js";
 import FlightBooking from "../models/flightbooking.js";
@@ -89,7 +89,7 @@ router.get("/flight-bookings", async (req, res) => {
       .sort({ createdAt: -1 })
       .limit(limit * 1)
       .skip((page - 1) * limit)
-      .select('fullName email phoneNumber gender dob tripType departureCity destinationCity departureDate returnDate multiCityFlights preferredAirline travelClass adults children infants notes createdAt status payment');
+      .select('fullName email phoneNumber gender dob tripType departureCity destinationCity departureDate returnDate multiCityFlights preferredAirline travelClass adults children infants notes createdAt status payment passportDatapage');
 
     const total = await FlightBooking.countDocuments(query);
 
@@ -104,6 +104,24 @@ router.get("/flight-bookings", async (req, res) => {
     res.status(500).json({ message: "Error fetching flight bookings" });
   }
 });
+
+// Get recent flight bookings (last 5)
+router.get("/flight-bookings/recent", async (req, res) => {
+  try {
+    const bookings = await FlightBooking.find()
+      .sort({ createdAt: -1 })
+      .limit(5)
+      .select('fullName tripType departureCity destinationCity multiCityFlights status createdAt');
+
+    res.json({ bookings });
+  } catch (error) {
+    console.error("Error fetching recent flight bookings:", error);
+    res.status(500).json({ message: "Error fetching recent flight bookings" });
+  }
+});
+
+// Get single flight booking by ID
+router.get("/flight-bookings/:id", getFlightBookingById);
 
 // Get flight bookings count for a specific month
 router.get("/flight-bookings/count", async (req, res) => {
@@ -120,21 +138,6 @@ router.get("/flight-bookings/count", async (req, res) => {
   } catch (error) {
     console.error("Error fetching flight bookings count:", error);
     res.status(500).json({ message: "Error fetching flight bookings count" });
-  }
-});
-
-// Get recent flight bookings (last 5)
-router.get("/flight-bookings/recent", async (req, res) => {
-  try {
-    const bookings = await FlightBooking.find()
-      .sort({ createdAt: -1 })
-      .limit(5)
-      .select('fullName tripType departureCity destinationCity multiCityFlights status createdAt');
-
-    res.json({ bookings });
-  } catch (error) {
-    console.error("Error fetching recent flight bookings:", error);
-    res.status(500).json({ message: "Error fetching recent flight bookings" });
   }
 });
 
@@ -558,7 +561,7 @@ router.get("/hotel-bookings", async (req, res) => {
       .sort({ createdAt: -1 })
       .limit(limit * 1)
       .skip((page - 1) * limit)
-      .select('fullName email phoneNumber gender dob destination checkInDate checkOutDate rooms guests roomType starRating amenities budget purpose notes isUnread status createdAt payment');
+      .select('fullName email phoneNumber gender dob passportPhotograph destination checkInDate checkOutDate rooms guests roomType starRating amenities budget purpose notes isUnread status createdAt payment');
 
     const total = await HotelBooking.countDocuments(query);
 
@@ -694,6 +697,22 @@ router.put('/hotel-bookings/:id/payment', async (req, res) => {
   } catch (error) {
     console.error('Error updating hotel booking payment status:', error);
     res.status(500).json({ message: 'Error updating payment status' });
+  }
+});
+
+// Get single hotel booking by ID
+router.get("/hotel-bookings/:id", async (req, res) => {
+  try {
+    const booking = await HotelBooking.findById(req.params.id);
+
+    if (!booking) {
+      return res.status(404).json({ message: "Hotel booking not found" });
+    }
+
+    res.json({ booking });
+  } catch (error) {
+    console.error("Error fetching hotel booking:", error);
+    res.status(500).json({ message: "Error fetching hotel booking" });
   }
 });
 

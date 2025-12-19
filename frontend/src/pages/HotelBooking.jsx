@@ -1,5 +1,5 @@
 import { useState, useEffect } from "react";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, useLocation } from "react-router-dom";
 import { toast } from "react-toastify";
 import DatePicker from "react-datepicker";
 import "react-datepicker/dist/react-datepicker.css";
@@ -8,6 +8,7 @@ import { useAuthStore } from "../store/authStore";
 
 function HotelBooking() {
   const navigate = useNavigate();
+  const location = useLocation();
   const { user } = useAuthStore();
 
   // Get today's date in YYYY-MM-DD format
@@ -39,6 +40,46 @@ function HotelBooking() {
 
   const [minCheckInDate, setMinCheckInDate] = useState(new Date());
   const [minCheckOutDate, setMinCheckOutDate] = useState(null);
+  const [uploadProgress, setUploadProgress] = useState({});
+  const [selectedFiles, setSelectedFiles] = useState({});
+
+  // Pre-populate form data when coming back from confirmation page
+  useEffect(() => {
+    if (location.state?.formData) {
+      const data = location.state.formData;
+
+      // Split phone number back into country code and number
+      let countryCode = "+1";
+      let phoneNumber = data.phoneNumber || "";
+
+      // Find matching country code
+      for (const country of countryCodes) {
+        if (phoneNumber.startsWith(country.code)) {
+          countryCode = country.code;
+          phoneNumber = phoneNumber.slice(country.code.length);
+          break;
+        }
+      }
+
+      setFormData({
+        ...data,
+        countryCode,
+        phoneNumber,
+        checkInDate: data.checkInDate ? new Date(data.checkInDate) : null,
+        checkOutDate: data.checkOutDate ? new Date(data.checkOutDate) : null,
+      });
+
+      // Set selected files for display if passport photograph exists
+      if (data.passportPhotograph) {
+        setSelectedFiles({
+          passportPhotograph: [{ name: data.passportPhotograph.originalName || "Uploaded file" }]
+        });
+        setUploadProgress({
+          "passportPhotograph-0": { status: "success", progress: 100 }
+        });
+      }
+    }
+  }, [location.state]);
 
   const handleInputChange = (e) => {
     const { name, value, type, checked } = e.target;
@@ -55,6 +96,93 @@ function HotelBooking() {
     }
 
     setFormData((prev) => ({ ...prev, [name]: value }));
+  };
+
+  // Upload file to backend (Cloudinary)
+  const handleFileUpload = async (file, reqLabel, fileIndex) => {
+    const form = new FormData();
+    form.append("file", file);
+
+    // Set initial progress
+    setUploadProgress((prev) => ({
+      ...prev,
+      [`${reqLabel}-${fileIndex}`]: { status: "uploading", progress: 0 },
+    }));
+
+    try {
+      const res = await fetch(
+        `${import.meta.env.VITE_API_URL}/hotel-bookings/upload-document`,
+        {
+          method: "POST",
+          body: form,
+        }
+      );
+
+      if (!res.ok) throw new Error("File upload failed");
+      const data = await res.json();
+
+      if (!data.success) throw new Error(data.error || "File upload failed");
+
+      // Update progress to success
+      setUploadProgress((prev) => ({
+        ...prev,
+        [`${reqLabel}-${fileIndex}`]: { status: "success", progress: 100 },
+      }));
+
+      return {
+        fileUrl: data.fileUrl,
+        originalName: file.name,
+      };
+    } catch (error) {
+      console.error("File upload error:", error);
+      toast.error("File upload failed");
+
+      // Update progress to failed
+      setUploadProgress((prev) => ({
+        ...prev,
+        [`${reqLabel}-${fileIndex}`]: { status: "failed", progress: 0 },
+      }));
+
+      return null;
+    }
+  };
+
+  // Dynamic input change (text & file)
+  const handleDynamicChange = async (e) => {
+    const { name, type, files } = e.target;
+
+    if (type === "file") {
+      if (!files || files.length === 0) return;
+
+      const file = files[0];
+
+      if (file.size > 10 * 1024 * 1024) {
+        toast.error("File is too large! Max 10MB.");
+        return;
+      }
+
+      // Store selected files for display
+      setSelectedFiles((prev) => ({
+        ...prev,
+        [name]: [file],
+      }));
+
+      // Set initial progress
+      setUploadProgress((prev) => ({
+        ...prev,
+        [`${name}-0`]: { status: "uploading", progress: 0 },
+      }));
+
+      const uploaded = await handleFileUpload(file, name, 0);
+      setFormData((prev) => ({
+        ...prev,
+        [name]: uploaded,
+      }));
+
+      return;
+    }
+
+    handleInputChange(e);
   };
 
   const handleCheckInDateChange = (date) => {
@@ -79,9 +207,7 @@ function HotelBooking() {
 
 
 
-  const handleSubmit = async (e) => {
-    e.preventDefault();
-
+  const validateForm = () => {
     // Security validation
     const sanitizeInput = (input) => {
       if (typeof input !== 'string') return input;
@@ -105,37 +231,67 @@ function HotelBooking() {
     // Validate inputs
     if (!validateTextInput(formData.fullName, 100)) {
       toast.error("Full name contains invalid characters or is too long.");
-      return;
+      return false;
     }
 
     if (!validatePhoneNumber(formData.phoneNumber)) {
       toast.error("Please enter a valid phone number.");
-      return;
+      return false;
+    }
+
+    if (!formData.gender) {
+      toast.error("Please select your gender.");
+      return false;
+    }
+
+    if (!formData.dob) {
+      toast.error("Please enter your date of birth.");
+      return false;
+    }
+
+    if (!formData.passportPhotograph) {
+      toast.error("Please upload your passport photograph.");
+      return false;
     }
 
     if (!validateTextInput(formData.destination, 100)) {
       toast.error("Destination contains invalid characters or is too long.");
-      return;
+      return false;
+    }
+
+    if (!formData.checkInDate) {
+      toast.error("Please select check-in date.");
+      return false;
+    }
+
+    if (!formData.checkOutDate) {
+      toast.error("Please select check-out date.");
+      return false;
     }
 
     if (!validateNumberInput(formData.rooms, 1, 50)) {
       toast.error("Number of rooms must be between 1 and 50.");
-      return;
+      return false;
     }
 
     if (!validateNumberInput(formData.guests, 1, 100)) {
       toast.error("Number of guests must be between 1 and 100.");
-      return;
+      return false;
+    }
+
+    if (!formData.roomType) {
+      toast.error("Please select room type.");
+      return false;
     }
 
     if (formData.budget && !validateNumberInput(formData.budget, 1, 100000)) {
       toast.error("Budget must be a valid number between 1 and 100,000.");
-      return;
+      return false;
     }
 
     if (!validateTextInput(formData.notes, 500)) {
       toast.error("Notes contain invalid characters or are too long.");
-      return;
+      return false;
     }
 
     // Check dates
@@ -145,9 +301,8 @@ function HotelBooking() {
     const today = new Date();
     today.setHours(0, 0, 0, 0);
 
-  // Calculate age
-  // allow mutation below when adjusting for month/day
-  let age = today.getFullYear() - dob.getFullYear();
+    // Calculate age
+    let age = today.getFullYear() - dob.getFullYear();
     const monthDiff = today.getMonth() - dob.getMonth();
     if (monthDiff < 0 || (monthDiff === 0 && today.getDate() < dob.getDate())) {
       age--;
@@ -155,69 +310,41 @@ function HotelBooking() {
 
     if (age < 16) {
       toast.error("Age too young. You must be at least 16 years old.");
-      return;
+      return false;
     }
 
     if (checkIn < today) {
       toast.error("Check-in date cannot be in the past.");
-      return;
+      return false;
     }
 
     if (checkOut <= checkIn) {
       toast.error("Check-out date must be after check-in date.");
-      return;
+      return false;
     }
 
-    // Sanitize inputs
-    const sanitizedFormData = {
-      ...formData,
-      fullName: sanitizeInput(formData.fullName),
-      destination: sanitizeInput(formData.destination),
-      notes: sanitizeInput(formData.notes),
-      purpose: sanitizeInput(formData.purpose),
-    };
+    return true;
+  };
 
-    const payload = {
-      ...sanitizedFormData,
-      phoneNumber: `${sanitizedFormData.countryCode}${sanitizedFormData.phoneNumber}`,
-      email: user?.email || null,
-    };
+  const handleNext = () => {
+    if (validateForm()) {
+      // Sanitize inputs
+      const sanitizeInput = (input) => {
+        if (typeof input !== 'string') return input;
+        return input.replace(/<script\b[^<]*(?:(?!<\/script>)<[^<]*)*<\/script>/gi, '').trim();
+      };
 
-    try {
-      const res = await fetch(
-        `${import.meta.env.VITE_API_URL}/hotel-bookings`,
-        {
-          method: "POST",
-          headers: { "Content-Type": "application/json" },
-          body: JSON.stringify(payload),
-        }
-      );
+      const sanitizedFormData = {
+        ...formData,
+        fullName: sanitizeInput(formData.fullName),
+        destination: sanitizeInput(formData.destination),
+        notes: sanitizeInput(formData.notes),
+        purpose: sanitizeInput(formData.purpose),
+        phoneNumber: `${formData.countryCode}${formData.phoneNumber}`,
+        email: user?.email || null,
+      };
 
-      if (!res.ok) throw new Error("Failed to submit hotel request");
-
-      navigate("/hotel-success", { state: { name: sanitizedFormData.fullName } });
-
-      setFormData({
-        fullName: "",
-        phoneNumber: "",
-        countryCode: "+1",
-        gender: "",
-        dob: "",
-        destination: "",
-        checkInDate: null,
-        checkOutDate: null,
-        rooms: "",
-        guests: "",
-        roomType: "",
-        starRating: "any",
-        amenities: [],
-        budget: "",
-        purpose: "",
-        notes: "",
-      });
-    } catch (err) {
-      console.error(err);
-      toast.error("Error submitting request. Try again.");
+      navigate("/hotel-booking-confirmation", { state: { formData: sanitizedFormData } });
     }
   };
 
@@ -229,11 +356,12 @@ function HotelBooking() {
         </h1>
         <p>Fill in your details and we will secure the best hotel options for you.</p>
 
-        <form onSubmit={handleSubmit}>
+        <form>
           <p className="mt-5 fw-bold">PERSONAL INFORMATION</p>
           <hr />
 
-          <label className="form-label">Full Name</label>
+          <label className="form-label">Full Name </label>
+          <small className="text-muted"> (Must match name on datapage)</small>
           <input
             name="fullName"
             value={formData.fullName}
@@ -269,9 +397,9 @@ function HotelBooking() {
               name="phoneNumber"
               value={formData.phoneNumber}
               onChange={handleInputChange}
+              placeholder="Enter phone number without country code"
               className="form-control"
               required
-              placeholder="Enter phone number"
               style={{
                 borderRadius: "0 4px 4px 0",
                 boxShadow: "none",
@@ -304,6 +432,63 @@ function HotelBooking() {
             className="form-control"
             required
           />
+
+          <label className="form-label mt-3">Upload Passport Photograph</label>
+          <input
+            type="file"
+            name="passportPhotograph"
+            required
+            accept="image/*"
+            onChange={handleDynamicChange}
+            className="form-control"
+            style={{
+              borderRadius: "4px",
+              boxShadow: "none",
+              borderColor: "#c9b5b5ff",
+            }}
+          />
+          {selectedFiles.passportPhotograph &&
+            selectedFiles.passportPhotograph.map((file, fileIndex) => {
+              const progressKey = `passportPhotograph-${fileIndex}`;
+              const progress = uploadProgress[progressKey];
+              return (
+                <div key={fileIndex} className="mt-2">
+                  <small className="text-muted">{file.name}</small>
+                  {progress && (
+                    <div
+                      className="progress mt-1"
+                      style={{ height: "6px" }}
+                    >
+                      <div
+                        className={`progress-bar ${
+                          progress.status === "success"
+                            ? "bg-success"
+                            : progress.status === "failed"
+                            ? "bg-danger"
+                            : "bg-primary"
+                        }`}
+                        role="progressbar"
+                        style={{ width: `${progress.progress}%` }}
+                        aria-valuenow={progress.progress}
+                        aria-valuemin="0"
+                        aria-valuemax="100"
+                      ></div>
+                    </div>
+                  )}
+                  {progress && progress.status === "success" && (
+                    <small className="text-success">
+                      ✓ Uploaded successfully
+                    </small>
+                  )}
+                  {progress && progress.status === "failed" && (
+                    <small className="text-danger">✗ Upload failed</small>
+                  )}
+                  {progress && progress.status === "uploading" && (
+                    <small className="text-primary">Uploading...</small>
+                  )}
+                </div>
+              );
+            })}
 
           <p className="mt-5 fw-bold">HOTEL DETAILS</p>
           <hr />
@@ -452,8 +637,8 @@ function HotelBooking() {
             placeholder="Like a Preferred Hotel..."
           />
 
-          <button type="submit" className="btn btn-secondary py-3 px-4 mt-4">
-            Submit
+          <button type="button" onClick={handleNext} className="btn btn-secondary py-3 px-4 mt-4">
+            Next
           </button>
         </form>
       </div>

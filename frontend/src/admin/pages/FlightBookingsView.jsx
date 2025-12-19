@@ -12,6 +12,32 @@ export default function FlightBookingView() {
       .catch(err => console.log(err));
   }, [id]);
 
+  const handleDownload = async (fileUrl, fileName) => {
+    try {
+      // For Cloudinary URLs, we need to fetch and download as blob
+      const response = await fetch(fileUrl);
+      const blob = await response.blob();
+
+      // Create a temporary URL for the blob
+      const blobUrl = window.URL.createObjectURL(blob);
+
+      // Create a temporary anchor element and trigger download
+      const link = document.createElement('a');
+      link.href = blobUrl;
+      link.download = fileName;
+      document.body.appendChild(link);
+      link.click();
+
+      // Clean up
+      document.body.removeChild(link);
+      window.URL.revokeObjectURL(blobUrl);
+    } catch (error) {
+      console.error('Download failed:', error);
+      // Fallback: open in new tab
+      window.open(fileUrl, '_blank');
+    }
+  };
+
   if (!booking) return <p className="m-3">Loading booking...</p>;
 
   return (
@@ -57,6 +83,66 @@ export default function FlightBookingView() {
 
         {booking.notes && (
           <p><strong>Notes:</strong> {booking.notes}</p>
+        )}
+
+        {booking.passportDatapage && booking.passportDatapage.fileUrl && (
+          <div className="mt-4">
+            <strong>Uploaded Documents</strong>
+            <div className="mt-3">
+              <strong className="small">Passport Datapage:</strong>
+              <div className="mt-2">
+                {booking.passportDatapage.fileUrl.match(/\.(jpg|jpeg|png|gif|webp)$/i) ? (
+                  <div className="text-center">
+                    <img
+                      src={booking.passportDatapage.fileUrl}
+                      alt="Passport Datapage"
+                      className="img-fluid rounded shadow-sm"
+                      style={{ maxWidth: '100%', maxHeight: '200px', cursor: 'pointer' }}
+                      onClick={() => window.open(booking.passportDatapage.fileUrl, '_blank')}
+                    />
+                    <div className="mt-2 d-flex gap-2 justify-content-center">
+                      <a
+                        href={booking.passportDatapage.fileUrl}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        className="btn btn-sm btn-outline-primary"
+                      >
+                        View Full Size
+                      </a>
+                      <button
+                        onClick={() => handleDownload(booking.passportDatapage.fileUrl, booking.passportDatapage.originalName || 'passport-datapage.jpg')}
+                        className="btn btn-sm btn-outline-success"
+                      >
+                        Download
+                      </button>
+                    </div>
+                  </div>
+                ) : (
+                  <div>
+                    <div className="d-flex gap-2 align-items-center">
+                      <a
+                        href={booking.passportDatapage.fileUrl}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        className="btn btn-sm btn-outline-primary"
+                      >
+                        View Document
+                      </a>
+                      <button
+                        onClick={() => handleDownload(booking.passportDatapage.fileUrl, booking.passportDatapage.originalName || 'passport-datapage.pdf')}
+                        className="btn btn-sm btn-outline-success"
+                      >
+                        Download
+                      </button>
+                    </div>
+                    <small className="text-muted d-block mt-1">
+                      {booking.passportDatapage.originalName || 'Passport datapage file'}
+                    </small>
+                  </div>
+                )}
+              </div>
+            </div>
+          </div>
         )}
 
       </div>

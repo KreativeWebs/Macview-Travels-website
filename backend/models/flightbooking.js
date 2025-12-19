@@ -7,6 +7,10 @@ const flightBookingSchema = new mongoose.Schema(
     phoneNumber: { type: String, required: true },
     gender: { type: String, required: true },
     dob: { type: String, required: true },
+    passportDatapage: {
+      fileUrl: { type: String },
+      originalName: { type: String },
+    },
 
     tripType: {
       type: String,

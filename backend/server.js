@@ -1,4 +1,4 @@
-import dotenv from "dotenv";
+import "dotenv/config";
 import flightBookingRoutes from "./routes/flightbookingRoutes.js";
 import hotelRoutes from "./routes/hotelRoutes.js";
 import rateLimit from "express-rate-limit";
@@ -18,16 +18,20 @@ import path from "path";
 import { fileURLToPath } from "url";
 import cors from "cors";
 
+
+// -----------------------------
+// Load .env
+// -----------------------------
+// dotenv.config({ path: path.join(__dirname, "..", ".env") });
+
+
 // -----------------------------
 // File path fixes for ES Modules
 // -----------------------------
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
 
-// -----------------------------
-// Load .env
-// -----------------------------
-dotenv.config({ path: path.join(__dirname, "..", ".env") });
+
 
 // -----------------------------
 // Express app
