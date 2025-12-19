@@ -4,6 +4,7 @@ import { getPackageById } from "../api/packages";
 import HeroHeader from "./HeroHeader";
 import { toast } from "react-toastify";
 import axios from "axios";
+import { countryCodes } from "../data/countryCodes";
 
 const API_BASE_URL = "http://localhost:5000/api";
 
@@ -16,6 +17,7 @@ export default function PackageDetails() {
     fullName: "",
     email: "",
     whatsappNumber: "",
+    countryCode: "+1",
     promoCode: "",
   });
   const [travelDate, setTravelDate] = useState("");
@@ -23,6 +25,7 @@ export default function PackageDetails() {
   const [selectedFiles, setSelectedFiles] = useState({});
   const [discountedPrice, setDiscountedPrice] = useState(null);
   const [promoApplied, setPromoApplied] = useState(false);
+  const [shouldNavigate, setShouldNavigate] = useState(false);
 
   useEffect(() => {
     const fetchPackage = async () => {
@@ -30,7 +33,13 @@ export default function PackageDetails() {
         const data = await getPackageById(id);
         setPackageData(data);
         // Initialize form data based on requirements
-        const initialFormData = {};
+        const initialFormData = {
+          fullName: "",
+          email: "",
+          whatsappNumber: "",
+          countryCode: "+1",
+          promoCode: "",
+        };
         data.requirements.forEach((req) => {
           initialFormData[req.label] = "";
         });
@@ -45,37 +54,30 @@ export default function PackageDetails() {
     fetchPackage();
   }, [id]);
 
-  const handleInputChange = async (e, label) => {
+  useEffect(() => {
+    if (shouldNavigate) {
+      const combinedFormData = {
+        ...formData,
+        whatsappNumber: `${formData.countryCode}${formData.whatsappNumber}`,
+      };
+
+      // Delay navigation to allow UI update
+      setTimeout(() => {
+        navigate("/package-confirmation", {
+          state: { formData: combinedFormData, packageData, travelDate, discountedPrice, promoApplied },
+        });
+      }, 0);
+    }
+  }, [shouldNavigate, formData, packageData, travelDate, discountedPrice, promoApplied, navigate]);
+
+  const handleInputChange = (e, label) => {
     const value = e.target.value;
     setFormData({ ...formData, [label]: value });
 
-    // Handle promo code validation
-    if (label === "promoCode") {
-      if (value.trim() === "") {
-        setDiscountedPrice(null);
-        setPromoApplied(false);
-      } else {
-        try {
-          const response = await axios.post(`${API_BASE_URL}/packages/${id}/validate-promo`, {
-            promoCode: value
-          });
-
-          if (response.data.valid) {
-            setDiscountedPrice(response.data.discountedPrice);
-            setPromoApplied(true);
-            toast.success(`Promo code applied! ${response.data.discountPercentage}% discount`);
-          } else {
-            setDiscountedPrice(null);
-            setPromoApplied(false);
-            toast.error("Invalid promo code");
-          }
-        } catch (error) {
-          console.error("Error validating promo code:", error);
-          setDiscountedPrice(null);
-          setPromoApplied(false);
-          toast.error("Error validating promo code");
-        }
-      }
+    // Handle promo code reset when cleared
+    if (label === "promoCode" && value.trim() === "") {
+      setDiscountedPrice(null);
+      setPromoApplied(false);
     }
   };
 
@@ -169,7 +171,7 @@ export default function PackageDetails() {
     setFormData(prev => ({ ...prev, [name]: value }));
   };
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
 
     if (!formData.fullName || !formData.whatsappNumber || !travelDate) {
@@ -195,10 +197,41 @@ export default function PackageDetails() {
       return;
     }
 
-    // Navigate to confirmation page
-    navigate("/package-confirmation", {
-      state: { formData, packageData, travelDate, discountedPrice, promoApplied },
-    });
+    // Validate promo code if entered
+    if (formData.promoCode.trim() !== "") {
+      try {
+        const response = await axios.post(`${API_BASE_URL}/packages/${id}/validate-promo`, {
+          promoCode: formData.promoCode
+        });
+
+        if (response.data.valid) {
+          const discountPercentage = parseFloat(response.data.discountPercentage);
+          const originalPrice = parseFloat(packageData.price);
+          const discountedPriceValue = originalPrice * (1 - discountPercentage / 100);
+          setDiscountedPrice(discountedPriceValue);
+          setPromoApplied(true);
+          toast.success(`Promo code applied! ${discountPercentage}% discount`);
+        } else {
+          toast.error("Invalid promo code");
+          setDiscountedPrice(null);
+          setPromoApplied(false);
+        }
+      } catch (error) {
+        console.error("Error validating promo code:", error);
+        toast.error("Error validating promo code");
+        setDiscountedPrice(null);
+        setPromoApplied(false);
+      }
+    }
+
+    // Combine country code and phone number
+    const combinedFormData = {
+      ...formData,
+      whatsappNumber: `${formData.countryCode}${formData.whatsappNumber}`,
+    };
+
+    // Set flag to navigate after state updates
+    setShouldNavigate(true);
   };
 
   if (loading) {
@@ -352,14 +385,41 @@ export default function PackageDetails() {
 
                     <div className="mb-3">
                       <label className="form-label">WhatsApp Number</label>
-                      <input
-                        type="tel"
-                        className="form-control"
-                        value={formData.whatsappNumber}
-                        onChange={(e) => handleInputChange(e, "whatsappNumber")}
-                        placeholder="Enter your WhatsApp number"
-                        required
-                      />
+                      <div className="d-flex">
+                        <select
+                          name="countryCode"
+                          value={formData.countryCode}
+                          onChange={(e) => handleInputChange(e, "countryCode")}
+                          className="form-select me-2"
+                          style={{
+                            width: "120px",
+                            borderRadius: "4px 0 0 4px",
+                            boxShadow: "none",
+                            borderColor: "#c9b5b5ff",
+                          }}
+                          required
+                        >
+                          {countryCodes.map((country, index) => (
+                            <option key={index} value={country.code}>
+                              {country.flag} {country.code}
+                            </option>
+                          ))}
+                        </select>
+                        <input
+                          type="tel"
+                          name="whatsappNumber"
+                          value={formData.whatsappNumber}
+                          onChange={(e) => handleInputChange(e, "whatsappNumber")}
+                          placeholder="Enter phone number without country code"
+                          className="form-control"
+                          required
+                          style={{
+                            borderRadius: "0 4px 4px 0",
+                            boxShadow: "none",
+                            borderColor: "#c9b5b5ff",
+                          }}
+                        />
+                      </div>
                     </div>
 
                     <div className="mb-3">
@@ -441,7 +501,7 @@ export default function PackageDetails() {
                       <h5>Total Price: {packageData.currency === "NGN" ? "₦" : "$"}{(discountedPrice || packageData.price).toLocaleString()}</h5>
                       {discountedPrice && (
                         <small className="text-muted">
-                          <s>{packageData.currency === "NGN" ? "₦" : "$"}{packageData.price.toLocaleString()}</s> ({packageData.discountPercentage}% off)
+                          <s>{packageData.currency === "NGN" ? "₦" : "$"}{packageData.price.toLocaleString()}</s> ({Math.round((1 - discountedPrice / packageData.price) * 100)}% off)
                         </small>
                       )}
                     </div>
