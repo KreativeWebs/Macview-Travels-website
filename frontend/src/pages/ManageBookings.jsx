@@ -23,6 +23,7 @@ export default function ManageBookings() {
       else if (type === "flight") endpoint = "/user/flight-bookings";
       else if (type === "hotel") endpoint = "/user/hotel-bookings";
       else if (type === "package") endpoint = "/user/package-bookings";
+      else if (type === "flashsale") endpoint = "/flash-sales/user/flash-sale-bookings";
 
       const res = await userAxios.get(endpoint);
 
@@ -228,6 +229,47 @@ export default function ManageBookings() {
     </div>
   );
 
+  const renderFlashSaleBookings = () => (
+    <div className="table-responsive">
+      <table className="table table-striped">
+        <thead>
+          <tr>
+            <th>Full Name</th>
+            <th>Destination</th>
+            <th>Airline</th>
+            <th>Price</th>
+            <th>Status</th>
+            <th>Payment</th>
+            <th>Date</th>
+          </tr>
+        </thead>
+        <tbody>
+          {bookings.map((booking) => (
+            <tr key={booking._id}>
+              <td>{booking.name}</td>
+              <td>{booking.flashSaleId?.destinationCity || "N/A"}</td>
+              <td>{booking.flashSaleId?.airline || "N/A"}</td>
+              <td>
+                ₦{booking.flashSaleId?.price?.toLocaleString() || "N/A"}
+              </td>
+              <td>
+                <span className={getStatusBadge(booking.status)}>
+                  {booking.status}
+                </span>
+              </td>
+              <td>
+                <span className={getStatusBadge(booking.payment?.status)}>
+                  {booking.payment?.status}
+                </span>
+              </td>
+              <td>{new Date(booking.createdAt).toLocaleDateString()}</td>
+            </tr>
+          ))}
+        </tbody>
+      </table>
+    </div>
+  );
+
   if (!user) {
     return (
       <div className="container-xxl py-5">
@@ -282,6 +324,14 @@ export default function ManageBookings() {
               Package Bookings
             </button>
           </li>
+          <li className="nav-item">
+            <button
+              className={`nav-link ${activeTab === "flashsale" ? "active" : ""}`}
+              onClick={() => setActiveTab("flashsale")}
+            >
+              Flash Sale Bookings
+            </button>
+          </li>
         </ul>
 
         {loading ? (
@@ -296,6 +346,7 @@ export default function ManageBookings() {
             {activeTab === "flight" && renderFlightBookings()}
             {activeTab === "hotel" && renderHotelBookings()}
             {activeTab === "package" && renderPackageBookings()}
+            {activeTab === "flashsale" && renderFlashSaleBookings()}
           </>
         )}
       </div>

@@ -10,6 +10,8 @@ const flashSaleBookingSchema = new mongoose.Schema({
   infants: { type: Number, default: 0 },
   passportPhotograph: { type: String },
   flashSaleId: { type: mongoose.Schema.Types.ObjectId, ref: 'FlashSale', required: true },
+  userId: { type: mongoose.Schema.Types.ObjectId, ref: 'User', required: true },
+  email: { type: String, required: true },
   payment: {
     status: { type: String, enum: ["pending","paid","failed"], default: "pending" },
     provider: String,
