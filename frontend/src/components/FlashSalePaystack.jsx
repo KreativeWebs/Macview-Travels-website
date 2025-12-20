@@ -34,7 +34,7 @@ export default function PaystackPayment({
   return (
     <PaystackButton
       {...componentProps}
-      className="btn btn-success w-100 px-4 py-2"
+      className="btn btn-success w-100 mt-3 pt-3 pb-3"
     />
   );
 }

@@ -34,6 +34,7 @@ import PrivacyPolicy from "./pages/PrivacyPolicy.jsx";
 import TermsAndConditions from "./pages/Terms.jsx";
 import FAQ from "./pages/FAQ.jsx";
 import Unsubscribe from "./pages/Unsubscribe.jsx";
+import FlashSaleSuccess from "./pages/FlashSaleSuccess.jsx";
 
 import AdminLayout from "./admin/AdminLayout";
 import Dashboard from "./admin/pages/AdminHome";
@@ -142,6 +143,7 @@ export default function App() {
          
           <Route path="/flash-sales" element={<FlashSales />} />
           <Route path="/flash-sale/:id" element={<FlashSaleDetails />} />
+          <Route path="/flash-sale-success" element={<FlashSaleSuccess />} />
         </Route>
 
         {/* Admin login */}
