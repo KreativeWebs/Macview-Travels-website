@@ -9,15 +9,17 @@ function TravelInsurance() {
     fullName: "",
     email: "",
     phoneNumber: "",
-    countryOfResidence: "",
-    destinationCountry: "",
-    travelStartDate: "",
-    travelEndDate: "",
-    tripPurpose: "",
-    travelersCount: "",
-    ageGroup: "",
-    passportNumber: "",
-    previousInsurance: "",
+    nationality: "",
+    dob: "",
+    gender: "",
+    highestEducation: "",
+    fieldOfStudy: "",
+    preferredCountry: "",
+    intake: "",
+    studyLevel: "",
+    budgetRange: "",
+    englishTest: "",
+    passportStatus: "",
     notes: "",
   });
 
@@ -29,36 +31,43 @@ function TravelInsurance() {
   const handleSubmit = async (e) => {
     e.preventDefault();
 
+    const payload = {
+      ...formData,
+    };
+
     try {
       const response = await fetch(
-        `${import.meta.env.VITE_API_URL}/travel-insurance`,
+        `${import.meta.env.VITE_API_URL}/study-abroad`,
         {
           method: "POST",
           headers: { "Content-Type": "application/json" },
-          body: JSON.stringify(formData),
+          body: JSON.stringify(payload),
         }
       );
 
-      if (!response.ok) throw new Error("Failed to submit insurance request");
+      if (!response.ok) throw new Error("Failed to submit request");
 
-      navigate("/success", { state: { name: formData.fullName } });
+      navigate("/success", {
+        state: { name: formData.fullName },
+      });
 
       setFormData({
         fullName: "",
         email: "",
         phoneNumber: "",
-        countryOfResidence: "",
-        destinationCountry: "",
-        travelStartDate: "",
-        travelEndDate: "",
-        tripPurpose: "",
-        travelersCount: "",
-        ageGroup: "",
-        passportNumber: "",
-        previousInsurance: "",
+        nationality: "",
+        dob: "",
+        gender: "",
+        highestEducation: "",
+        fieldOfStudy: "",
+        preferredCountry: "",
+        intake: "",
+        studyLevel: "",
+        budgetRange: "",
+        englishTest: "",
+        passportStatus: "",
         notes: "",
       });
-
     } catch (err) {
       console.error(err);
       toast.error("Error submitting form. Please try again.");
@@ -68,175 +77,41 @@ function TravelInsurance() {
   return (
     <div className="container-xxl" style={{ paddingTop: "150px" }}>
       <div className="container">
-        <h1 className="text-start" style={{ fontFamily: "Raleway" }}>
-          Travel Insurance Request
-        </h1>
-        <p>Fill the form below to request travel insurance.</p>
-
-        <p className="mt-5" style={{ fontWeight: "bold" }}>PERSONAL INFORMATION</p>
-        <hr />
-
-        <form onSubmit={handleSubmit}>
-          <div className="personalInformation">
-
-            <label className="form-label">Full Name</label>
-            <input
-              type="text"
-              name="fullName"
-              value={formData.fullName}
-              onChange={handleInputChange}
-              className="form-control"
-              required
-            />
-
-            <label className="form-label mt-3">Email</label>
-            <input
-              type="email"
-              name="email"
-              value={formData.email}
-              onChange={handleInputChange}
-              className="form-control"
-              required
-            />
-
-            <label className="form-label mt-3">Whatsapp Number</label>
-            <input
-              type="tel"
-              name="phoneNumber"
-              value={formData.phoneNumber}
-              onChange={handleInputChange}
-              className="form-control"
-              required
-            />
-
-            <label className="form-label mt-3">Country of Residence</label>
-            <input
-              type="text"
-              name="countryOfResidence"
-              value={formData.countryOfResidence}
-              onChange={handleInputChange}
-              className="form-control"
-              required
-            />
-
-            <label className="form-label mt-3">Destination Country</label>
-            <input
-              type="text"
-              name="destinationCountry"
-              value={formData.destinationCountry}
-              onChange={handleInputChange}
-              className="form-control"
-              required
-            />
-
-            <p className="mt-5" style={{ fontWeight: "bold" }}>TRAVEL DETAILS</p>
-            <hr />
-
-            <label className="form-label mt-3">Travel Start Date</label>
-            <input
-              type="date"
-              name="travelStartDate"
-              value={formData.travelStartDate}
-              onChange={handleInputChange}
-              className="form-control"
-              required
-            />
-
-            <label className="form-label mt-3">Travel End Date</label>
-            <input
-              type="date"
-              name="travelEndDate"
-              value={formData.travelEndDate}
-              onChange={handleInputChange}
-              className="form-control"
-              required
-            />
-
-            <label className="form-label mt-3">Purpose of Trip</label>
-            <select
-              name="tripPurpose"
-              value={formData.tripPurpose}
-              onChange={handleInputChange}
-              className="form-select"
-            >
-              <option value=""></option>
-              <option>Vacation</option>
-              <option>Business</option>
-              <option>Study</option>
-              <option>Medical</option>
-              <option>Family Visit</option>
-            </select>
-
-            <label className="form-label mt-3">Number of Travelers</label>
-            <input
-              type="number"
-              name="travelersCount"
-              value={formData.travelersCount}
-              onChange={handleInputChange}
-              className="form-control"
-              min="1"
-              required
-            />
-
-            <label className="form-label mt-3">Age Group</label>
-            <select
-              name="ageGroup"
-              value={formData.ageGroup}
-              onChange={handleInputChange}
-              className="form-select"
-              required
-            >
-              <option value=""></option>
-              <option>18-30</option>
-              <option>31-45</option>
-              <option>46-60</option>
-              <option>60+</option>
-            </select>
-
-            <label className="form-label mt-3">Passport Number</label>
-            <input
-              type="text"
-              name="passportNumber"
-              value={formData.passportNumber}
-              onChange={handleInputChange}
-              className="form-control"
-              required
-            />
-
-            <label className="form-label mt-3">Had Travel Insurance Before?</label>
-            <select
-              name="previousInsurance"
-              value={formData.previousInsurance}
-              onChange={handleInputChange}
-              className="form-select"
-            >
-              <option value=""></option>
-              <option>Yes</option>
-              <option>No</option>
-            </select>
-
-            <p className="mt-5" style={{ fontWeight: "bold" }}>
-              ADDITIONAL INFORMATION
+        <div className="row g-4">
+          <div
+            style={{
+              height: "400px",
+              width: "100%",
+              backgroundImage: `url('assets/img/430.jpg')`,
+              backgroundSize: "cover",
+              backgroundPosition: "center",
+              position: "relative",
+            }}
+          ></div>
+        </div>
+        <div className="row g-4 mt-4">
+          <div className="col-12 text-start">
+            <h1 style={{ fontFamily: "Raleway" }}>Travel Insurance</h1>
+            <p className="mb-3">
+              Reach out to our travel insurance personnel for travel insurance offers.
             </p>
-            <hr />
-
-            <label className="form-label mt-3">Notes / Special Requests</label>
-            <textarea
-              name="notes"
-              value={formData.notes}
-              onChange={handleInputChange}
-              className="form-control"
-            />
-
-            <button
-              type="submit"
-              className="btn btn-secondary py-3 px-1 mt-5"
-              style={{ fontFamily: "Raleway", fontWeight: "600", width: "170px" }}
+            <a
+              href="https://wa.me/+2348030889725"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="btn"
+              style={{
+                backgroundColor: "#f1741e",
+                border: "none",
+                borderRadius: "10px",
+                color: "white",
+              }}
             >
-              Submit Request
-            </button>
+              <i className="fab fa-whatsapp me-2"></i>
+              WhatsApp Us
+            </a>
           </div>
-        </form>
+        </div>
       </div>
     </div>
   );

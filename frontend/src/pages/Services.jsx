@@ -128,7 +128,7 @@ function Services() {
                 icon="fa-plane"
                 title="Chartered Flights"
                 description="Experience exclusive air travel with personalized chartered flights, offering comfort, and privacy tailored to your schedule."
-                onClick={() => handleServiceClick("/chartedflights")}
+                onClick={() => handleServiceClick("/charteredflight")}
               />
             </div>
           </div>

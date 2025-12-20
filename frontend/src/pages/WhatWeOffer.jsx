@@ -80,7 +80,7 @@ function WhatWeOffer() {
               description="Begin your academic journey overseas with trusted guidance
               on admissions, visas, turning your study dreams into
               reality."
-              onClick={() => handleServiceClick("/studyabroadprograms")}
+              onClick={() => handleServiceClick("/studyabroad")}
             />
           </div>
 

@@ -2,7 +2,7 @@ import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { toast } from "react-toastify";
 
-function ProtocolService() {
+function CharteredFlight() {
   const navigate = useNavigate();
 
   const [formData, setFormData] = useState({
@@ -117,4 +117,4 @@ function ProtocolService() {
   );
 }
 
-export default ProtocolService;
+export default CharteredFlight;
