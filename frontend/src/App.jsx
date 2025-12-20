@@ -16,6 +16,7 @@ import StudyAbroad from "./pages/StudyAbroad";
 import AirportTransfer from "./pages/AirportTransfer.jsx";
 import TravelInsurance from "./pages/TravelInsurance.jsx";
 import ProtocolService from "./pages/ProtocolService.jsx";
+import CharteredFlight from "./pages/CharteredFlights.jsx";
 import Destination from "./pages/Destination";
 import ManageBookings from "./pages/ManageBookings";
 import Team from "./pages/Team";
@@ -115,6 +116,7 @@ export default function App() {
           <Route path="/airporttransfer" element={<AirportTransfer />} />
           <Route path="/travelinsurance" element={<TravelInsurance />} />
           <Route path="/protocolservice" element={<ProtocolService />} />
+          <Route path="/charteredflight" element={<CharteredFlight />} />
           <Route path="/destination" element={<Destination />} />
           <Route path="/managebookings" element={<ManageBookings />} />
           <Route path="/team" element={<Team />} />

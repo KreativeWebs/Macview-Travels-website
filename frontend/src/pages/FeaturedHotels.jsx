@@ -151,7 +151,7 @@ function FeaturedHotels() {
                   </h1>
                   <div className="d-flex justify-content-center mb-2">
                     <Link
-                      to="/booking"
+                      to="/hotelbooking"
                       className="btn btn-sm btn-secondary px-5"
                       style={{
                         borderRadius: "12px",
@@ -219,7 +219,7 @@ function FeaturedHotels() {
                   </h1>
                   <div className="d-flex justify-content-center mb-2">
                     <Link
-                      to="/booking"
+                      to="/hotelbooking"
                       className="btn btn-sm btn-secondary px-5"
                       style={{
                         borderRadius: "12px",
@@ -286,7 +286,7 @@ function FeaturedHotels() {
                   </h1>
                   <div className="d-flex justify-content-center mb-2">
                     <Link
-                      to="/booking"
+                      to="/hotelbooking"
                       className="btn btn-sm btn-secondary px-5"
                       style={{
                         borderRadius: "12px",
@@ -319,8 +319,8 @@ function FeaturedHotels() {
                   }}
                 >
                   <img
-                    src="assets/img/Mövenpick Hotel West Bay Doha.jpeg"
-                    alt="Qatar"
+                    src="assets/img/Barbados.jpg"
+                    alt="Barbados"
                     className="img-fluid"
                     style={{
                       width: "100%",
@@ -341,11 +341,11 @@ function FeaturedHotels() {
                       color: "#ffffff",
                     }}
                   >
-                    Qatar
+                    Barbados
                   </h1>
                   <div className="d-flex justify-content-center mb-2">
                     <Link
-                      to="/booking"
+                      to="/hotelbooking"
                       className="btn btn-sm btn-secondary px-5"
                       style={{
                         borderRadius: "12px",
@@ -378,8 +378,8 @@ function FeaturedHotels() {
                   }}
                 >
                   <img
-                    src="assets/img/Mövenpick Hotel West Bay Doha.jpeg"
-                    alt="Qatar"
+                    src="assets/img/egypt.jpg"
+                    alt="Egypt"
                     className="img-fluid"
                     style={{
                       width: "100%",
@@ -400,11 +400,11 @@ function FeaturedHotels() {
                       color: "#ffffff",
                     }}
                   >
-                    Qatar
+                    Egypt
                   </h1>
                   <div className="d-flex justify-content-center mb-2">
                     <Link
-                      to="/booking"
+                      to="/hotelbooking"
                       className="btn btn-sm btn-secondary px-5"
                       style={{
                         borderRadius: "12px",
