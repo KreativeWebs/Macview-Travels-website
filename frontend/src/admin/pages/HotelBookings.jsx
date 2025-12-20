@@ -395,7 +395,6 @@ export function HotelDetails({ booking, onStatusUpdate, updatePaymentStatus }) {
               className="small text-primary"
               style={{ textDecoration: 'none' }}
             >
-              {booking.phoneNumber.startsWith('+') ? booking.phoneNumber : `+${booking.phoneNumber}`}
             </a>
           </div>
           <div className="col-6">

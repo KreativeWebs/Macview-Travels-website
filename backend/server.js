@@ -105,7 +105,9 @@ const io = new Server(server, {
   transports: ['websocket', 'polling'],
   allowEIO3: true, // Allow Engine.IO v3 clients
   pingTimeout: 60000,
-  pingInterval: 25000
+  pingInterval: 25000,
+  connectTimeout: 45000,
+  maxHttpBufferSize: 1e8
 });
 
 io.on("connection", (socket) => {

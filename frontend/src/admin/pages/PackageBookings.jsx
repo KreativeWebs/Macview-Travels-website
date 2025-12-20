@@ -211,7 +211,7 @@ export default function PackageBookings() {
               <thead className="table-light">
                 <tr>
                   <th>Name</th>
-                  <th>Email</th>
+                  <th>WhatsApp</th>
                   <th>Destination</th>
                   <th>Status</th>
                   <th>Date</th>
@@ -246,7 +246,7 @@ export default function PackageBookings() {
                           </div>
                         </div>
                       </td>
-                      <td>{b.email || 'N/A'}</td>
+                      <td>{formatWhatsApp(b.whatsappNumber)}</td>
                       <td>{b.packageId?.city || 'N/A'}</td>
                       <td>
                         <span className={`badge ${getStatusBadgeClass(b.status)}`}>{b.status}</span>
@@ -397,7 +397,7 @@ export function PackageBookingDetails({ booking, onStatusUpdate }) {
               className="small text-primary"
               style={{ textDecoration: 'none' }}
             >
-              {booking.whatsappNumber}
+              {formatWhatsApp(booking.whatsappNumber)}
             </a>
           </div>
 
@@ -418,6 +418,7 @@ export function PackageBookingDetails({ booking, onStatusUpdate }) {
               <option value="not booked">Not Booked</option>
             </select>
           </div>
+
           <div className="col-6">
             <small className="text-muted d-block">Email</small>
             <span className="small">{booking.email || 'N/A'}</span>
@@ -478,6 +479,7 @@ export function PackageBookingDetails({ booking, onStatusUpdate }) {
                         alt={doc.label}
                         className="img-fluid rounded shadow-sm"
                         style={{ maxWidth: '100%', maxHeight: '200px', cursor: 'pointer' }}
+                        crossOrigin="anonymous"
                         onClick={() => window.open(doc.fileUrl, '_blank')}
                       />
                       <div className="mt-2 d-flex gap-2 justify-content-center">
@@ -542,4 +544,17 @@ const getStatusBadgeClass = (status) => {
     case 'not booked': return 'bg-danger';
     default: return 'bg-secondary';
   }
+};
+
+// Helper function to format WhatsApp number with country code
+const formatWhatsApp = (number) => {
+  if (!number) return 'N/A';
+  if (number.startsWith('+')) {
+    // Find the first space or assume country code is 3-4 digits after +
+    const match = number.match(/^(\+\d{1,4})(.*)$/);
+    if (match) {
+      return `${match[1]} ${match[2]}`;
+    }
+  }
+  return number;
 };
