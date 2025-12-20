@@ -700,22 +700,6 @@ router.put('/hotel-bookings/:id/payment', async (req, res) => {
   }
 });
 
-// Get single hotel booking by ID
-router.get("/hotel-bookings/:id", async (req, res) => {
-  try {
-    const booking = await HotelBooking.findById(req.params.id);
-
-    if (!booking) {
-      return res.status(404).json({ message: "Hotel booking not found" });
-    }
-
-    res.json({ booking });
-  } catch (error) {
-    console.error("Error fetching hotel booking:", error);
-    res.status(500).json({ message: "Error fetching hotel booking" });
-  }
-});
-
 // Get hotel bookings count for a specific month
 router.get("/hotel-bookings/count", async (req, res) => {
   try {
@@ -746,6 +730,22 @@ router.get("/hotel-bookings/recent", async (req, res) => {
   } catch (error) {
     console.error("Error fetching recent hotel bookings:", error);
     res.status(500).json({ message: "Error fetching recent hotel bookings" });
+  }
+});
+
+// Get single hotel booking by ID
+router.get("/hotel-bookings/:id", async (req, res) => {
+  try {
+    const booking = await HotelBooking.findById(req.params.id);
+
+    if (!booking) {
+      return res.status(404).json({ message: "Hotel booking not found" });
+    }
+
+    res.json({ booking });
+  } catch (error) {
+    console.error("Error fetching hotel booking:", error);
+    res.status(500).json({ message: "Error fetching hotel booking" });
   }
 });
 

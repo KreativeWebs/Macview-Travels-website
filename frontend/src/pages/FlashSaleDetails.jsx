@@ -19,6 +19,7 @@ function FlashSaleDetails() {
   const [formData, setFormData] = useState({
     name: "",
     whatsappNumber: "",
+    countryCode: "+234",
     dateOfBirth: "",
     gender: "",
     adults: "",
@@ -138,6 +139,7 @@ function FlashSaleDetails() {
     try {
       await userAxios.post("/flash-sales/book", {
         ...formData,
+        whatsappNumber: formData.countryCode + formData.whatsappNumber,
         flashSaleId: id,
         payment: {
           status: "paid",
@@ -161,8 +163,9 @@ function FlashSaleDetails() {
     setMessage("");
 
     try {
-      await userAxios.post("/ flash-sales/book", {
+      await userAxios.post("/flash-sales/book", {
         ...formData,
+        whatsappNumber: formData.countryCode + formData.whatsappNumber,
         flashSaleId: id,
       });
       setMessage("Booking submitted successfully! We will contact you soon.");

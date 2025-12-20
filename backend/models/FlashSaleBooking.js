@@ -5,6 +5,10 @@ const flashSaleBookingSchema = new mongoose.Schema({
   whatsappNumber: { type: String, required: true },
   dateOfBirth: { type: Date, required: true },
   gender: { type: String, enum: ["male", "female", "other"], required: true },
+  adults: { type: Number, default: 0 },
+  children: { type: Number, default: 0 },
+  infants: { type: Number, default: 0 },
+  passportPhotograph: { type: String },
   flashSaleId: { type: mongoose.Schema.Types.ObjectId, ref: 'FlashSale', required: true },
   payment: {
     status: { type: String, enum: ["pending","paid","failed"], default: "pending" },
@@ -12,7 +16,8 @@ const flashSaleBookingSchema = new mongoose.Schema({
     transactionId: String,
     amount: Number,
   },
-  status: { type: String, enum: ["received", "confirmed", "cancelled"], default: "received" },
+  status: { type: String, enum: ["received", "booked", "not booked"], default: "received" },
+  isUnread: { type: Boolean, default: true },
   createdAt: { type: Date, default: Date.now }
 });
 

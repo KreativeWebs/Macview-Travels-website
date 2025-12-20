@@ -113,7 +113,7 @@ export const getFlashSaleById = async (req, res) => {
 
 export const createFlashSaleBooking = async (req, res) => {
   try {
-    const { name, whatsappNumber, dateOfBirth, gender, flashSaleId, passportPhotograph, payment } = req.body;
+    const { name, whatsappNumber, dateOfBirth, gender, flashSaleId, passportPhotograph, payment, adults, children, infants } = req.body;
 
     const flashSale = await FlashSale.findById(flashSaleId);
     if (!flashSale || !flashSale.isActive) {
@@ -127,11 +127,27 @@ export const createFlashSaleBooking = async (req, res) => {
       gender,
       flashSaleId,
       passportPhotograph,
+      adults,
+      children,
+      infants,
       payment: payment || { status: 'pending' },
       status: 'received',
+      isUnread: true, // Mark as new for the badge
     });
 
     await booking.save();
+
+    // Populate flashSaleId for the socket event
+    await booking.populate('flashSaleId');
+
+    // Emit socket event for real-time update
+    if (global.io) {
+      console.log('🔌 Emitting newFlashSaleBooking event:', booking);
+      global.io.emit('newFlashSaleBooking', booking);
+    } else {
+      console.log('🔌 global.io not available for socket emission');
+    }
+
     res.status(201).json({ message: "Flash sale booking created successfully", booking });
   } catch (error) {
     console.error("Error creating flash sale booking:", error);
