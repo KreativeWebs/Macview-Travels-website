@@ -126,7 +126,7 @@ function Services() {
             >
               <ServicesCard
                 icon="fa-plane"
-                title="Charted Flights"
+                title="Chartered Flights"
                 description="Experience exclusive air travel with personalized chartered flights, offering comfort, and privacy tailored to your schedule."
                 onClick={() => handleServiceClick("/chartedflights")}
               />

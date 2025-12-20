@@ -113,7 +113,7 @@ export const getFlashSaleById = async (req, res) => {
 
 export const createFlashSaleBooking = async (req, res) => {
   try {
-    const { name, whatsappNumber, dateOfBirth, gender, flashSaleId } = req.body;
+    const { name, whatsappNumber, dateOfBirth, gender, flashSaleId, passportPhotograph } = req.body;
 
     const flashSale = await FlashSale.findById(flashSaleId);
     if (!flashSale || !flashSale.isActive) {
@@ -126,6 +126,7 @@ export const createFlashSaleBooking = async (req, res) => {
       dateOfBirth,
       gender,
       flashSaleId,
+      passportPhotograph,
       payment: { status: 'pending' },
       status: 'received',
     });
@@ -137,6 +138,8 @@ export const createFlashSaleBooking = async (req, res) => {
     res.status(500).json({ message: "Error creating flash sale booking" });
   }
 };
+
+
 
 export const getOverviewData = async (req, res) => {
   try {

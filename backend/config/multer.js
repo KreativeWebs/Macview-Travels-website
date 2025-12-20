@@ -7,6 +7,8 @@ const storage = new CloudinaryStorage({
   params: {
     folder: "macview-packages",
     allowed_formats: ["jpg", "jpeg", "png", "pdf", "doc", "docx"],
+    resource_type: "auto",
+    access_mode: "public",
   },
 });
 
