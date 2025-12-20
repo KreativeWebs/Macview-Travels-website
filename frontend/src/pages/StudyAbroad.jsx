@@ -77,21 +77,43 @@ function StudyAbroad() {
   return (
     <div className="container-xxl" style={{ paddingTop: "150px" }}>
       <div className="container">
-        <h1 className="text-start" style={{ fontFamily: "Raleway" }}>
-          Study Abroad Application
-        </h1>
-        <p>Fill the form below and our consultants will contact you shortly.</p>
-
-        <p className="mt-5" style={{ fontWeight: "bold" }}>
-          PERSONAL INFORMATION
-        </p>
-        <div className="container">
-          <img
-            src="assets/img/students-people-excited-with-selfie-graduation-campus-with-celebration-success-portrait-college-university-classmate-friends-with-pride-social-media-post-qualification.jpg"
-            alt=""
-          />
+        <div className="row g-4">
+          <div
+            style={{
+              height: "400px",
+              width: "100%",
+              backgroundImage: `url('assets/img/students-people-excited-with-selfie-graduation-campus-with-celebration-success-portrait-college-university-classmate-friends-with-pride-social-media-post-qualification.jpg')`,
+              backgroundSize: "cover",
+              backgroundPosition: "center",
+              position: "relative",
+            }}
+          ></div>
         </div>
-        <hr />
+        <div className="row g-4 mt-4">
+          <div className="col-12 text-start">
+            <h1 style={{ fontFamily: "Raleway" }}>
+              Study Abroad Application
+            </h1>
+            <p className="mb-3">
+              Contact our Study Abroad consultant for more information.
+            </p>
+            <a
+              href="https://wa.me/+2347076177013"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="btn"
+              style={{
+                backgroundColor: "#f1741e",
+                border: "none",
+                borderRadius: "10px",
+                color: "white",
+              }}
+            >
+              <i className="fab fa-whatsapp me-2"></i>
+              WhatsApp Us
+            </a>
+          </div>
+        </div>
       </div>
     </div>
   );
