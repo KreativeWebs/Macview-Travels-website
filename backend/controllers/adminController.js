@@ -126,6 +126,8 @@ export const createFlashSaleBooking = async (req, res) => {
       dateOfBirth,
       gender,
       flashSaleId,
+      userId: req.user.id,
+      email: req.user.email,
       passportPhotograph,
       adults,
       children,
@@ -152,6 +154,28 @@ export const createFlashSaleBooking = async (req, res) => {
   } catch (error) {
     console.error("Error creating flash sale booking:", error);
     res.status(500).json({ message: "Error creating flash sale booking" });
+  }
+};
+
+export const getUserFlashSaleBookings = async (req, res) => {
+  try {
+    // Get user ID from authenticated user (assuming middleware sets req.user)
+    const userId = req.user?.id;
+    if (!userId) {
+      return res.status(401).json({ message: "User not authenticated" });
+    }
+
+    const bookings = await FlashSaleBooking.find({ userId })
+      .populate('flashSaleId', 'destinationCity airline price')
+      .sort({ createdAt: -1 });
+
+    // Filter out bookings where flashSaleId is null (invalid flash sales)
+    const validBookings = bookings.filter(booking => booking.flashSaleId);
+
+    res.json({ bookings: validBookings });
+  } catch (error) {
+    console.error("Error fetching user flash sale bookings:", error);
+    res.status(500).json({ message: "Error fetching flash sale bookings" });
   }
 };
 

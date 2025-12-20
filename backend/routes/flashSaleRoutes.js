@@ -1,7 +1,8 @@
 import express from "express";
 import upload from "../config/multer.js";
 import FlashSale from "../models/FlashSale.js";
-import { getFlashSaleById, createFlashSaleBooking } from "../controllers/adminController.js";
+import { getFlashSaleById, createFlashSaleBooking, getUserFlashSaleBookings } from "../controllers/adminController.js";
+import { authenticateUser } from "../middleware/authMiddleware.js";
 
 const router = express.Router();
 
@@ -20,7 +21,10 @@ router.get("/", async (req, res) => {
 router.get("/:id", getFlashSaleById);
 
 // Create flash sale booking
-router.post("/book", createFlashSaleBooking);
+router.post("/book", authenticateUser, createFlashSaleBooking);
+
+// Get user flash sale bookings
+router.get("/user/flash-sale-bookings", authenticateUser, getUserFlashSaleBookings);
 
 // Upload document
 router.post("/upload-document", upload.single("file"), (req, res) => {

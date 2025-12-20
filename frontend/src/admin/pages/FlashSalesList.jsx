@@ -416,6 +416,10 @@ export function FlashSaleBookingDetails({ booking, onStatusUpdate }) {
             </a>
           </div>
           <div className="col-6">
+            <small className="text-muted d-block">Email</small>
+            <span className="small">{booking.email || 'N/A'}</span>
+          </div>
+          <div className="col-6">
             <small className="text-muted d-block">Date of Birth</small>
             <span className="small">{new Date(booking.dateOfBirth).toLocaleDateString()}</span>
           </div>
