@@ -1,4 +1,5 @@
 import express from "express";
+import mongoose from "mongoose";
 import { getOverviewData, getFlashSaleBookings, createFlashSale, updateFlashSale, deleteFlashSale, getFlashSales } from "../controllers/adminController.js";
 import { getFlightBookings, getFlightBookingById } from "../controllers/flightbookingController.js";
 import { authenticateAdmin } from "../middleware/authMiddleware.js";
@@ -120,9 +121,6 @@ router.get("/flight-bookings/recent", async (req, res) => {
   }
 });
 
-// Get single flight booking by ID
-router.get("/flight-bookings/:id", getFlightBookingById);
-
 // Get flight bookings count for a specific month
 router.get("/flight-bookings/count", async (req, res) => {
   try {
@@ -140,6 +138,38 @@ router.get("/flight-bookings/count", async (req, res) => {
     res.status(500).json({ message: "Error fetching flight bookings count" });
   }
 });
+
+// Get flight bookings for PDF report by month and year
+router.get("/flight-bookings/report", async (req, res) => {
+  try {
+    const { month, year } = req.query;
+
+    // Validate and parse month and year
+    const parsedMonth = parseInt(month, 10);
+    const parsedYear = parseInt(year, 10);
+
+    if (!month || !year || isNaN(parsedMonth) || isNaN(parsedYear) || parsedMonth < 1 || parsedMonth > 12 || parsedYear < 1900 || parsedYear > 2100) {
+      return res.status(400).json({ message: "Invalid month or year. Month must be 1-12, year must be a valid number." });
+    }
+
+    const startDate = new Date(parsedYear, parsedMonth - 1, 1); // Month is 0-indexed in JS
+    const endDate = new Date(parsedYear, parsedMonth, 1);
+
+    const bookings = await FlightBooking.find({
+      createdAt: { $gte: startDate, $lt: endDate }
+    })
+      .sort({ createdAt: -1 })
+      .select('fullName email phoneNumber tripType departureCity destinationCity departureDate returnDate multiCityFlights travelClass adults children infants notes status payment createdAt');
+
+    res.json({ bookings, month: parsedMonth, year: parsedYear });
+  } catch (error) {
+    console.error("Error fetching flight bookings for report:", error);
+    res.status(500).json({ message: "Error fetching flight bookings for report" });
+  }
+});
+
+// Get single flight booking by ID
+router.get("/flight-bookings/:id", getFlightBookingById);
 
 // Get visa applications count for a specific month
 router.get("/visa-applications/count", async (req, res) => {
@@ -200,35 +230,6 @@ router.get("/visa-applications/report", async (req, res) => {
   } catch (error) {
     console.error("Error fetching visa applications for report:", error);
     res.status(500).json({ message: "Error fetching visa applications for report" });
-  }
-});
-
-// Get flight bookings for PDF report by month and year
-router.get("/flight-bookings/report", async (req, res) => {
-  try {
-    const { month, year } = req.query;
-
-    // Validate and parse month and year
-    const parsedMonth = parseInt(month, 10);
-    const parsedYear = parseInt(year, 10);
-
-    if (!month || !year || isNaN(parsedMonth) || isNaN(parsedYear) || parsedMonth < 1 || parsedMonth > 12 || parsedYear < 1900 || parsedYear > 2100) {
-      return res.status(400).json({ message: "Invalid month or year. Month must be 1-12, year must be a valid number." });
-    }
-
-    const startDate = new Date(parsedYear, parsedMonth - 1, 1); // Month is 0-indexed in JS
-    const endDate = new Date(parsedYear, parsedMonth, 1);
-
-    const bookings = await FlightBooking.find({
-      createdAt: { $gte: startDate, $lt: endDate }
-    })
-      .sort({ createdAt: -1 })
-      .select('fullName email phoneNumber tripType departureCity destinationCity departureDate returnDate multiCityFlights travelClass adults children infants notes status payment createdAt');
-
-    res.json({ bookings, month: parsedMonth, year: parsedYear });
-  } catch (error) {
-    console.error("Error fetching flight bookings for report:", error);
-    res.status(500).json({ message: "Error fetching flight bookings for report" });
   }
 });
 
@@ -312,6 +313,10 @@ router.get("/visa-applications", async (req, res) => {
 // Get single visa application by ID
 router.get("/visa-applications/:id", async (req, res) => {
   try {
+    if (!mongoose.Types.ObjectId.isValid(req.params.id)) {
+      return res.status(400).json({ message: "Invalid application ID" });
+    }
+
     const application = await VisaApplication.findById(req.params.id);
 
     if (!application) {
@@ -736,6 +741,10 @@ router.get("/hotel-bookings/recent", async (req, res) => {
 // Get single hotel booking by ID
 router.get("/hotel-bookings/:id", async (req, res) => {
   try {
+    if (!mongoose.Types.ObjectId.isValid(req.params.id)) {
+      return res.status(400).json({ message: "Invalid hotel booking ID" });
+    }
+
     const booking = await HotelBooking.findById(req.params.id);
 
     if (!booking) {
@@ -877,6 +886,10 @@ router.get("/visa-requirements", async (req, res) => {
 // Get single visa requirement by ID
 router.get("/visa-requirements/:id", async (req, res) => {
   try {
+    if (!mongoose.Types.ObjectId.isValid(req.params.id)) {
+      return res.status(400).json({ message: "Invalid visa requirement ID" });
+    }
+
     const requirement = await VisaRequirement.findById(req.params.id);
 
     if (!requirement) {
@@ -976,6 +989,10 @@ router.get("/packages", async (req, res) => {
 // Get single package by ID
 router.get("/packages/:id", async (req, res) => {
   try {
+    if (!mongoose.Types.ObjectId.isValid(req.params.id)) {
+      return res.status(400).json({ message: "Invalid package ID" });
+    }
+
     const packageData = await Package.findById(req.params.id);
 
     if (!packageData) {
@@ -1209,9 +1226,64 @@ router.get("/package-bookings/recent", async (req, res) => {
   }
 });
 
+// Get package bookings count for a specific month
+router.get("/package-bookings/count", async (req, res) => {
+  try {
+    const { month, year } = req.query;
+    const startDate = new Date(year, month - 1, 1); // Month is 0-indexed in JS
+    const endDate = new Date(year, month, 1);
+
+    const count = await PackageBooking.countDocuments({
+      createdAt: { $gte: startDate, $lt: endDate }
+    });
+
+    res.json({ count });
+  } catch (error) {
+    console.error("Error fetching package bookings count:", error);
+    res.status(500).json({ message: "Error fetching package bookings count" });
+  }
+});
+
+// Get package bookings for PDF report by month and year
+router.get("/package-bookings/report", async (req, res) => {
+  try {
+    console.log('Package bookings report request:', req.query);
+    const { month, year } = req.query;
+
+    const parsedMonth = parseInt(month, 10);
+    const parsedYear = parseInt(year, 10);
+
+    console.log('Parsed month/year:', parsedMonth, parsedYear);
+
+    if (!month || !year || isNaN(parsedMonth) || isNaN(parsedYear) || parsedMonth < 1 || parsedMonth > 12 || parsedYear < 1900 || parsedYear > 2100) {
+      return res.status(400).json({ message: "Invalid month or year. Month must be 1-12, year must be a valid number." });
+    }
+
+    const startDate = new Date(parsedYear, parsedMonth - 1, 1);
+    const endDate = new Date(parsedYear, parsedMonth, 1);
+
+    console.log('Date range:', startDate, endDate);
+
+    const bookings = await PackageBooking.find({ createdAt: { $gte: startDate, $lt: endDate } })
+      .sort({ createdAt: -1 })
+      .select('fullName whatsappNumber packageTitle packagePrice packageCurrency travelDate status createdAt');
+
+    console.log('Found bookings:', bookings.length);
+
+    res.json({ bookings, month: parsedMonth, year: parsedYear });
+  } catch (error) {
+    console.error('Error fetching package bookings for report:', error);
+    res.status(500).json({ message: 'Error fetching package bookings for report' });
+  }
+});
+
 // Get single package booking by ID
 router.get("/package-bookings/:id", async (req, res) => {
   try {
+    if (!mongoose.Types.ObjectId.isValid(req.params.id)) {
+      return res.status(400).json({ message: "Invalid package booking ID" });
+    }
+
     const booking = await PackageBooking.findById(req.params.id).populate('packageId');
 
     if (!booking) {
@@ -1276,50 +1348,6 @@ router.put('/package-bookings/:id/payment', async (req, res) => {
   } catch (error) {
     console.error('Error updating package booking payment status:', error);
     res.status(500).json({ message: 'Error updating payment status' });
-  }
-});
-
-// Get package bookings count for a specific month
-router.get("/package-bookings/count", async (req, res) => {
-  try {
-    const { month, year } = req.query;
-    const startDate = new Date(year, month - 1, 1); // Month is 0-indexed in JS
-    const endDate = new Date(year, month, 1);
-
-    const count = await PackageBooking.countDocuments({
-      createdAt: { $gte: startDate, $lt: endDate }
-    });
-
-    res.json({ count });
-  } catch (error) {
-    console.error("Error fetching package bookings count:", error);
-    res.status(500).json({ message: "Error fetching package bookings count" });
-  }
-});
-
-// Get package bookings for PDF report by month and year
-router.get("/package-bookings/report", async (req, res) => {
-  try {
-    const { month, year } = req.query;
-
-    const parsedMonth = parseInt(month, 10);
-    const parsedYear = parseInt(year, 10);
-
-    if (!month || !year || isNaN(parsedMonth) || isNaN(parsedYear) || parsedMonth < 1 || parsedMonth > 12 || parsedYear < 1900 || parsedYear > 2100) {
-      return res.status(400).json({ message: "Invalid month or year. Month must be 1-12, year must be a valid number." });
-    }
-
-    const startDate = new Date(parsedYear, parsedMonth - 1, 1);
-    const endDate = new Date(parsedYear, parsedMonth, 1);
-
-    const bookings = await PackageBooking.find({ createdAt: { $gte: startDate, $lt: endDate } })
-      .sort({ createdAt: -1 })
-      .select('fullName whatsappNumber packageTitle packagePrice packageCurrency travelDate status createdAt');
-
-    res.json({ bookings, month: parsedMonth, year: parsedYear });
-  } catch (error) {
-    console.error('Error fetching package bookings for report:', error);
-    res.status(500).json({ message: 'Error fetching package bookings for report' });
   }
 });
 
@@ -1420,9 +1448,65 @@ router.get("/flash-sale-bookings/recent", async (req, res) => {
   }
 });
 
+// Get flash sale bookings for PDF report by month and year
+router.get("/flash-sale-bookings/report", async (req, res) => {
+  try {
+    console.log('Flash sale bookings report request:', req.query);
+    const { month, year } = req.query;
+
+    const parsedMonth = parseInt(month, 10);
+    const parsedYear = parseInt(year, 10);
+
+    console.log('Parsed month/year:', parsedMonth, parsedYear);
+
+    if (!month || !year || isNaN(parsedMonth) || isNaN(parsedYear) || parsedMonth < 1 || parsedMonth > 12 || parsedYear < 1900 || parsedYear > 2100) {
+      return res.status(400).json({ message: "Invalid month or year. Month must be 1-12, year must be a valid number." });
+    }
+
+    const startDate = new Date(parsedYear, parsedMonth - 1, 1);
+    const endDate = new Date(parsedYear, parsedMonth, 1);
+
+    console.log('Date range:', startDate, endDate);
+
+    const bookings = await FlashSaleBooking.find({ createdAt: { $gte: startDate, $lt: endDate } })
+      .populate('flashSaleId', 'destinationCity airline price')
+      .sort({ createdAt: -1 })
+      .select('name whatsappNumber flashSaleId status createdAt');
+
+    console.log('Found bookings:', bookings.length);
+
+    res.json({ bookings, month: parsedMonth, year: parsedYear });
+  } catch (error) {
+    console.error('Error fetching flash sale bookings for report:', error);
+    res.status(500).json({ message: 'Error fetching flash sale bookings for report' });
+  }
+});
+
+// Get flash sale bookings count for a specific month
+router.get("/flash-sale-bookings/count", async (req, res) => {
+  try {
+    const { month, year } = req.query;
+    const startDate = new Date(year, month - 1, 1);
+    const endDate = new Date(year, month, 1);
+
+    const count = await FlashSaleBooking.countDocuments({
+      createdAt: { $gte: startDate, $lt: endDate }
+    });
+
+    res.json({ count });
+  } catch (error) {
+    console.error("Error fetching flash sale bookings count:", error);
+    res.status(500).json({ message: "Error fetching flash sale bookings count" });
+  }
+});
+
 // Get single flash sale booking by ID
 router.get("/flash-sale-bookings/:id", async (req, res) => {
   try {
+    if (!mongoose.Types.ObjectId.isValid(req.params.id)) {
+      return res.status(400).json({ message: "Invalid booking ID" });
+    }
+
     const booking = await FlashSaleBooking.findById(req.params.id).populate('flashSaleId');
 
     if (!booking) {
@@ -1490,51 +1574,6 @@ router.put('/flash-sale-bookings/:id/payment', async (req, res) => {
   }
 });
 
-// Get flash sale bookings count for a specific month
-router.get("/flash-sale-bookings/count", async (req, res) => {
-  try {
-    const { month, year } = req.query;
-    const startDate = new Date(year, month - 1, 1);
-    const endDate = new Date(year, month, 1);
-
-    const count = await FlashSaleBooking.countDocuments({
-      createdAt: { $gte: startDate, $lt: endDate }
-    });
-
-    res.json({ count });
-  } catch (error) {
-    console.error("Error fetching flash sale bookings count:", error);
-    res.status(500).json({ message: "Error fetching flash sale bookings count" });
-  }
-});
-
-// Get flash sale bookings for PDF report by month and year
-router.get("/flash-sale-bookings/report", async (req, res) => {
-  try {
-    const { month, year } = req.query;
-
-    const parsedMonth = parseInt(month, 10);
-    const parsedYear = parseInt(year, 10);
-
-    if (!month || !year || isNaN(parsedMonth) || isNaN(parsedYear) || parsedMonth < 1 || parsedMonth > 12 || parsedYear < 1900 || parsedYear > 2100) {
-      return res.status(400).json({ message: "Invalid month or year. Month must be 1-12, year must be a valid number." });
-    }
-
-    const startDate = new Date(parsedYear, parsedMonth - 1, 1);
-    const endDate = new Date(parsedYear, parsedMonth, 1);
-
-    const bookings = await FlashSaleBooking.find({ createdAt: { $gte: startDate, $lt: endDate } })
-      .populate('flashSaleId', 'destinationCity airline price')
-      .sort({ createdAt: -1 })
-      .select('name whatsappNumber flashSaleId status createdAt');
-
-    res.json({ bookings, month: parsedMonth, year: parsedYear });
-  } catch (error) {
-    console.error('Error fetching flash sale bookings for report:', error);
-    res.status(500).json({ message: 'Error fetching flash sale bookings for report' });
-  }
-});
-
 // Get all flash sales
 router.get("/flash-sales", async (req, res) => {
   try {
@@ -1549,6 +1588,10 @@ router.get("/flash-sales", async (req, res) => {
 // Get single flash sale by ID
 router.get("/flash-sales/:id", async (req, res) => {
   try {
+    if (!mongoose.Types.ObjectId.isValid(req.params.id)) {
+      return res.status(400).json({ message: "Invalid flash sale ID" });
+    }
+
     const flashSale = await FlashSale.findById(req.params.id);
 
     if (!flashSale) {
