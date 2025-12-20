@@ -4,6 +4,7 @@ import { Container, Card, Button, Form, Alert, Row, Col } from "react-bootstrap"
 import userAxios from "../api/userAxios";
 import { countryCodes } from "../data/countryCodes";
 import { toast } from "react-toastify";
+import PaystackPayment from "../components/FlashSalePaystack";
 
 function FlashSaleDetails() {
   const { id } = useParams();
@@ -130,7 +131,7 @@ function FlashSaleDetails() {
     setCurrentStep("form");
   };
 
-  const handleFinalSubmit = async () => {
+  const handlePaymentSuccess = async (paymentRef) => {
     setBookingLoading(true);
     setMessage("");
 
@@ -138,6 +139,12 @@ function FlashSaleDetails() {
       await userAxios.post("/flash-sales/book", {
         ...formData,
         flashSaleId: id,
+        payment: {
+          status: "paid",
+          provider: "paystack",
+          transactionId: paymentRef.reference,
+          amount: flashSale.price,
+        },
       });
       navigate("/flash-sale-success", { state: { name: formData.name } });
     } catch (error) {
@@ -419,13 +426,20 @@ function FlashSaleDetails() {
                     <p className="mt-2 mb-0"><small className="text-muted">{formData.passportPhotographName || "Uploaded image"}</small></p>
                   </div>
                 )}
-                <div className="d-flex justify-content-between mt-4">
-                  <Button variant="secondary" onClick={handleBack}>
+                <div className="d-flex flex-column flex-md-row justify-content-between gap-3 mt-4">
+                  <Button
+                    variant="secondary"
+                    onClick={handleBack}
+                    className="w-100 mt-3"
+                    style={{ paddingTop: '1rem', paddingBottom: '1rem' }}
+                  >
                     Back
                   </Button>
-                  <Button variant="success" onClick={handleFinalSubmit} disabled={bookingLoading}>
-                    {bookingLoading ? "Processing..." : "Pay Now"}
-                  </Button>
+                  <PaystackPayment
+                    amount={flashSale.price}
+                    fullName={formData.name}
+                    onSuccess={handlePaymentSuccess}
+                  />
                 </div>
               </Card.Body>
             </Card>
