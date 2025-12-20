@@ -21,14 +21,14 @@ export default function Sidebar({ open }) {
       icon: "fa-solid fa-shopping-cart",
     },
     {
-      name: "Flash Sale Bookings",
+      name: "Create a Flash Sale",
       path: "flash-sales-bookings",
-      icon: "fa-solid fa-bolt",
+      icon: "fa-solid fa-plus",
     },
     {
       name: "All Flash Sales",
       path: "flash-sales",
-      icon: "fa-solid fa-plus",
+      icon: "fa-solid fa-bolt",
     },
     { name: "Transfers", path: "transfers", icon: "fa-solid fa-car" },
     {
