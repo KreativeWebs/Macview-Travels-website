@@ -30,17 +30,17 @@ export default function Sidebar({ open }) {
       path: "flash-sales",
       icon: "fa-solid fa-bolt",
     },
-    { name: "Transfers", path: "transfers", icon: "fa-solid fa-car" },
+    // { name: "Transfers", path: "transfers", icon: "fa-solid fa-car" },
     {
       name: "Visa Requirements",
       path: "visa-requirements",
       icon: "fa-solid fa-file-alt",
     },
-    {
-      name: "Create Newsletter",
-      path: "createnewsletter",
-      icon: "fa-solid fa-envelope-open",
-    },
+    // {
+    //   name: "Create Newsletter",
+    //   path: "createnewsletter",
+    //   icon: "fa-solid fa-envelope-open",
+    // },
     {
       name: "Subscribers",
       path: "viewnewsletter",
