@@ -1,10 +1,13 @@
 import React, { useState, useEffect } from "react";
 import { Link } from "react-router-dom";
 import adminAxios from "../../api/adminAxios";
+import { toast } from "react-toastify";
 
 export default function PackagesManagement() {
   const [packages, setPackages] = useState([]);
   const [loading, setLoading] = useState(true);
+  const [showDeleteModal, setShowDeleteModal] = useState(false);
+  const [packageToDelete, setPackageToDelete] = useState(null);
 
   useEffect(() => {
     fetchPackages();
@@ -21,17 +24,29 @@ export default function PackagesManagement() {
     }
   };
 
-  const handleDelete = async (id) => {
-    if (window.confirm("Are you sure you want to delete this package?")) {
-      try {
-        await adminAxios.delete(`/packages/${id}`);
-        setPackages(packages.filter(pkg => pkg._id !== id));
-        alert("Package deleted successfully");
-      } catch (error) {
-        console.error("Error deleting package:", error);
-        alert("Error deleting package");
-      }
+  const handleDelete = async () => {
+    if (!packageToDelete) return;
+
+    try {
+      await adminAxios.delete(`/packages/${packageToDelete._id}`);
+      toast.success("Package deleted successfully");
+      fetchPackages();
+      setShowDeleteModal(false);
+      setPackageToDelete(null);
+    } catch (error) {
+      console.error("Error deleting package:", error);
+      toast.error("Failed to delete package");
     }
+  };
+
+  const openDeleteModal = (pkg) => {
+    setPackageToDelete(pkg);
+    setShowDeleteModal(true);
+  };
+
+  const closeDeleteModal = () => {
+    setShowDeleteModal(false);
+    setPackageToDelete(null);
   };
 
   if (loading) {
@@ -119,7 +134,7 @@ export default function PackagesManagement() {
                               </Link>
                               <button
                                 className="btn btn-sm btn-outline-danger"
-                                onClick={() => handleDelete(pkg._id)}
+                                onClick={() => openDeleteModal(pkg)}
                                 title="Delete"
                               >
                                 <i className="fas fa-trash"></i>
@@ -136,6 +151,32 @@ export default function PackagesManagement() {
           </div>
         </div>
       </div>
+
+      {/* Delete Confirmation Modal */}
+      {showDeleteModal && (
+        <div className="modal show d-block" tabIndex="-1" style={{ backgroundColor: 'rgba(0,0,0,0.5)' }}>
+          <div className="modal-dialog">
+            <div className="modal-content">
+              <div className="modal-header">
+                <h5 className="modal-title">Confirm Delete</h5>
+                <button type="button" className="btn-close" onClick={closeDeleteModal}></button>
+              </div>
+              <div className="modal-body">
+                <p>Are you sure you want to delete the package <strong>{packageToDelete?.title}</strong>?</p>
+                <p className="text-danger small">This action cannot be undone.</p>
+              </div>
+              <div className="modal-footer">
+                <button type="button" className="btn btn-secondary" onClick={closeDeleteModal}>
+                  Cancel
+                </button>
+                <button type="button" className="btn btn-danger" onClick={handleDelete}>
+                  Delete
+                </button>
+              </div>
+            </div>
+          </div>
+        </div>
+      )}
     </div>
   );
 }
