@@ -1,13 +1,23 @@
-import React from "react";
-import { Link } from "react-router-dom";
-import { useEffect } from "react";
+import React, { useEffect } from "react";
 import { Carousel } from "react-bootstrap";
+
+// Frontend logger helper (can be replaced with Sentry or backend API)
+const logWarning = (message, context = {}) => {
+  // Optional: send to backend
+  fetch("/api/log-client-warning", {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify({ message, context }),
+  }).catch(() => {
+    // Silent fail – no console noise in production
+  });
+};
 
 function Destination() {
   useEffect(() => {
     const carouselEl = document.getElementById("destinationCarousel");
 
-    // ✅ Check if the element exists and bootstrap is loaded
+    // Check if the element exists and bootstrap is loaded
     if (carouselEl && window.bootstrap) {
       new window.bootstrap.Carousel(carouselEl, {
         interval: 3000,
@@ -15,10 +25,12 @@ function Destination() {
         pause: "hover",
       });
     } else {
-      console.warn("Carousel element not found or Bootstrap not loaded yet.");
+      logWarning("Bootstrap carousel not initialized", {
+        elementFound: !!carouselEl,
+        bootstrapLoaded: !!window.bootstrap,
+      });
     }
   }, []);
-
 
   return (
     <div
@@ -45,12 +57,13 @@ function Destination() {
           Popular Destinations
         </h1>
       </div>
+
       <Carousel interval={5000} pause={false}>
         <Carousel.Item>
           <img
             className="d-block w-100"
             src="assets/img/11013.jpg"
-            alt="Thailand"
+            alt="Indonesia"
             style={{
               height: "400px",
               objectFit: "cover",
@@ -63,11 +76,8 @@ function Destination() {
               top: "50%",
               left: "50%",
               transform: "translate(-50%, -50%)",
-              width: "100%", // full width so text can be centered
+              width: "100%",
               textAlign: "center",
-              whiteSpace: "nowrap", // keeps text on one line
-              overflow: "hidden",
-              textOverflow: "ellipsis",
               display: "flex",
               justifyContent: "center",
               alignItems: "center",
@@ -75,7 +85,7 @@ function Destination() {
             }}
           >
             <h1
-              className="carousel-title text-white"
+              className="text-white"
               style={{
                 fontFamily: "Raleway",
                 fontSize: "clamp(50px, 8vw, 100px)",
@@ -83,7 +93,6 @@ function Destination() {
                 margin: 0,
               }}
             >
-              {" "}
               Indonesia
             </h1>
           </Carousel.Caption>
@@ -93,25 +102,21 @@ function Destination() {
           <img
             className="d-block w-100"
             src="assets/img/666.jpg"
-            alt="Thailand"
+            alt="Singapore"
             style={{
               height: "400px",
               objectFit: "cover",
               borderRadius: "8px",
             }}
           />
-
           <Carousel.Caption
             style={{
               position: "absolute",
               top: "50%",
               left: "50%",
               transform: "translate(-50%, -50%)",
-              width: "100%", // full width so text can be centered
+              width: "100%",
               textAlign: "center",
-              whiteSpace: "nowrap", // keeps text on one line
-              overflow: "hidden",
-              textOverflow: "ellipsis",
               display: "flex",
               justifyContent: "center",
               alignItems: "center",
@@ -127,7 +132,6 @@ function Destination() {
                 margin: 0,
               }}
             >
-              {" "}
               Singapore
             </h1>
           </Carousel.Caption>
@@ -137,14 +141,13 @@ function Destination() {
           <img
             className="d-block w-100"
             src="assets/img/17878885.jpg"
-            alt="Thailand"
+            alt="Qatar"
             style={{
               height: "400px",
               objectFit: "cover",
               borderRadius: "8px",
             }}
           />
-
           <Carousel.Caption
             style={{
               position: "absolute",
@@ -153,9 +156,6 @@ function Destination() {
               transform: "translate(-50%, -50%)",
               width: "100%",
               textAlign: "center",
-              whiteSpace: "nowrap",
-              overflow: "hidden",
-              textOverflow: "ellipsis",
               display: "flex",
               justifyContent: "center",
               alignItems: "center",
@@ -171,7 +171,6 @@ function Destination() {
                 margin: 0,
               }}
             >
-              {" "}
               Qatar
             </h1>
           </Carousel.Caption>
@@ -181,25 +180,21 @@ function Destination() {
           <img
             className="d-block w-100"
             src="assets/img/10880824.jpg"
-            alt="Thailand"
+            alt="South Africa"
             style={{
               height: "400px",
               objectFit: "cover",
               borderRadius: "8px",
             }}
           />
-
           <Carousel.Caption
             style={{
               position: "absolute",
               top: "50%",
               left: "50%",
               transform: "translate(-50%, -50%)",
-              width: "100%", // full width so text can be centered
+              width: "100%",
               textAlign: "center",
-              whiteSpace: "nowrap", // keeps text on one line
-              overflow: "hidden",
-              textOverflow: "ellipsis",
               display: "flex",
               justifyContent: "center",
               alignItems: "center",
@@ -215,12 +210,10 @@ function Destination() {
                 margin: 0,
               }}
             >
-              {" "}
               South Africa
             </h1>
           </Carousel.Caption>
         </Carousel.Item>
-        {/* Add other slides similarly */}
       </Carousel>
     </div>
   );

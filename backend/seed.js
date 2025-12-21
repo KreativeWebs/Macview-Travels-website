@@ -60,15 +60,11 @@ const seedVisaRequirements = async () => {
   try {
     await connectToDB();
 
-    console.log("Connected to MongoDB...");
-
     // Clear old data
     await visaRequirements.deleteMany();
-    console.log("Existing visa data cleared.");
 
     // Insert seed data
     await visaRequirements.insertMany(visaData);
-    console.log("Visa requirements seeded successfully!");
 
     process.exit();
   } catch (error) {

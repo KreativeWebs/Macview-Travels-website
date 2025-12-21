@@ -47,7 +47,7 @@ export const useAuthStore = create((set, get) => ({
 
       set({
         user: res.data.user,
-        accessToken: res.data.accessToken, // ✅ store access token in memory
+        accessToken: res.data.accessToken, // store access token in memory
         isLoading: false,
       });
 
