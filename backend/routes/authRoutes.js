@@ -1,4 +1,5 @@
 import express from "express";
+import { body, validationResult } from "express-validator";
 import crypto from "crypto";
 import bcryptjs from "bcryptjs";
 import jwt from "jsonwebtoken";
@@ -101,8 +102,22 @@ router.post("/signup", async (req, res) => {
 /* ================================
    LOGIN
 ================================ */
-router.post("/login", async (req, res) => {
-  const { email, password } = req.body;
+router.post("/login",
+  [
+    body('email').isEmail().normalizeEmail().withMessage('Please provide a valid email'),
+    body('password').notEmpty().withMessage('Password is required'),
+  ],
+  async (req, res) => {
+    const errors = validationResult(req);
+    if (!errors.isEmpty()) {
+      return res.status(400).json({
+        success: false,
+        message: 'Validation failed',
+        errors: errors.array()
+      });
+    }
+
+    const { email, password } = req.body;
   try {
     const user = await User.findOne({ email });
     if (!user)

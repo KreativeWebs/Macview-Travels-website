@@ -2,6 +2,8 @@ import "dotenv/config";
 import flightBookingRoutes from "./routes/flightbookingRoutes.js";
 import hotelRoutes from "./routes/hotelRoutes.js";
 import rateLimit from "express-rate-limit";
+import helmet from "helmet";
+import logger from "./config/logger.js";
 import { Server } from "socket.io";
 import http from "http";
 import express from "express";
@@ -18,20 +20,11 @@ import path from "path";
 import { fileURLToPath } from "url";
 import cors from "cors";
 
-
-// -----------------------------
-// Load .env
-// -----------------------------
-// dotenv.config({ path: path.join(__dirname, "..", ".env") });
-
-
 // -----------------------------
 // File path fixes for ES Modules
 // -----------------------------
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
-
-
 
 // -----------------------------
 // Express app
@@ -50,7 +43,6 @@ const allowedOrigins = [
 
 app.use(cors({
   origin: (origin, callback) => {
-    // allow requests with no origin (like mobile apps, curl, postman)
     if (!origin || allowedOrigins.includes(origin)) {
       callback(null, true);
     } else {
@@ -61,22 +53,86 @@ app.use(cors({
 }));
 
 // -----------------------------
-// Middleware
+// Security Middleware (Helmet)
 // -----------------------------
-app.use(express.json());
-app.use(cookieParser()); // no secret needed for unsigned cookies
+app.use(
+  helmet({
+    contentSecurityPolicy: {
+      directives: {
+        defaultSrc: ["'self'"],
+        styleSrc: [
+          "'self'",
+          "'unsafe-inline'",
+          "https://fonts.googleapis.com",
+          "https://cdn.jsdelivr.net"
+        ],
+        fontSrc: ["'self'", "https://fonts.gstatic.com"],
+        scriptSrc: [
+          "'self'",
+          "https://js.paystack.co",
+          "https://www.paypal.com"
+        ],
+        imgSrc: ["'self'", "data:", "https:", "blob:"],
+        connectSrc: [
+          "'self'",
+          "https://api.paystack.co",
+          "ws:",
+          "wss:"
+        ],
+      },
+    },
+    hsts: {
+      maxAge: 31536000,
+      includeSubDomains: true,
+      preload: true
+    }
+  })
+);
 
 // -----------------------------
-// Rate Limiter
+// Request logging using Winston
 // -----------------------------
-const authLimiter = rateLimit({
-  windowMs: 15 * 60 * 1000, // 15 min
-  max: 5000,
-  standardHeaders: true,
-  legacyHeaders: false
+app.use((req, res, next) => {
+  logger.info(`${req.method} ${req.path} - ${req.ip} - ${req.get("User-Agent")}`);
+  next();
 });
 
-app.use("/api/", authLimiter);
+// -----------------------------
+// Middleware
+// -----------------------------
+app.use(express.json({ limit: "10mb" }));
+app.use(cookieParser());
+
+// -----------------------------
+// Rate Limiting
+// -----------------------------
+const generalLimiter = rateLimit({
+  windowMs: 15 * 60 * 1000,
+  max: 1000,
+  message: "Too many requests from this IP, please try again later.",
+  standardHeaders: true,
+  legacyHeaders: false,
+});
+
+const authLimiter = rateLimit({
+  windowMs: 15 * 60 * 1000,
+  max: 10,
+  message: "Too many authentication attempts, please try again later.",
+  standardHeaders: true,
+  legacyHeaders: false,
+});
+
+const apiLimiter = rateLimit({
+  windowMs: 15 * 60 * 1000,
+  max: 500,
+  message: "Too many API requests, please try again later.",
+  standardHeaders: true,
+  legacyHeaders: false,
+});
+
+app.use("/", generalLimiter);
+app.use("/api/auth", authLimiter);
+app.use("/api/", apiLimiter);
 
 // -----------------------------
 // Routes
@@ -102,8 +158,8 @@ const io = new Server(server, {
     credentials: true,
     methods: ["GET", "POST"]
   },
-  transports: ['websocket', 'polling'],
-  allowEIO3: true, // Allow Engine.IO v3 clients
+  transports: ["websocket", "polling"],
+  allowEIO3: true,
   pingTimeout: 60000,
   pingInterval: 25000,
   connectTimeout: 45000,
@@ -111,20 +167,14 @@ const io = new Server(server, {
 });
 
 io.on("connection", (socket) => {
-  console.log("🔌 Socket connected:", socket.id);
-  console.log("🔌 Connection details:", {
-    transport: socket.conn.transport.name,
-    headers: socket.handshake.headers.origin,
-    userAgent: socket.handshake.headers['user-agent']?.substring(0, 50)
-  });
+  logger.info(`Socket connected: ${socket.id}`);
 
   socket.on("disconnect", (reason) => {
-    console.log("🔌 Socket disconnected:", socket.id, "Reason:", reason);
+    logger.info(`Socket disconnected: ${socket.id} | Reason: ${reason}`);
   });
 });
 
 global.io = io;
-
 
 // -----------------------------
 // Start server after DB connection
@@ -132,10 +182,9 @@ global.io = io;
 connectToDB()
   .then(() => {
     server.listen(PORT, () => {
-      console.log(`🚀 Server started on port ${PORT}`);
+      logger.info(`Server started on port ${PORT}`);
     });
   })
   .catch((err) => {
-    console.error("❌ DB Connection Failed:", err);
+    logger.error(`DB Connection Failed: ${err.message}`);
   });
-

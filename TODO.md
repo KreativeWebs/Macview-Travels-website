@@ -3,3 +3,14 @@
 - [ ] Update sendWelcomeNewsletterEmail to include unsubscribe_url
 - [ ] Create Unsubscribe.jsx page
 - [ ] Add route for Unsubscribe in App.jsx
+- [ ] Enhance User model with validation and password strength
+- [ ] Add input validation to all routes using express-validator
+- [ ] Implement comprehensive logging with winston
+- [ ] Add security headers with helmet
+- [ ] Improve rate limiting with more granular rules
+- [ ] Add monitoring with prometheus
+- [ ] Fix hardcoded URLs in frontend
+- [ ] Add file size limits in multer
+- [ ] Implement alerting (basic console alerts)
+- [ ] Update dependencies and ensure no vulnerabilities
+- [ ] Test all changes thoroughly

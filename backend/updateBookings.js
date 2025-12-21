@@ -12,11 +12,9 @@ async function updateExistingBookings() {
       const user = await User.findById(booking.userId);
       if (user && user.email) {
         await FlashSaleBooking.findByIdAndUpdate(booking._id, { email: user.email });
-        console.log('Updated booking', booking._id, 'with email', user.email);
       }
     }
 
-    console.log('Finished updating existing bookings');
     process.exit(0);
   } catch (error) {
     console.error('Error updating bookings:', error);

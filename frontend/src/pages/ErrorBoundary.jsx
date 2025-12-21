@@ -1,5 +1,18 @@
 import React from "react";
 
+// Example logger function for frontend (replace with Sentry or backend API)
+const logError = (error, errorInfo) => {
+  // You can send this to your backend for persistent logging
+  fetch("/api/log-client-error", {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify({ error: error.toString(), errorInfo })
+  }).catch(() => {
+    // fallback logging if API fails
+    console.error("Failed to send error to server:", error, errorInfo);
+  });
+};
+
 class ErrorBoundary extends React.Component {
   constructor(props) {
     super(props);
@@ -7,26 +20,24 @@ class ErrorBoundary extends React.Component {
   }
 
   static getDerivedStateFromError(error) {
-    // Update state so the next render will show the fallback UI
     return { hasError: true };
   }
 
   componentDidCatch(error, errorInfo) {
-    console.error("Error caught by Error Boundary:", error, errorInfo);
+    // Replace console.error with logger
+    logError(error, errorInfo);
   }
 
   render() {
     if (this.state.hasError) {
-      // Fallback UI when a component crashes
       return (
         <div style={{ padding: "50px", textAlign: "center" }}>
-          <h2>Something went wrong 😕</h2>
+          <h2>Something went wrong</h2>
           <p>We’re working to fix it. Please try again later.</p>
         </div>
       );
     }
 
-    // Otherwise, render child components normally
     return this.props.children;
   }
 }
