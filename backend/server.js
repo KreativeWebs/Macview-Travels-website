@@ -137,6 +137,7 @@ app.use("/api/", apiLimiter);
 // -----------------------------
 // Routes
 // -----------------------------
+app.get("/", (req, res) => res.send("API is running"));
 app.use("/api", authRouter);
 app.use("/api/flight-bookings", flightBookingRoutes);
 app.use("/api/hotel-bookings", hotelRoutes);
