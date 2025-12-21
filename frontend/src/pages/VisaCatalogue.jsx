@@ -32,13 +32,23 @@ export default function VisaCatalogue() {
       desc: "Easy visa processing for your South African adventure.",
     },
     {
+      img: "assets/img/National Flag of South Africa.jpeg",
+      title: "South Africa Fast Track",
+      desc: "Easy visa processing for your South African adventure.",
+    },
+    {
       img: "assets/img/Zimbabwe Large Flag.jpeg",
       title: "Zimbabwe Visa",
       desc: "Apply now for a smooth Zimbabwe tourist visa experience.",
     },
     {
       img: "assets/img/Morocco.jpeg",
-      title: "Morocco Visa",
+      title: "Morocco eVisa",
+      desc: "Travel to Morocco hassle-free with our visa services.",
+    },
+     {
+      img: "assets/img/Morocco.jpeg",
+      title: "Morocco Sticker Visa",
       desc: "Travel to Morocco hassle-free with our visa services.",
     },
     {
@@ -49,44 +59,74 @@ export default function VisaCatalogue() {
     // NEXT 8 CARDS
    
         {
-      img: "assets/img/Qatar.jpeg",
-      title: "Qatar Visa",
-      desc: "Apply for your Qatar travel visa easily and quickly.",
+      img: "assets/img/zambia.jpeg",
+      title: "Zambia Visa",
+      desc: "Apply for your Zambia travel visa easily and quickly.",
     },
     {
+      img: "assets/img/uganda.jpeg",
+      title: "Uganda eVisa",
+      desc: "Get access to Uganda with our simplified visa service.",
+    },
+     {
       img: "assets/img/Kenia - Wikipedia, la enciclopedia libre.jpeg",
-      title: "Kenya Visa",
+      title: "Kenya Fast Track",
       desc: "Get access to Kenya with our simplified visa service.",
     },
     {
-      img: "assets/img/Tanzania.jpeg",
-      title: "Tanzania Visa",
-      desc: "Secure your travel visa to Tanzania for business or leisure.",
+      img: "assets/img/eastafrica.jpeg",
+      title: "East Africa eVisa",
+      desc: "Secure your travel visa to East African countries.",
     },
     {
-      img: "assets/img/Bandera de Egipto - Wikipedia, la enciclopedia libre.jpeg",
-      title: "Egypt Visa",
-      desc: "Explore Egypt’s wonders with a fast-tracked visa application.",
+      img: "assets/img/seychelles.jpeg",
+      title: "Seychelles Visa",
+      desc: "Explore Seychelles with a fast and easy visa application.",
     },
     {
-      img: "assets/img/National Flag of South Africa.jpeg",
-      title: "South Africa Visa",
-      desc: "Easy visa processing for your South African adventure.",
+      img: "assets/img/china.jpeg",
+      title: "China Visa",
+      desc: "Easy visa processing for your Chinese adventure.",
     },
     {
-      img: "assets/img/Zimbabwe Large Flag.jpeg",
-      title: "Zimbabwe Visa",
-      desc: "Apply now for a smooth Zimbabwe tourist visa experience.",
+      img: "assets/img/brazil.jpeg",
+      title: "Brazil Visa",
+      desc: "Apply now for a smooth Brazil tourist visa experience.",
     },
     {
-      img: "assets/img/Morocco.jpeg",
-      title: "Morocco Visa",
-      desc: "Travel to Morocco hassle-free with our visa services.",
+      img: "assets/img/nigeria.jpeg",
+      title: "Nigeria eVisa",
+      desc: "Travel to Nigeria hassle-free with our visa services.",
     },
     {
-      img: "assets/img/Indonesia - Wikipedia.jpeg",
-      title: "Indonesia Visa",
-      desc: "Simplified Indonesia visa application process.",
+      img: "assets/img/schengen.jpeg",
+      title: "Schengen Visa",
+      desc: "Simplified Schengen visa application process.",
+    },
+     {
+      img: "assets/img/canada.jpg",
+      title: "Canada Visa",
+      desc: "Simplified Canada visa application process.",
+    },
+     {
+      img: "assets/img/usa.jpeg",
+      title: "US Visa",
+      desc: "Simplified USA visa application process.",
+    },
+     {
+      img: "assets/img/australia.jpeg",
+      title: "Australia Visa",
+      desc: "Simplified Australia visa application process.",
+    },
+     {
+      img: "assets/img/uk.jpg",
+      title: "UK Visa",
+      desc: "Simplified UK visa application process.",
+    },
+     {
+      img: "assets/img/turkey.jpeg",
+      title: "Turkey Visa",
+      desc: "Simplified Turkey visa application process.",
     },
   ];
 
