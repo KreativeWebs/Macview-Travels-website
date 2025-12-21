@@ -1,5 +1,5 @@
 import React, { useEffect, useRef } from "react";
-import { Link, useNavigate } from "react-router-dom";
+import { Link, useNavigate, useLocation } from "react-router-dom";
 import Signup from "../pages/Signup";
 import Login from "../pages/Login";
 import { useAuthStore } from "../store/authStore";
@@ -9,6 +9,7 @@ import Collapse from "bootstrap/js/dist/collapse";
 function Header() {
   const { user, logout } = useAuthStore();
   const navigate = useNavigate();
+  const location = useLocation();
   const navbarCollapseRef = useRef(null);
 
   // Get initials from firstName, fallback to email if firstName is missing
@@ -27,6 +28,11 @@ function Header() {
   };
 
   const initials = getInitials(user);
+
+  // Function to check if a link is active
+  const isActive = (path) => {
+    return location.pathname === path;
+  };
 
   const handleLogout = async () => {
     document.querySelectorAll(".modal-backdrop").forEach((el) => el.remove());
@@ -165,6 +171,7 @@ function Header() {
                   fontFamily: "'Raleway', sans-serif",
                   fontWeight: "500",
                   fontSize: "15px",
+                  color: isActive("/") ? "#f1741e" : "inherit",
                 }}
               >
                 <i className="fa fa-home pe-2"></i>
@@ -178,6 +185,7 @@ function Header() {
                   fontFamily: "'Raleway', sans-serif",
                   fontWeight: "500",
                   fontSize: "15px",
+                  color: isActive("/AboutUs") ? "#f1741e" : "inherit",
                 }}
               >
                 <i className="fa fa-users pe-4"></i>
@@ -191,6 +199,7 @@ function Header() {
                   fontFamily: "'Raleway', sans-serif",
                   fontWeight: "500",
                   fontSize: "15px",
+                  color: isActive("/Services") ? "#f1741e" : "inherit",
                 }}
               >
                 <i className="fa fa-briefcase pe-2"></i>
@@ -204,6 +213,7 @@ function Header() {
                   fontFamily: "'Raleway', sans-serif",
                   fontWeight: "500",
                   fontSize: "15px",
+                  color: isActive("/Packages") ? "#f1741e" : "inherit",
                 }}
               >
                 <i className="fa fa-suitcase pe-2"></i>
@@ -219,6 +229,7 @@ function Header() {
                   fontWeight: "500",
                   fontSize: "15px",
                   cursor: "pointer",
+                  color: isActive("/managebookings") ? "#f1741e" : "inherit",
                 }}
               >
                 <i className="fa fa-plane pe-2"></i>
@@ -232,6 +243,7 @@ function Header() {
                   fontFamily: "'Raleway', sans-serif",
                   fontWeight: "500",
                   fontSize: "15px",
+                  color: isActive("/Contact") ? "#f1741e" : "inherit",
                 }}
               >
                 <i className="fa fa-envelope pe-2"></i>
