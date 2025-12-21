@@ -1195,7 +1195,7 @@ router.get("/package-bookings", async (req, res) => {
       .sort({ createdAt: -1 })
       .limit(limit * 1)
       .skip((page - 1) * limit)
-      .select('_id fullName email whatsappNumber travelDate packageTitle packagePrice packageCurrency documents status payment.status payment.amount createdAt userId');
+      .select('_id fullName email whatsappNumber travelDate packageTitle packagePrice packageCurrency packageCity documents status payment.status payment.amount createdAt userId');
 
     const total = await PackageBooking.countDocuments(query);
 
@@ -1284,7 +1284,7 @@ router.get("/package-bookings/:id", async (req, res) => {
       return res.status(400).json({ message: "Invalid package booking ID" });
     }
 
-    const booking = await PackageBooking.findById(req.params.id).populate('packageId');
+    const booking = await PackageBooking.findById(req.params.id).populate('packageId', 'city title inclusions requirements');
 
     if (!booking) {
       return res.status(404).json({ message: "Package booking not found" });

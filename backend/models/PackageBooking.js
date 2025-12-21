@@ -14,10 +14,11 @@ const packageBookingSchema = new mongoose.Schema({
   email: { type: String },
   whatsappNumber: { type: String, required: true },
   travelDate: { type: Date, required: true },
-  packageId: { type: mongoose.Schema.Types.ObjectId, ref: 'Package', required: true },
+  packageId: { type: mongoose.Schema.Types.ObjectId, ref: 'Package' },
   packageTitle: { type: String, required: true },
   packagePrice: { type: Number, required: true },
   packageCurrency: { type: String, required: true },
+  packageCity: { type: String, required: true },
   documents: [docSchema],
   payment: {
     status: { type: String, enum: ["pending","paid","failed"], default: "pending" },

@@ -21,25 +21,71 @@ function PackageConfirmation() {
   const [isConverting, setIsConverting] = useState(false);
 
   useEffect(() => {
+    let isMounted = true;
+
     const convertCurrency = async () => {
-      if (packageData.currency === "USD") {
+      if (packageData.currency === "USD" && isMounted) {
         setIsConverting(true);
         try {
-          const response = await axios.get(`${import.meta.env.VITE_API_URL}/packages/exchange-rate`);
-          const rate = response.data.rate;
-          const nairaAmount = Math.round((discountedPrice || packageData.price) * rate);
-          setConvertedAmount(nairaAmount);
+          // Check for cached exchange rate (valid for 24 hours to reduce API calls)
+          const cachedRate = localStorage.getItem('exchangeRate');
+          const cachedTime = localStorage.getItem('exchangeRateTime');
+          const now = Date.now();
+          const twentyFourHours = 24 * 60 * 60 * 1000; // 24 hours in milliseconds
+
+          let rate;
+          if (cachedRate && cachedTime && (now - parseInt(cachedTime)) < twentyFourHours) {
+            rate = parseFloat(cachedRate);
+            console.log('Using cached exchange rate:', rate);
+          } else {
+            console.log('Fetching new exchange rate from API');
+            try {
+              const response = await axios.get(`${import.meta.env.VITE_API_URL}/packages/exchange-rate`, {
+                timeout: 10000 // 10 second timeout
+              });
+              rate = response.data.rate;
+              // Cache the rate for 24 hours
+              localStorage.setItem('exchangeRate', rate.toString());
+              localStorage.setItem('exchangeRateTime', now.toString());
+              console.log('Cached new exchange rate:', rate);
+            } catch (apiError) {
+              console.error("API call failed, using fallback rate:", apiError);
+              // Use cached rate if available, otherwise use fallback
+              if (cachedRate) {
+                rate = parseFloat(cachedRate);
+                console.log('Using old cached rate as fallback:', rate);
+              } else {
+                throw new Error('No cached rate available');
+              }
+            }
+          }
+
+          if (isMounted) {
+            const nairaAmount = Math.round((discountedPrice || packageData.price) * rate);
+            setConvertedAmount(nairaAmount);
+          }
         } catch (error) {
-          console.error("Error fetching exchange rate:", error);
-          // Fallback to original price if conversion fails
-          setConvertedAmount(discountedPrice || packageData.price);
+          console.error("Error in currency conversion:", error);
+          // Use a fallback rate if all else fails (approximate USD to NGN rate)
+          if (isMounted) {
+            const fallbackRate = 1500; // Approximate fallback rate
+            console.log('Using hardcoded fallback exchange rate:', fallbackRate);
+            const nairaAmount = Math.round((discountedPrice || packageData.price) * fallbackRate);
+            setConvertedAmount(nairaAmount);
+          }
         } finally {
-          setIsConverting(false);
+          if (isMounted) {
+            setIsConverting(false);
+          }
         }
       }
     };
 
     convertCurrency();
+
+    return () => {
+      isMounted = false;
+    };
   }, [packageData.currency, packageData.price, discountedPrice]);
 
   const handlePaymentSuccess = async (paymentRef) => {
