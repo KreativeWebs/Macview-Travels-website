@@ -1,78 +1,8 @@
-import { useState } from "react";
 import { useNavigate } from "react-router-dom";
-import { toast } from "react-toastify";
+
 
 function AirportTransfer() {
   const navigate = useNavigate();
-
-  const [formData, setFormData] = useState({
-    fullName: "",
-    email: "",
-    phoneNumber: "",
-    nationality: "",
-    dob: "",
-    gender: "",
-    highestEducation: "",
-    fieldOfStudy: "",
-    preferredCountry: "",
-    intake: "",
-    studyLevel: "",
-    budgetRange: "",
-    englishTest: "",
-    passportStatus: "",
-    notes: "",
-  });
-
-  const handleInputChange = (e) => {
-    const { name, value } = e.target;
-    setFormData((prev) => ({ ...prev, [name]: value }));
-  };
-
-  const handleSubmit = async (e) => {
-    e.preventDefault();
-
-    const payload = {
-      ...formData,
-    };
-
-    try {
-      const response = await fetch(
-        `${import.meta.env.VITE_API_URL}/study-abroad`,
-        {
-          method: "POST",
-          headers: { "Content-Type": "application/json" },
-          body: JSON.stringify(payload),
-        }
-      );
-
-      if (!response.ok) throw new Error("Failed to submit request");
-
-      navigate("/success", {
-        state: { name: formData.fullName },
-      });
-
-      setFormData({
-        fullName: "",
-        email: "",
-        phoneNumber: "",
-        nationality: "",
-        dob: "",
-        gender: "",
-        highestEducation: "",
-        fieldOfStudy: "",
-        preferredCountry: "",
-        intake: "",
-        studyLevel: "",
-        budgetRange: "",
-        englishTest: "",
-        passportStatus: "",
-        notes: "",
-      });
-    } catch (err) {
-      console.error(err);
-      toast.error("Error submitting form. Please try again.");
-    }
-  };
 
   return (
     <div className="container-xxl" style={{ paddingTop: "150px" }}>
@@ -82,7 +12,7 @@ function AirportTransfer() {
             style={{
               height: "400px",
               width: "100%",
-              backgroundImage: `url('assets/img/airporttransfer.jpg')`,
+              backgroundImage: `url('assets/img/airportpickup.jpg')`,
               backgroundSize: "cover",
               backgroundPosition: "center",
               position: "relative",

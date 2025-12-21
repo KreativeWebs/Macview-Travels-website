@@ -90,7 +90,85 @@ function Contact() {
             {/* LEFT INFO COLUMN — UNCHANGED */}
             <div className="col-lg-4 col-md-6 wow fadeInUp" data-wow-delay="0.1s">
               <h5 style={{ fontFamily: "Raleway" }}>Get In Touch</h5>
-              {/* content unchanged */}
+              <p className="mb-4" style={{ fontFamily: "Raleway" }}>
+                Ready to plan your next adventure? Reach out to us for personalized travel solutions.
+              </p>
+              <div className="d-flex align-items-center mb-3">
+                <div
+                  className="d-flex align-items-center justify-content-center flex-shrink-0 bg-primary"
+                  style={{
+                    width: 50,
+                    height: 50,
+                    borderRadius: "50%",
+                    marginRight: 15,
+                  }}
+                >
+                  <i className="fa fa-map-marker-alt text-white"></i>
+                </div>
+                <div className="ms-3">
+                  <h5 className="text-primary" style={{ fontFamily: "Raleway" }}>Head Office</h5>
+                  <p className="mb-0" style={{ fontFamily: "Raleway" }}>
+                   Suite 436, Ikeja Plaza, Lagos, Nigeria
+                  </p>
+                </div>
+              </div>
+              <div className="d-flex align-items-center mb-3">
+                <div
+                  className="d-flex align-items-center justify-content-center flex-shrink-0 bg-primary"
+                  style={{
+                    width: 50,
+                    height: 50,
+                    borderRadius: "50%",
+                    marginRight: 15,
+                  }}
+                >
+                  <i className="fa fa-map-marker-alt text-white"></i>
+                </div>
+                <div className="ms-3">
+                  <h5 className="text-primary" style={{ fontFamily: "Raleway" }}>Branch Office</h5>
+                  <p className="mb-0" style={{ fontFamily: "Raleway" }}>
+                   Suite K39, Ikota Plaza, Lekki Lagos, Nigeria
+                  </p>
+                </div>
+              </div>
+              <div className="d-flex align-items-center mb-3">
+                <div
+                  className="d-flex align-items-center justify-content-center flex-shrink-0 bg-primary"
+                  style={{
+                    width: 50,
+                    height: 50,
+                    borderRadius: "50%",
+                    marginRight: 15,
+                  }}
+                >
+                  <i className="fa fa-phone-alt text-white"></i>
+                </div>
+                <div className="ms-3">
+                  <h5 className="text-primary" style={{ fontFamily: "Raleway" }}>Phone Number</h5>
+                  <p className="mb-0" style={{ fontFamily: "Raleway" }}>
+                    +234 911 011 1120, +234 816 905 6956
+                  </p>
+                </div>
+              </div>
+              <div className="d-flex align-items-center">
+                <div
+                  className="d-flex align-items-center justify-content-center flex-shrink-0 bg-primary"
+                  style={{
+                    width: 50,
+                    height: 50,
+                    borderRadius: "50%",
+                    marginRight: 15,
+                  }}
+                >
+                  <i className="fa fa-envelope-open text-white"></i>
+                </div>
+                <div className="ms-3">
+                  <h5 className="text-primary" style={{ fontFamily: "Raleway" }}>Email</h5>
+                  <p className="mb-0" style={{ fontFamily: "Raleway" }}>
+                    info@macviewtravel.com
+                  </p>
+                </div>
+              </div>
             </div>
 
             {/* MAP — UNCHANGED */}
