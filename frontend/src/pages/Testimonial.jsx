@@ -2,29 +2,29 @@ import React from "react";
 
 const testimonials = [
   {
-    img: "assets/img/testimonial-1.jpg",
-    name: "Sarah Johnson",
-    location: "London, UK",
-    text: "Macview Travels made our honeymoon in Bali absolutely perfect. Every detail was taken care of, and the guides were fantastic!",
+    img: "assets/img/mrnollywood.jpg",
+    name: "Mr David Nollywood",
+    location: "Lagos, Nigeria",
+    text: "Macview Travels services is No 1. Honestly I appreciate you for your honesty",
   },
-  {
-    img: "assets/img/testimonial-2.jpg",
-    name: "Rajesh Patel",
-    location: "Mumbai, India",
-    text: "Our family trip to Australia was unforgettable. The itinerary was well-planned and the service was top-notch.",
-  },
-  {
-    img: "assets/img/testimonial-4.jpg",
-    name: "Linda Chen",
-    location: "Singapore",
-    text: "Highly recommend Macview Travels! They helped us organize a corporate retreat in Malaysia and everything went smoothly.",
-  },
-  {
-    img: "assets/img/testimonial-3.jpg",
-    name: "Carlos Rivera",
-    location: "Mexico City, Mexico",
-    text: "The adventure tour in Indonesia was thrilling! Great guides, amazing locations, and excellent value.",
-  },
+  // {
+  //   img: "assets/img/testimonial-2.jpg",
+  //   name: "Rajesh Patel",
+  //   location: "Mumbai, India",
+  //   text: "Our family trip to Australia was unforgettable. The itinerary was well-planned and the service was top-notch.",
+  // },
+  // {
+  //   img: "assets/img/testimonial-4.jpg",
+  //   name: "Linda Chen",
+  //   location: "Singapore",
+  //   text: "Highly recommend Macview Travels! They helped us organize a corporate retreat in Malaysia and everything went smoothly.",
+  // },
+  // {
+  //   img: "assets/img/testimonial-3.jpg",
+  //   name: "Carlos Rivera",
+  //   location: "Mexico City, Mexico",
+  //   text: "The adventure tour in Indonesia was thrilling! Great guides, amazing locations, and excellent value.",
+  // },
 ];
 
 function Testimonial() {
