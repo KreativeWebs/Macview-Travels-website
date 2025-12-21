@@ -247,7 +247,7 @@ export default function PackageBookings() {
                         </div>
                       </td>
                       <td>{formatWhatsApp(b.whatsappNumber)}</td>
-                      <td>{b.packageId?.city || 'N/A'}</td>
+                      <td>{b.packageCity || 'N/A'}</td>
                       <td>
                         <span className={`badge ${getStatusBadgeClass(b.status)}`}>{b.status}</span>
                       </td>
@@ -309,8 +309,8 @@ export default function PackageBookings() {
       <div className="col-12 col-lg-4">
         <div className="bg-white p-3 rounded shadow-sm">
           <h5 className="fw-semibold mb-3">Details</h5>
-          {selected && selected.packageId?.title && (
-            <h6 className="fw-bold mb-3">{selected.packageId.title}</h6>
+          {selected && selected.packageTitle && (
+            <h6 className="fw-bold mb-3">{selected.packageTitle}</h6>
           )}
 
           {selected ? (
