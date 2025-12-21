@@ -1,8 +1,13 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { Container, Form, Button, Alert, Card } from "react-bootstrap";
+import { useParams, useNavigate } from "react-router-dom";
+import { toast } from "react-toastify";
 import userAxios from "../../api/userAxios";
 
 function AddNewFlashSale() {
+  const { id } = useParams();
+  const navigate = useNavigate();
+  const [isEdit, setIsEdit] = useState(false);
   const [formData, setFormData] = useState({
     backgroundImage: "",
     price: "",
@@ -14,6 +19,35 @@ function AddNewFlashSale() {
   });
   const [loading, setLoading] = useState(false);
   const [message, setMessage] = useState("");
+
+  useEffect(() => {
+    if (id) {
+      setIsEdit(true);
+      fetchFlashSale();
+    }
+  }, [id]);
+
+  const fetchFlashSale = async () => {
+    try {
+      setLoading(true);
+      const response = await userAxios.get(`/admin/flash-sales/${id}`);
+      const sale = response.data.flashSale;
+      setFormData({
+        backgroundImage: null, // Keep null for file input
+        price: sale.price,
+        destinationCity: sale.destinationCity,
+        departureCity: sale.departureCity,
+        dateValidFrom: sale.dateValidFrom ? new Date(sale.dateValidFrom).toISOString().split('T')[0] : "",
+        dateValid: sale.dateValid ? new Date(sale.dateValid).toISOString().split('T')[0] : "",
+        airline: sale.airline,
+      });
+    } catch (error) {
+      console.error("Error fetching flash sale:", error);
+      toast.error("Failed to fetch flash sale details");
+    } finally {
+      setLoading(false);
+    }
+  };
 
   const handleInputChange = (e) => {
     const { name, value } = e.target;
@@ -41,24 +75,38 @@ function AddNewFlashSale() {
     }
 
     try {
-      const response = await userAxios.post("/admin/flash-sales", data, {
-        headers: {
-          "Content-Type": "multipart/form-data",
-        },
-      });
-      setMessage("Flash sale created successfully!");
-      setFormData({
-        backgroundImage: null,
-        price: "",
-        destinationCity: "",
-        departureCity: "",
-        dateValidFrom: "",
-        dateValid: "",
-        airline: "",
-      });
+      if (isEdit && id) {
+        await userAxios.put(`/admin/flash-sales/${id}`, data, {
+          headers: {
+            "Content-Type": "multipart/form-data",
+          },
+        });
+        toast.success("Flash sale updated successfully!");
+        navigate("/admin/flash-sales-bookings");
+      } else {
+        await userAxios.post("/admin/flash-sales", data, {
+          headers: {
+            "Content-Type": "multipart/form-data",
+          },
+        });
+        setMessage("Flash sale created successfully!");
+        setFormData({
+          backgroundImage: null,
+          price: "",
+          destinationCity: "",
+          departureCity: "",
+          dateValidFrom: "",
+          dateValid: "",
+          airline: "",
+        });
+      }
     } catch (error) {
-      console.error("Error creating flash sale:", error);
-      setMessage("Error creating flash sale. Please try again.");
+      console.error("Error saving flash sale:", error);
+      if (isEdit) {
+        toast.error("Failed to update flash sale");
+      } else {
+        setMessage("Error creating flash sale. Please try again.");
+      }
     } finally {
       setLoading(false);
     }
@@ -68,7 +116,7 @@ function AddNewFlashSale() {
     <Container className="py-5">
       <Card>
         <Card.Header>
-          <h2>Add New Flash Sale</h2>
+          <h2>{isEdit ? "Edit Flash Sale" : "Add New Flash Sale"}</h2>
         </Card.Header>
         <Card.Body>
           {message && <Alert variant={message.includes("successfully") ? "success" : "danger"}>{message}</Alert>}
@@ -79,7 +127,7 @@ function AddNewFlashSale() {
                 type="file"
                 accept="image/*"
                 onChange={handleFileChange}
-                required
+                required={!isEdit}
               />
             </Form.Group>
             <Form.Group className="mb-3">
@@ -149,7 +197,7 @@ function AddNewFlashSale() {
               />
             </Form.Group>
             <Button type="submit" variant="primary" disabled={loading}>
-              {loading ? "Creating..." : "Create Flash Sale"}
+              {loading ? (isEdit ? "Updating..." : "Creating...") : (isEdit ? "Update Flash Sale" : "Create Flash Sale")}
             </Button>
           </Form>
         </Card.Body>

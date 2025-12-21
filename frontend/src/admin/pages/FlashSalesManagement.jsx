@@ -2,11 +2,14 @@ import React, { useState, useEffect } from "react";
 import { Container, Row, Col, Card, Button, Alert } from "react-bootstrap";
 import { Link } from "react-router-dom";
 import userAxios from "../../api/userAxios";
+import { toast } from "react-toastify";
 
 function FlashSalesManagement() {
   const [flashSales, setFlashSales] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState("");
+  const [showDeleteModal, setShowDeleteModal] = useState(false);
+  const [flashSaleToDelete, setFlashSaleToDelete] = useState(null);
 
   useEffect(() => {
     const fetchFlashSales = async () => {
@@ -24,31 +27,32 @@ function FlashSalesManagement() {
     fetchFlashSales();
   }, []);
 
-  const handleDelete = async (id) => {
-    if (!window.confirm("Are you sure you want to delete this flash sale?")) return;
+  const handleDelete = async () => {
+    if (!flashSaleToDelete) return;
 
     try {
-      await userAxios.delete(`/admin/flash-sales/${id}`);
-      setFlashSales(flashSales.filter((sale) => sale._id !== id));
+      await userAxios.delete(`/admin/flash-sales/${flashSaleToDelete._id}`);
+      toast.success("Flash sale deleted successfully");
+      setFlashSales(flashSales.filter((sale) => sale._id !== flashSaleToDelete._id));
+      setShowDeleteModal(false);
+      setFlashSaleToDelete(null);
     } catch (err) {
       console.error("Error deleting flash sale:", err);
-      setError("Failed to delete flash sale");
+      toast.error("Failed to delete flash sale");
     }
   };
 
-  const toggleActive = async (id, currentStatus) => {
-    try {
-      await userAxios.patch(`/admin/flash-sales/${id}`, { isActive: !currentStatus });
-      setFlashSales(
-        flashSales.map((sale) =>
-          sale._id === id ? { ...sale, isActive: !currentStatus } : sale
-        )
-      );
-    } catch (err) {
-      console.error("Error updating flash sale:", err);
-      setError("Failed to update flash sale");
-    }
+  const openDeleteModal = (sale) => {
+    setFlashSaleToDelete(sale);
+    setShowDeleteModal(true);
   };
+
+  const closeDeleteModal = () => {
+    setShowDeleteModal(false);
+    setFlashSaleToDelete(null);
+  };
+
+
 
   if (loading) {
     return <Container className="py-5 text-center"><div>Loading...</div></Container>;
@@ -86,14 +90,14 @@ function FlashSalesManagement() {
                     Valid Until: {new Date(sale.dateValid).toLocaleDateString()}<br />
                     Status: {sale.isActive ? "Active" : "Inactive"}
                   </Card.Text>
-                  <Button
-                    variant={sale.isActive ? "warning" : "success"}
-                    onClick={() => toggleActive(sale._id, sale.isActive)}
-                    className="me-2"
+                  <Link
+                    to={`/admin/edit-flash-sale/${sale._id}`}
+                    className="btn btn-outline-secondary me-2"
+                    title="Edit"
                   >
-                    {sale.isActive ? "Deactivate" : "Activate"}
-                  </Button>
-                  <Button variant="danger" onClick={() => handleDelete(sale._id)}>
+                  Update
+                  </Link>
+                  <Button variant="danger" onClick={() => openDeleteModal(sale)}>
                     Delete
                   </Button>
                 </Card.Body>
@@ -101,6 +105,32 @@ function FlashSalesManagement() {
             </Col>
           ))}
         </Row>
+      )}
+
+      {/* Delete Confirmation Modal */}
+      {showDeleteModal && (
+        <div className="modal show d-block" tabIndex="-1" style={{ backgroundColor: 'rgba(0,0,0,0.5)' }}>
+          <div className="modal-dialog">
+            <div className="modal-content">
+              <div className="modal-header">
+                <h5 className="modal-title">Confirm Delete</h5>
+                <button type="button" className="btn-close" onClick={closeDeleteModal}></button>
+              </div>
+              <div className="modal-body">
+                <p>Are you sure you want to delete the flash sale for <strong>{flashSaleToDelete?.destinationCity}</strong>?</p>
+                <p className="text-danger small">This action cannot be undone.</p>
+              </div>
+              <div className="modal-footer">
+                <button type="button" className="btn btn-secondary" onClick={closeDeleteModal}>
+                  Cancel
+                </button>
+                <button type="button" className="btn btn-danger" onClick={handleDelete}>
+                  Delete
+                </button>
+              </div>
+            </div>
+          </div>
+        </div>
       )}
     </Container>
   );

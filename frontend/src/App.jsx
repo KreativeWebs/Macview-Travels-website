@@ -183,6 +183,7 @@ export default function App() {
             element={<AdminNewsletterSubscribers />}
           />
           <Route path="add-flash-sale" element={<AddNewFlashSale />} />
+          <Route path="edit-flash-sale/:id" element={<AddNewFlashSale />} />
           <Route
             path="flash-sales-bookings"
             element={<FlashSalesManagement />}
