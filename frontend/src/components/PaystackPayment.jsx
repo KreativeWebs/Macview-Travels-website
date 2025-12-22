@@ -6,6 +6,7 @@ export default function PaystackPayment({
   amount,
   fullName,
   onSuccess,
+  buttonText = "Pay Now",
 }) {
   const publicKey = import.meta.env.VITE_PAYSTACK_PUBLIC_KEY;
 
@@ -22,15 +23,54 @@ export default function PaystackPayment({
     );
   }
 
+  // Validate amount
+  if (!amount || amount <= 0 || !Number.isInteger(amount)) {
+    console.error("Invalid amount for Paystack:", amount);
+    return (
+      <p className="text-danger mt-3">
+        Invalid payment amount.
+      </p>
+    );
+  }
+
+  // Validate email format
+  const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+  if (!emailRegex.test(email)) {
+    console.error("Invalid email format for Paystack:", email);
+    return (
+      <p className="text-danger mt-3">
+        Invalid email address for payment.
+      </p>
+    );
+  }
+
   const componentProps = {
     email,
-    amount: amount * 100, // Paystack requires kobo
-    metadata: { fullName },
+    amount: Math.round(amount * 100), // Paystack requires kobo, ensure it's an integer
+    currency: 'NGN', // Explicitly set currency
+    metadata: {
+      fullName,
+      custom_fields: [
+        {
+          display_name: "Full Name",
+          variable_name: "full_name",
+          value: fullName
+        }
+      ]
+    },
     publicKey,
-    text: "Pay Visa Fee",
+    text: buttonText,
     onSuccess: (ref) => onSuccess(ref),
     onClose: () => alert("Transaction was not completed"),
   };
+
+  // Debug logging
+  console.log("Paystack component props:", {
+    email,
+    amount: amount * 100,
+    fullName,
+    publicKey: publicKey ? "Present" : "Missing"
+  });
 
   return (
     <PaystackButton
