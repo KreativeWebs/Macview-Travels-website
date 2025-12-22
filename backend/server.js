@@ -38,7 +38,8 @@ const PORT = process.env.PORT || 5000;
 const allowedOrigins = [
   "http://localhost:5173",
   "http://localhost:5174",
-  "http://localhost:5175"
+  "http://localhost:5175",
+  "https://healthcheck.railway.app"
 ];
 
 app.use(cors({
@@ -130,6 +131,9 @@ const apiLimiter = rateLimit({
   legacyHeaders: false,
 });
 
+
+app.get("/health", (req, res) => res.status(200).json({ status: "ok" }));
+
 app.use("/", generalLimiter);
 app.use("/api/auth", authLimiter);
 app.use("/api/", apiLimiter);
@@ -137,7 +141,6 @@ app.use("/api/", apiLimiter);
 // -----------------------------
 // Routes
 // -----------------------------
-app.get("/health", (req, res) => res.send("ok"));
 app.use("/api", authRouter);
 app.use("/api/flight-bookings", flightBookingRoutes);
 app.use("/api/hotel-bookings", hotelRoutes);
