@@ -1,6 +1,6 @@
 import express from "express";
 import Newsletter from "../models/Newsletter.js";
-import { sendWelcomeNewsletterEmail } from "../backend/utils/sendEmail.js";
+import { sendWelcomeNewsletterEmail } from "../utils/sendEmail.js";
 
 const router = express.Router();
 

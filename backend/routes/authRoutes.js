@@ -15,7 +15,7 @@ import {
   sendPasswordResetEmail,
   sendWelcomeEmail,
   sendContactEmail,
-} from "../backend/utils/sendEmail.js";
+} from "../utils/sendEmail.js";
 
 const router = express.Router();
 
