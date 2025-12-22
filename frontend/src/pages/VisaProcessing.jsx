@@ -43,7 +43,7 @@ function VisaProcessing() {
     }));
 
     try {
-      const res = await fetch(`${import.meta.env.VITE_API_BASE_URL}/visa/upload-document`, {
+      const res = await fetch(`${import.meta.env.VITE_API_BASE_URL}/api/visa/upload-document`, {
         method: "POST",
         body: form,
       });
@@ -125,7 +125,7 @@ function VisaProcessing() {
 
     const fetchVisaData = async () => {
       try {
-        const res = await fetch(`${import.meta.env.VITE_API_BASE_URL}/visa/requirements/${selectedCountry}`);
+        const res = await fetch(`${import.meta.env.VITE_API_BASE_URL}/api/visa/requirements/${selectedCountry}`);
         if (!res.ok) throw new Error("Failed to fetch visa requirements");
 
         const data = await res.json();
@@ -155,7 +155,7 @@ function VisaProcessing() {
   // Fetch list of available countries so admin-added entries appear immediately
   const fetchCountries = async () => {
     try {
-      const res = await fetch(`${import.meta.env.VITE_API_BASE_URL}/visa/requirements`);
+      const res = await fetch(`${import.meta.env.VITE_API_BASE_URL}/api/visa/requirements`);
       if (!res.ok) throw new Error("Failed to fetch visa countries");
       const data = await res.json();
       setAvailableCountries(Array.isArray(data.requirements) ? data.requirements : []);
