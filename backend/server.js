@@ -39,7 +39,8 @@ const allowedOrigins = [
   "http://localhost:5173",
   "http://localhost:5174",
   "http://localhost:5175",
-  "https://healthcheck.railway.app"
+  "https://healthcheck.railway.app",
+  "https://www.macviewtravel.com"
 ];
 
 app.use(cors({

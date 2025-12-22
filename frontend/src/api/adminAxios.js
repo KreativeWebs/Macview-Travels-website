@@ -1,7 +1,9 @@
 import axios from "axios";
 
+const BASE_URL = import.meta.env.VITE_API_BASE_URL;
+
 const adminAxios = axios.create({
-  baseURL: "VITE_API_BASE_URL/api/admin", // backend admin route base
+  baseURL: `${BASE_URL}/api/admin`, // backend admin route base
 });
 
 // Auto attach token for every request
@@ -28,7 +30,7 @@ adminAxios.interceptors.response.use(
 
       try {
         // Attempt to refresh the token
-        const refreshResponse = await axios.post(`${fullBaseURL}/api/refresh`, {}, { withCredentials: true });
+        const refreshResponse = await axios.post(`${BASE_URL}/api/refresh`, {}, { withCredentials: true });
 
         const newToken = refreshResponse.data.accessToken;
 
