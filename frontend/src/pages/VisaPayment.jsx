@@ -173,8 +173,7 @@ function VisaPayment() {
           </button>
 
           <PaystackPayment
-            amount={fee} 
-            email="ishakad041@example.com"
+            amount={fee}
             fullName={formData.fullName}
             onSuccess={handlePaymentSuccess}
           />
