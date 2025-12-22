@@ -1,16 +1,3 @@
-- [ ] Modify Newsletter.jsx to check authentication before subscription
-- [ ] Add unsubscribe route in newsletterRoutes.js
-- [ ] Update sendWelcomeNewsletterEmail to include unsubscribe_url
-- [ ] Create Unsubscribe.jsx page
-- [ ] Add route for Unsubscribe in App.jsx
-- [ ] Enhance User model with validation and password strength
-- [ ] Add input validation to all routes using express-validator
-- [ ] Implement comprehensive logging with winston
-- [ ] Add security headers with helmet
-- [ ] Improve rate limiting with more granular rules
-- [ ] Add monitoring with prometheus
-- [ ] Fix hardcoded URLs in frontend
-- [ ] Add file size limits in multer
-- [ ] Implement alerting (basic console alerts)
-- [ ] Update dependencies and ensure no vulnerabilities
-- [ ] Test all changes thoroughly
+- [x] Update frontend/src/api/packages.js to use const BASE_URL = import.meta.env.VITE_API_BASE_URL; and adjust axios calls
+- [x] Update frontend/src/api/userAxios.js to use const BASE_URL = import.meta.env.VITE_API_BASE_URL; and adjust axios calls
+- [x] Update frontend/src/api/adminAxios.js to use const BASE_URL = import.meta.env.VITE_API_BASE_URL; and adjust axios calls

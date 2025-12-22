@@ -2,10 +2,10 @@
 import axios from "axios";
 import { useAuthStore } from "../store/authStore";
 
-const API_BASE_URL = "VITE_API_BASE_URL/api";
+const BASE_URL = import.meta.env.VITE_API_BASE_URL;
 
 const userAxios = axios.create({
-  baseURL: API_BASE_URL,
+  baseURL: `${BASE_URL}/api`,
   withCredentials: true, // To send cookies like refreshToken
 });
 
