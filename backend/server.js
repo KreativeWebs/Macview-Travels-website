@@ -37,8 +37,6 @@ const PORT = process.env.PORT || 5000;
 // -----------------------------
 const allowedOrigins = [
   "http://localhost:5173",
-  "http://localhost:5174",
-  "http://localhost:5175",
   "https://healthcheck.railway.app",
   "https://www.macviewtravel.com"
 ];
@@ -53,6 +51,11 @@ app.use(cors({
   },
   credentials: true
 }));
+
+app.use((req, res, next) => {
+  res.setHeader("Cross-Origin-Opener-Policy", "same-origin-allow-popups");
+  next();
+});
 
 // -----------------------------
 // Security Middleware (Helmet)
