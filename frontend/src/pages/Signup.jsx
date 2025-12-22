@@ -8,6 +8,8 @@ import Modal from "bootstrap/js/dist/modal";
 import PasswordStrength from "../components/PasswordStrength";
 import { toast } from "react-toastify";
 
+const BASE_URL = import.meta.env.VITE_API_BASE_URL;
+
 function Signup() {
   const [step, setStep] = useState(1);
   const [showPassword, setShowPassword] = useState(false);
@@ -109,7 +111,7 @@ function Signup() {
     const googleFirstName = fullName.split(" ")[0];
     const idToken = await result.user.getIdToken();
 
-    const response = await fetch("VITE_API_BASE_URL/api/google-login", {
+    const response = await fetch(`${BASE_URL}/api/google-login`, {
       method: "POST",
       headers: { "Content-Type": "application/json" },
       credentials: "include",

@@ -4,7 +4,7 @@ import axios from "axios";
 import { useAuthStore } from "../store/authStore";
 import Modal from "bootstrap/js/dist/modal";
 
-const API_BASE_URL = "VITE_API_BASE_URL/api";
+const BASE_URL = import.meta.env.VITE_API_BASE_URL;
 
 function Newsletter() {
   const { user } = useAuthStore();
@@ -30,7 +30,7 @@ function Newsletter() {
     setLoading(true);
     try {
       const response = await axios.post(
-        `${API_BASE_URL}/newsletter/subscribe`,
+        `${BASE_URL}/api/newsletter/subscribe`,
         { email }
       );
       toast.success(response.data.message || "Subscribed successfully!");
