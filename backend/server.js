@@ -137,7 +137,7 @@ app.use("/api/", apiLimiter);
 // -----------------------------
 // Routes
 // -----------------------------
-app.get("/health", (req, res) => res.status(200).json({ status: "ok" }));
+app.get("/health", (req, res) => res.send("ok"));
 app.use("/api", authRouter);
 app.use("/api/flight-bookings", flightBookingRoutes);
 app.use("/api/hotel-bookings", hotelRoutes);
