@@ -76,7 +76,7 @@ function VisaPayment() {
         },
       };
 
-      await axios.post(`${import.meta.env.VITE_API_BASE_URL}/visa/apply`, payload);
+      await axios.post(`${import.meta.env.VITE_API_BASE_URL}/api/visa/apply`, payload);
 
       navigate("/visa-success", {
         state: { name: formData.fullName, country: selectedCountry },
