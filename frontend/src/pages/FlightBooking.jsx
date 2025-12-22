@@ -68,7 +68,7 @@ function FlightBooking() {
 
     try {
       const res = await fetch(
-        `${import.meta.env.VITE_API_BASE_URL}/flight-bookings/upload-document`,
+        `${import.meta.env.VITE_API_BASE_URL}/api/flight-bookings/upload-document`,
         {
           method: "POST",
           body: form,
