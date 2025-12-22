@@ -176,6 +176,7 @@ function VisaPayment() {
             amount={fee}
             fullName={formData.fullName}
             onSuccess={handlePaymentSuccess}
+            buttonText="Pay Visa Fee"
           />
         </div>
       </div>

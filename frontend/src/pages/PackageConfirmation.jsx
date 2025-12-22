@@ -257,6 +257,7 @@ function PackageConfirmation() {
           ) : (
             <PaystackPayment
               amount={convertedAmount}
+              buttonText="Pay for Package"
               email={formData.email}
               fullName={formData.fullName}
               onSuccess={handlePaymentSuccess}
