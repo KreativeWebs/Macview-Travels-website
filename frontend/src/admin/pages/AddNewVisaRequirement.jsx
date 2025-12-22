@@ -171,7 +171,7 @@ export default function AddNewVisaRequirement() {
         console.error("Error loading visa requirement (admin):", err);
         // Try fallback to public endpoint (no auth required) so form can still be populated
         try {
-          const publicRes = await fetch(`${import.meta.env.VITE_API_URL}/visa/requirements`);
+          const publicRes = await fetch(`${import.meta.env.VITE_API_BASE_URL}/visa/requirements`);
           if (publicRes.ok) {
             const publicData = await publicRes.json();
             const found = Array.isArray(publicData.requirements) ? publicData.requirements.find(r => String(r._id) === String(id)) : null;

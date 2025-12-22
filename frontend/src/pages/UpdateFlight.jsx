@@ -49,7 +49,7 @@ function UpdateFlight() {
   useEffect(() => {
     const fetchBooking = async () => {
       try {
-        const response = await fetch(`${import.meta.env.VITE_API_URL}/user/flight-bookings/${id}`, {
+        const response = await fetch(`${import.meta.env.VITE_API_BASE_URL}/user/flight-bookings/${id}`, {
           headers: { Authorization: `Bearer ${accessToken}` },
         });
         if (!response.ok) throw new Error("Failed to fetch booking");
@@ -132,7 +132,7 @@ function UpdateFlight() {
     };
 
     try {
-      const response = await fetch(`${import.meta.env.VITE_API_URL}/user/flight-bookings/${id}`, {
+      const response = await fetch(`${import.meta.env.VITE_API_BASE_URL}/user/flight-bookings/${id}`, {
         method: "PUT",
         headers: {
           "Content-Type": "application/json",

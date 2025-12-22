@@ -4,7 +4,7 @@ import axios from "axios";
 import { useAuthStore } from "../store/authStore";
 import Modal from "bootstrap/js/dist/modal";
 
-const API_BASE_URL = "http://localhost:5000/api";
+const API_BASE_URL = "VITE_API_BASE_URL/api";
 
 function Newsletter() {
   const { user } = useAuthStore();

@@ -40,7 +40,7 @@ function PackageConfirmation() {
           } else {
             console.log('Fetching new exchange rate from API');
             try {
-              const response = await axios.get(`${import.meta.env.VITE_API_URL}/packages/exchange-rate`, {
+              const response = await axios.get(`${import.meta.env.VITE_API_BASE_URL}/packages/exchange-rate`, {
                 timeout: 10000 // 10 second timeout
               });
               rate = response.data.rate;
@@ -146,7 +146,7 @@ function PackageConfirmation() {
         discountedPrice: promoApplied ? discountedPrice : null,
       };
 
-      await axios.post(`${import.meta.env.VITE_API_URL}/packages/book`, payload);
+      await axios.post(`${import.meta.env.VITE_API_BASE_URL}/packages/book`, payload);
 
       navigate("/package-success", {
         state: { name: formData.fullName, packageTitle: packageData.title },

@@ -456,15 +456,15 @@ export function VisaDetails({ app, onStatusUpdate }) {
                   {doc.fileUrl.match(/\.(jpg|jpeg|png|gif|webp)$/i) ? (
                     <div className="text-center">
                       <img
-                        src={doc.fileUrl.startsWith('http') ? doc.fileUrl : `http://localhost:5000${doc.fileUrl}`}
+                        src={doc.fileUrl.startsWith('http') ? doc.fileUrl : `VITE_API_BASE_URL${doc.fileUrl}`}
                         alt={doc.label}
                         className="img-fluid rounded shadow-sm"
                         style={{ maxWidth: '100%', maxHeight: '300px', cursor: 'pointer' }}
-                        onClick={() => window.open(doc.fileUrl.startsWith('http') ? doc.fileUrl : `http://localhost:5000${doc.fileUrl}`, '_blank')}
+                        onClick={() => window.open(doc.fileUrl.startsWith('http') ? doc.fileUrl : `VITE_API_BASE_URL${doc.fileUrl}`, '_blank')}
                       />
                       <div className="mt-2 d-flex gap-2 justify-content-center">
                         <a
-                          href={doc.fileUrl.startsWith('http') ? doc.fileUrl : `http://localhost:5000${doc.fileUrl}`}
+                          href={doc.fileUrl.startsWith('http') ? doc.fileUrl : `VITE_API_BASE_URL${doc.fileUrl}`}
                           target="_blank"
                           rel="noopener noreferrer"
                           className="btn btn-sm btn-outline-primary"
@@ -472,7 +472,7 @@ export function VisaDetails({ app, onStatusUpdate }) {
                           View Full Size
                         </a>
                         <button
-                          onClick={() => handleDownload(doc.fileUrl.startsWith('http') ? doc.fileUrl : `http://localhost:5000${doc.fileUrl}`, doc.originalName || `${doc.label}.jpg`)}
+                          onClick={() => handleDownload(doc.fileUrl.startsWith('http') ? doc.fileUrl : `VITE_API_BASE_URL${doc.fileUrl}`, doc.originalName || `${doc.label}.jpg`)}
                           className="btn btn-sm btn-outline-success"
                         >
                           Download
@@ -483,7 +483,7 @@ export function VisaDetails({ app, onStatusUpdate }) {
                     <div>
                       <div className="d-flex gap-2 align-items-center">
                         <a
-                          href={doc.fileUrl.startsWith('http') ? doc.fileUrl : `http://localhost:5000${doc.fileUrl}`}
+                          href={doc.fileUrl.startsWith('http') ? doc.fileUrl : `VITE_API_BASE_URL${doc.fileUrl}`}
                           target="_blank"
                           rel="noopener noreferrer"
                           className="btn btn-sm btn-outline-primary"
@@ -491,7 +491,7 @@ export function VisaDetails({ app, onStatusUpdate }) {
                           View Document
                         </a>
                         <button
-                          onClick={() => handleDownload(doc.fileUrl.startsWith('http') ? doc.fileUrl : `http://localhost:5000${doc.fileUrl}`, doc.originalName || `${doc.label}.pdf`)}
+                          onClick={() => handleDownload(doc.fileUrl.startsWith('http') ? doc.fileUrl : `VITE_API_BASE_URL${doc.fileUrl}`, doc.originalName || `${doc.label}.pdf`)}
                           className="btn btn-sm btn-outline-success"
                         >
                           Download

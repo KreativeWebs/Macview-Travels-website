@@ -48,7 +48,7 @@ function UpdateHotel() {
   useEffect(() => {
     const fetchBooking = async () => {
       try {
-        const response = await fetch(`${import.meta.env.VITE_API_URL}/user/hotel-bookings/${id}`, {
+        const response = await fetch(`${import.meta.env.VITE_API_BASE_URL}/user/hotel-bookings/${id}`, {
           headers: { Authorization: `Bearer ${accessToken}` },
         });
         if (!response.ok) throw new Error("Failed to fetch booking");
@@ -223,7 +223,7 @@ function UpdateHotel() {
     };
 
     try {
-      const response = await fetch(`${import.meta.env.VITE_API_URL}/user/hotel-bookings/${id}`, {
+      const response = await fetch(`${import.meta.env.VITE_API_BASE_URL}/user/hotel-bookings/${id}`, {
         method: "PUT",
         headers: {
           "Content-Type": "application/json",

@@ -1,7 +1,7 @@
 import { create } from "zustand";
 import axios from "axios";
 
-const API_URL = "http://localhost:5000/api";
+const API_URL = "VITE_API_BASE_URL/api";
 
 // Allow cookies to be sent (Refresh Token is in cookie)
 axios.defaults.withCredentials = true;
