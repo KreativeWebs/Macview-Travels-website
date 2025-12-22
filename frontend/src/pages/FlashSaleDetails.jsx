@@ -60,7 +60,7 @@ function FlashSaleDetails() {
     }));
 
     try {
-      const res = await fetch(`${import.meta.env.VITE_API_URL}/flash-sales/upload-document`, {
+      const res = await fetch(`${import.meta.env.VITE_API_BASE_URL}/flash-sales/upload-document`, {
         method: "POST",
         body: form,
       });

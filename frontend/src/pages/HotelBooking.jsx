@@ -111,7 +111,7 @@ function HotelBooking() {
 
     try {
       const res = await fetch(
-        `${import.meta.env.VITE_API_URL}/hotel-bookings/upload-document`,
+        `${import.meta.env.VITE_API_BASE_URL}/hotel-bookings/upload-document`,
         {
           method: "POST",
           body: form,

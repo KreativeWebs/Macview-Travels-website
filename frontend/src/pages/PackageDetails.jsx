@@ -6,7 +6,7 @@ import { toast } from "react-toastify";
 import axios from "axios";
 import { countryCodes } from "../data/countryCodes";
 
-const API_BASE_URL = "http://localhost:5000/api";
+const API_BASE_URL = import.meta.env.VITE_API_BASE_URL + "/api";
 
 export default function PackageDetails() {
   const { id } = useParams();

@@ -38,7 +38,7 @@ function UpdateVisa() {
   useEffect(() => {
     const fetchApplication = async () => {
       try {
-        const response = await fetch(`${import.meta.env.VITE_API_URL}/user/visa-applications/${id}`, {
+        const response = await fetch(`${import.meta.env.VITE_API_BASE_URL}/user/visa-applications/${id}`, {
           headers: { Authorization: `Bearer ${accessToken}` },
         });
         if (!response.ok) throw new Error("Failed to fetch application");
@@ -67,7 +67,7 @@ function UpdateVisa() {
 
     const fetchVisaData = async () => {
       try {
-        const res = await fetch(`${import.meta.env.VITE_API_URL}/visa/requirements/${selectedCountry}`);
+        const res = await fetch(`${import.meta.env.VITE_API_BASE_URL}/visa/requirements/${selectedCountry}`);
         if (!res.ok) throw new Error("Failed to fetch visa requirements");
 
         const data = await res.json();
@@ -97,7 +97,7 @@ function UpdateVisa() {
   // Fetch list of available countries
   const fetchCountries = async () => {
     try {
-      const res = await fetch(`${import.meta.env.VITE_API_URL}/visa/requirements`);
+      const res = await fetch(`${import.meta.env.VITE_API_BASE_URL}/visa/requirements`);
       if (!res.ok) throw new Error("Failed to fetch visa countries");
       const data = await res.json();
       setAvailableCountries(Array.isArray(data.requirements) ? data.requirements : []);
@@ -128,7 +128,7 @@ function UpdateVisa() {
     }));
 
     try {
-      const res = await fetch(`${import.meta.env.VITE_API_URL}/visa/upload-document`, {
+      const res = await fetch(`${import.meta.env.VITE_API_BASE_URL}/visa/upload-document`, {
         method: "POST",
         body: form,
       });
@@ -228,7 +228,7 @@ function UpdateVisa() {
     };
 
     try {
-      const response = await fetch(`${import.meta.env.VITE_API_URL}/user/visa-applications/${id}`, {
+      const response = await fetch(`${import.meta.env.VITE_API_BASE_URL}/user/visa-applications/${id}`, {
         method: "PUT",
         headers: {
           "Content-Type": "application/json",

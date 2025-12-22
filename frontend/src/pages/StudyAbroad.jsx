@@ -37,7 +37,7 @@ function StudyAbroad() {
 
     try {
       const response = await fetch(
-        `${import.meta.env.VITE_API_URL}/study-abroad`,
+        `${import.meta.env.VITE_API_BASE_URL}/study-abroad`,
         {
           method: "POST",
           headers: { "Content-Type": "application/json" },

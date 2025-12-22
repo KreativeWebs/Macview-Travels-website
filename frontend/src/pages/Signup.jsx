@@ -109,7 +109,7 @@ function Signup() {
     const googleFirstName = fullName.split(" ")[0];
     const idToken = await result.user.getIdToken();
 
-    const response = await fetch("http://localhost:5000/api/google-login", {
+    const response = await fetch("VITE_API_BASE_URL/api/google-login", {
       method: "POST",
       headers: { "Content-Type": "application/json" },
       credentials: "include",
