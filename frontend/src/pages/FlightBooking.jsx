@@ -185,7 +185,7 @@ function FlightBooking() {
 
     try {
       const response = await fetch(
-        `${import.meta.env.VITE_API_BASE_URL}/flight-bookings`,
+        `${import.meta.env.VITE_API_BASE_URL}/api/flight-bookings`,
         {
           method: "POST",
           headers: { "Content-Type": "application/json" },
