@@ -3,7 +3,7 @@ import { useParams } from "react-router-dom";
 import { toast } from "react-toastify";
 import axios from "axios";
 
-const API_BASE_URL = "VITE_API_BASE_URL/api";
+const BASE_URL = import.meta.env.VITE_API_BASE_URL;
 
 function Unsubscribe() {
   const { email } = useParams();
@@ -18,7 +18,7 @@ function Unsubscribe() {
 
       try {
         const response = await axios.delete(
-          `${API_BASE_URL}/newsletter/unsubscribe/${email}`
+          `${BASE_URL}/api/newsletter/unsubscribe/${email}`
         );
         setMessage(response.data.message);
         toast.success("Unsubscribed successfully!");

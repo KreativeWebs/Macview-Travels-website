@@ -129,7 +129,7 @@ function Login() {
       const user = result.user;
       const idToken = await user.getIdToken();
 
-      const response = await fetch("VITE_API_BASE_URL/api/google-login", {
+      const response = await fetch(`${BASE_URL}/api/google-login`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         credentials: "include",

@@ -4,6 +4,8 @@ import { toast } from "react-toastify";
 import { useAuthStore } from "../store/authStore";
 import Modal from "bootstrap/js/dist/modal";
 
+const BASE_URL = import.meta.env.VITE_API_BASE_URL;
+
 function Contact() {
   const { user, accessToken } = useAuthStore();
 
@@ -38,7 +40,7 @@ function Contact() {
     setLoading(true);
 
     try {
-      const response = await fetch("VITE_API_BASE_URL/api/contact", {
+      const response = await fetch(`${BASE_URL}/api/contact`, {
         method: "POST",
         headers: {
           "Content-Type": "application/json",

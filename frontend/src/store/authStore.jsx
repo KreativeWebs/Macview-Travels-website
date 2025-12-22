@@ -2,7 +2,7 @@ import React from "react";
 import { create } from "zustand";
 import axios from "axios";
 
-const API_URL = "VITE_API_BASE_URL/api";
+const BASE_URL = import.meta.env.VITE_API_BASE_URL;
 
 // Allow cookies to be sent (Refresh Token is in cookie)
 axios.defaults.withCredentials = true;
@@ -19,7 +19,7 @@ export const useAuthStore = create((set, get) => ({
   signup: async (firstName, email, password) => {
     set({ isLoading: true, error: null });
     try {
-      const res = await axios.post(`${API_URL}/signup`, { firstName, email, password });
+      const res = await axios.post(`${BASE_URL}/api/signup`, { firstName, email, password });
 
       set({
         user: res.data.user,
@@ -44,7 +44,7 @@ export const useAuthStore = create((set, get) => ({
   login: async (email, password) => {
     set({ isLoading: true, error: null });
     try {
-      const res = await axios.post(`${API_URL}/login`, { email, password });
+      const res = await axios.post(`${BASE_URL}/api/login`, { email, password });
 
       set({
         user: res.data.user,
@@ -64,7 +64,7 @@ export const useAuthStore = create((set, get) => ({
 
   refreshAccessToken: async () => {
     try {
-      const res = await axios.post(`${API_URL}/refresh`);
+      const res = await axios.post(`${BASE_URL}/api/refresh`);
 
       set({ user: res.data.user, accessToken: res.data.accessToken });
       return res.data.accessToken;
@@ -88,7 +88,7 @@ export const useAuthStore = create((set, get) => ({
         }
       }
 
-      const res = await axios.get(`${API_URL}/fetchuser`, {
+      const res = await axios.get(`${BASE_URL}/api/fetchuser`, {
         headers: { Authorization: `Bearer ${token}` },
       });
 
@@ -115,7 +115,7 @@ export const useAuthStore = create((set, get) => ({
   adminLogout: async () => {
     set({ isLoading: true });
     try {
-      await axios.post(`${API_URL}/logout`);
+      await axios.post(`${BASE_URL}/api/logout`);
       // Clear admin token from localStorage
       localStorage.removeItem('adminToken');
       set({ user: null, accessToken: null, isLoading: false });
@@ -127,7 +127,7 @@ export const useAuthStore = create((set, get) => ({
   adminLogin: async (email, password) => {
     set({ isLoading: true, error: null });
     try {
-      const res = await axios.post(`${API_URL}/admin/login`, { email, password });
+      const res = await axios.post(`${BASE_URL}/api/admin/login`, { email, password });
 
       // Store token in localStorage for adminAxios
       localStorage.setItem('adminToken', res.data.accessToken);
