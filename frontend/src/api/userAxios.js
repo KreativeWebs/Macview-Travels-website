@@ -2,10 +2,11 @@
 import axios from "axios";
 import { useAuthStore } from "../store/authStore";
 
-const BASE_URL = import.meta.env.VITE_API_BASE_URL;
+const BASE_URL = import.meta.env.VITE_API_BASE_URL || "https://macview-travels-website-production.up.railway.app";
+const fullBaseURL = BASE_URL.startsWith('http') ? BASE_URL : `https://${BASE_URL}`;
 
 const userAxios = axios.create({
-  baseURL: `${BASE_URL}/api`,
+  baseURL: `${fullBaseURL}/api`,
   withCredentials: true, // To send cookies like refreshToken
 });
 
