@@ -52,16 +52,14 @@ app.use(cors({
   credentials: true
 }));
 
-app.use((req, res, next) => {
-  res.setHeader("Cross-Origin-Opener-Policy", "same-origin-allow-popups");
-  next();
-});
-
 // -----------------------------
 // Security Middleware (Helmet)
 // -----------------------------
 app.use(
   helmet({
+    crossOriginOpenerPolicy: {
+      policy: "same-origin-allow-popups",
+    },
     contentSecurityPolicy: {
       directives: {
         defaultSrc: ["'self'"],
@@ -75,22 +73,19 @@ app.use(
         scriptSrc: [
           "'self'",
           "https://js.paystack.co",
-          "https://www.paypal.com"
+          "https://www.paypal.com",
+          "https://accounts.google.com"
         ],
         imgSrc: ["'self'", "data:", "https:", "blob:"],
         connectSrc: [
           "'self'",
           "https://api.paystack.co",
+          "https://accounts.google.com",
           "ws:",
           "wss:"
         ],
       },
     },
-    hsts: {
-      maxAge: 31536000,
-      includeSubDomains: true,
-      preload: true
-    }
   })
 );
 
