@@ -1,3 +1,4 @@
+import React from "react";
 import HeroHeader from "./HeroHeader";
 
 function PrivacyPolicy() {

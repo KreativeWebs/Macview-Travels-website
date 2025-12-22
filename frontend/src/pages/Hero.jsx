@@ -1,3 +1,5 @@
+import React from "react";
+
 function Hero() {
   return (
     <div className="container-fluid bg-primary py-5 mb-5 hero-header">

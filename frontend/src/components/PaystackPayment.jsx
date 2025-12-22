@@ -1,3 +1,4 @@
+import React from "react";
 import { PaystackButton } from "react-paystack";
 import { useAuthStore } from "../store/authStore";
 

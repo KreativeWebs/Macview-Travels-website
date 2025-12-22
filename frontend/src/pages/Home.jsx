@@ -1,6 +1,6 @@
+import React from "react";
 import { useEffect } from "react";
 import "bootstrap/dist/css/bootstrap.min.css";
-
 import { Modal } from "bootstrap";
 import { useAuthStore } from "../store/authStore";
 import Hero from "./Hero";
