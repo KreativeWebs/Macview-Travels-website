@@ -1,7 +1,10 @@
 import axios from "axios";
 
+const baseURL = import.meta.env.VITE_API_BASE_URL || "https://macview-travels-website-production.up.railway.app";
+const fullBaseURL = baseURL.startsWith('http') ? baseURL : `https://${baseURL}`;
+
 const instance = axios.create({
-  baseURL: import.meta.env.VITE_API_BASE_URL || "https://macview-travels-website-production.up.railway.app",
+  baseURL: fullBaseURL,
 });
 
 export default instance;

@@ -28,7 +28,7 @@ adminAxios.interceptors.response.use(
 
       try {
         // Attempt to refresh the token
-        const refreshResponse = await axios.post(`${BASE_URL}/api/refresh`, {}, { withCredentials: true });
+        const refreshResponse = await axios.post(`${fullBaseURL}/api/refresh`, {}, { withCredentials: true });
 
         const newToken = refreshResponse.data.accessToken;
 

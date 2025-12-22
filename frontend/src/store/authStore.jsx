@@ -2,7 +2,8 @@ import React from "react";
 import { create } from "zustand";
 import axios from "axios";
 
-const BASE_URL = import.meta.env.VITE_API_BASE_URL;
+const BASE_URL = import.meta.env.VITE_API_BASE_URL || "https://macview-travels-website-production.up.railway.app";
+const fullBaseURL = BASE_URL.startsWith('http') ? BASE_URL : `https://${BASE_URL}`;
 
 // Allow cookies to be sent (Refresh Token is in cookie)
 axios.defaults.withCredentials = true;
@@ -19,7 +20,7 @@ export const useAuthStore = create((set, get) => ({
   signup: async (firstName, email, password) => {
     set({ isLoading: true, error: null });
     try {
-      const res = await axios.post(`${BASE_URL}/api/signup`, { firstName, email, password });
+      const res = await axios.post(`${fullBaseURL}/api/signup`, { firstName, email, password });
 
       set({
         user: res.data.user,
@@ -44,7 +45,7 @@ export const useAuthStore = create((set, get) => ({
   login: async (email, password) => {
     set({ isLoading: true, error: null });
     try {
-      const res = await axios.post(`${BASE_URL}/api/login`, { email, password });
+      const res = await axios.post(`${fullBaseURL}/api/login`, { email, password });
 
       set({
         user: res.data.user,
@@ -64,7 +65,7 @@ export const useAuthStore = create((set, get) => ({
 
   refreshAccessToken: async () => {
     try {
-      const res = await axios.post(`${BASE_URL}/api/refresh`);
+      const res = await axios.post(`${fullBaseURL}/api/refresh`);
 
       set({ user: res.data.user, accessToken: res.data.accessToken });
       return res.data.accessToken;
@@ -88,7 +89,7 @@ export const useAuthStore = create((set, get) => ({
         }
       }
 
-      const res = await axios.get(`${BASE_URL}/api/fetchuser`, {
+      const res = await axios.get(`${fullBaseURL}/api/fetchuser`, {
         headers: { Authorization: `Bearer ${token}` },
       });
 
@@ -105,7 +106,7 @@ export const useAuthStore = create((set, get) => ({
   logout: async () => {
     set({ isLoading: true });
     try {
-      await axios.post(`${API_URL}/logout`);
+      await axios.post(`${fullBaseURL}/api/logout`);
       set({ user: null, accessToken: null, isLoading: false });
     } catch {
       set({ isLoading: false });
@@ -115,7 +116,7 @@ export const useAuthStore = create((set, get) => ({
   adminLogout: async () => {
     set({ isLoading: true });
     try {
-      await axios.post(`${BASE_URL}/api/logout`);
+      await axios.post(`${fullBaseURL}/api/logout`);
       // Clear admin token from localStorage
       localStorage.removeItem('adminToken');
       set({ user: null, accessToken: null, isLoading: false });
@@ -127,7 +128,7 @@ export const useAuthStore = create((set, get) => ({
   adminLogin: async (email, password) => {
     set({ isLoading: true, error: null });
     try {
-      const res = await axios.post(`${BASE_URL}/api/admin/login`, { email, password });
+      const res = await axios.post(`${fullBaseURL}/api/admin/login`, { email, password });
 
       // Store token in localStorage for adminAxios
       localStorage.setItem('adminToken', res.data.accessToken);

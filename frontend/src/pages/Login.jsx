@@ -7,6 +7,8 @@ import { useAuthStore } from "../store/authStore";
 import Modal from "bootstrap/js/dist/modal";
 import { toast } from "react-toastify";
 
+const BASE_URL = import.meta.env.VITE_API_BASE_URL;
+
 function Login() {
   const [showPassword, setShowPassword] = useState(false);
   const [loading, setLoading] = useState(false);
