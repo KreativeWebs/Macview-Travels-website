@@ -24,7 +24,7 @@ export default function PaystackPayment({
   }
 
   // Validate amount
-  if (!amount || amount <= 0 || !Number.isInteger(amount)) {
+ if (!amount || isNaN(amount) || Number(amount) <= 0) {
     console.error("Invalid amount for Paystack:", amount);
     return (
       <p className="text-danger mt-3">
@@ -46,7 +46,7 @@ export default function PaystackPayment({
 
   const componentProps = {
     email,
-    amount: Math.round(amount * 100), // Paystack requires kobo, ensure it's an integer
+    amount: Math.floor(Number(amount) * 100), // Paystack requires kobo, ensure it's an integer
     currency: 'NGN', // Explicitly set currency
     metadata: {
       fullName,
