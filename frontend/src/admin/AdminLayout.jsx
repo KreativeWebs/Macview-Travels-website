@@ -6,6 +6,7 @@ import Header from "./Header";
 import Sidebar from "./Sidebar";
 import { Outlet } from "react-router-dom";
 import socket from "../socket";
+import AdminSocketNotifications from "../components/AdminSocketNotifications";
 
 export default function AdminLayout() {
   const [sidebarOpen, setSidebarOpen] = useState(true);
@@ -70,6 +71,7 @@ export default function AdminLayout() {
           <Outlet />
         </div>
       </div>
+      <AdminSocketNotifications />
     </div>
   );
 }
