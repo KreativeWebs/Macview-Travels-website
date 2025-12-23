@@ -371,6 +371,14 @@ router.post("/admin/login", async (req, res) => {
     const refreshToken = createRefreshToken(adminUser._id);
     setRefreshCookie(res, refreshToken);
 
+    // Emit admin login event via socket
+    if (global.io) {
+      global.io.emit("adminLogin", {
+        adminName: adminUser.email,
+        loginTime: new Date().toISOString(),
+      });
+    }
+
     res.status(200).json({
       success: true,
       user: {

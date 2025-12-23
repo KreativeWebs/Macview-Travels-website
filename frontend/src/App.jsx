@@ -64,6 +64,7 @@ import FlashSales from "./pages/FlashSales";
 import FlashSaleDetails from "./pages/FlashSaleDetails";
 import AdminCreateNewsletter from "./admin/pages/AdminCreateNewsletter.jsx";
 import AdminNewsletterSubscribers from "./admin/pages/AdminNewsletterSubscribers.jsx";
+import AdminSocketNotifications from "./components/AdminSocketNotifications";
 
 
 function FloatingButtonsController() {
@@ -193,6 +194,7 @@ export default function App() {
           <Route path="flash-sales" element={<FlashSalesList />} />
         </Route>
       </Routes>
+      <AdminSocketNotifications />
 
       <ToastContainer
         position="top-right"
