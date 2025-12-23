@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState, useEffect, useRef } from "react";
 import { useAuthStore } from "../store/authStore";
 import { useNavigate } from "react-router-dom";
 
@@ -6,11 +6,32 @@ import { useNavigate } from "react-router-dom";
 export default function Header({ toggleSidebar }) {
   const { user, adminLogout } = useAuthStore();
   const navigate = useNavigate();
+  const [showDropdown, setShowDropdown] = useState(false);
+  const dropdownRef = useRef(null);
+
+  const toggleDropdown = () => {
+    // console.log('Toggle dropdown clicked');
+    setShowDropdown(!showDropdown);
+  };
 
   const handleLogout = async () => {
     await adminLogout();
     navigate('/adminlogin');
   };
+
+  // Close dropdown when clicking outside
+  useEffect(() => {
+    const handleClickOutside = (event) => {
+      if (dropdownRef.current && !dropdownRef.current.contains(event.target)) {
+        setShowDropdown(false);
+      }
+    };
+
+    document.addEventListener('mousedown', handleClickOutside);
+    return () => {
+      document.removeEventListener('mousedown', handleClickOutside);
+    };
+  }, []);
 
   return (
     <header
@@ -52,24 +73,50 @@ export default function Header({ toggleSidebar }) {
         <div className="small">
           Hello, <strong>{user?.email || 'Admin'}</strong>
         </div>
-        <div className="dropdown" style={{ position: "relative" }}>
+        <div className="dropdown" style={{ position: "relative" }} ref={dropdownRef}>
           <button
-            className="btn dropdown-toggle rounded-circle bg-secondary bg-opacity-50 d-flex align-items-center justify-content-center border-0"
+            className="btn rounded-circle bg-secondary bg-opacity-50 d-flex align-items-center justify-content-center border-0"
             style={{ width: "40px", height: "40px" }}
             type="button"
-            data-bs-toggle="dropdown"
-            aria-expanded="false"
+            onClick={toggleDropdown}
+            aria-expanded={showDropdown}
           >
             <i className="fa-solid fa-user"></i>
           </button>
-          <ul className="dropdown-menu dropdown-menu-end" style={{ position: "absolute", right: 0, zIndex: 1050 }}>
-            <li>
-              <button className="dropdown-item" onClick={handleLogout}>
-                <i className="fa-solid fa-sign-out-alt me-2"></i>
-                Logout
-              </button>
-            </li>
-          </ul>
+          {showDropdown && (
+            <ul className="dropdown-menu show" style={{
+              position: "absolute",
+              right: 0,
+              top: "100%",
+              zIndex: 1050,
+              minWidth: "160px",
+              backgroundColor: "white",
+              border: "1px solid rgba(0,0,0,.15)",
+              borderRadius: ".375rem",
+              boxShadow: "0 0.5rem 1rem rgba(0, 0, 0, 0.175)"
+            }}>
+              <li>
+                <button
+                  className="dropdown-item"
+                  style={{
+                    width: "100%",
+                    padding: ".25rem 1rem",
+                    clear: "both",
+                    fontWeight: 400,
+                    color: "#212529",
+                    textAlign: "inherit",
+                    whiteSpace: "nowrap",
+                    backgroundColor: "transparent",
+                    border: 0
+                  }}
+                  onClick={handleLogout}
+                >
+                  <i className="fa-solid fa-sign-out-alt me-2"></i>
+                  Logout
+                </button>
+              </li>
+            </ul>
+          )}
         </div>
       </div>
     </header>
