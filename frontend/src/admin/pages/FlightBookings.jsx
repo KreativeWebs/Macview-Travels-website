@@ -26,7 +26,7 @@ export default function FlightBookings() {
   useEffect(() => {
     // Listen for real-time updates
     socket.on('newFlightBooking', (newBooking) => {
-      console.log('FlightBookings: New flight booking received:', newBooking);
+      // console.log('FlightBookings: New flight booking received:', newBooking);
       // Prepend the new booking to the list
       setBookings(prevBookings => {
         const currentBookings = Array.isArray(prevBookings) ? prevBookings : [];
