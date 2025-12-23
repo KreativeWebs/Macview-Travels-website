@@ -4,11 +4,11 @@ import { useNavigate } from "react-router-dom";
 
 
 export default function Header({ toggleSidebar }) {
-  const { user, logout } = useAuthStore();
+  const { user, adminLogout } = useAuthStore();
   const navigate = useNavigate();
 
   const handleLogout = async () => {
-    await logout();
+    await adminLogout();
     navigate('/adminlogin');
   };
 
@@ -52,16 +52,17 @@ export default function Header({ toggleSidebar }) {
         <div className="small">
           Hello, <strong>{user?.email || 'Admin'}</strong>
         </div>
-        <div className="dropdown">
-          <div
-            className="rounded-circle bg-secondary bg-opacity-50 d-flex align-items-center justify-content-center"
-            style={{ width: "40px", height: "40px", cursor: "pointer" }}
+        <div className="dropdown" style={{ position: "relative" }}>
+          <button
+            className="btn dropdown-toggle rounded-circle bg-secondary bg-opacity-50 d-flex align-items-center justify-content-center border-0"
+            style={{ width: "40px", height: "40px" }}
+            type="button"
             data-bs-toggle="dropdown"
             aria-expanded="false"
           >
             <i className="fa-solid fa-user"></i>
-          </div>
-          <ul className="dropdown-menu">
+          </button>
+          <ul className="dropdown-menu dropdown-menu-end" style={{ position: "absolute", right: 0, zIndex: 1050 }}>
             <li>
               <button className="dropdown-item" onClick={handleLogout}>
                 <i className="fa-solid fa-sign-out-alt me-2"></i>

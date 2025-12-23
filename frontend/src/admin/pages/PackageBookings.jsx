@@ -47,7 +47,8 @@ export default function PackageBookings() {
       console.log('PackageBookings: New package booking received:', newBooking);
       // Prepend the new booking to the list
       setBookings(prevBookings => {
-        const newBookings = [newBooking, ...prevBookings];
+        const currentBookings = Array.isArray(prevBookings) ? prevBookings : [];
+        const newBookings = [newBooking, ...currentBookings];
         setTotalPages(Math.ceil(newBookings.length / 10));
         return newBookings;
       });
@@ -228,7 +229,7 @@ export default function PackageBookings() {
                       </div>
                     </td>
                   </tr>
-                ) : bookings.length === 0 ? (
+                ) : !Array.isArray(bookings) || bookings.length === 0 ? (
                   <tr>
                     <td colSpan="6" className="text-center py-4 text-muted">
                       No package bookings found

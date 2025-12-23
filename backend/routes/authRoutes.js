@@ -154,7 +154,10 @@ router.post("/refresh", async (req, res) => {
     const decoded = jwt.verify(token, process.env.REFRESH_TOKEN_SECRET);
     const accessToken = createAccessToken(decoded.id);
 
-    const user = await User.findById(decoded.id).select("-password");
+    let user = await User.findById(decoded.id).select("-password");
+    if (!user) {
+      user = await Admin.findById(decoded.id).select("-password");
+    }
     if (!user) return res.status(404).json({ message: "User not found" });
 
     res.json({ accessToken, user });

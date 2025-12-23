@@ -47,7 +47,8 @@ export default function VisaRequests() {
       console.log('VisaRequests: New visa application received:', newApp);
       // Prepend the new application to the list
       setApplications(prevApps => {
-        const newApps = [newApp, ...prevApps];
+        const currentApps = Array.isArray(prevApps) ? prevApps : [];
+        const newApps = [newApp, ...currentApps];
         setTotalPages(Math.ceil(newApps.length / 10));
         return newApps;
       });
@@ -80,8 +81,8 @@ export default function VisaRequests() {
       });
 
       const res = await adminAxios.get(`/visa-applications?${params}`);
-      setApplications(res.data.applications);
-      setTotalPages(res.data.totalPages);
+      setApplications(res.data.applications || []);
+      setTotalPages(res.data.totalPages || 1);
     } catch (error) {
       console.error("Error fetching visa applications:", error);
     } finally {
@@ -235,7 +236,7 @@ export default function VisaRequests() {
                       </div>
                     </td>
                   </tr>
-                ) : applications.length === 0 ? (
+                ) : !Array.isArray(applications) || applications.length === 0 ? (
                   <tr>
                     <td colSpan="6" className="text-center py-4 text-muted">
                       No visa applications found

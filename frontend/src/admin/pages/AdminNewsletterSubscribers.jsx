@@ -10,9 +10,10 @@ export default function AdminNewsletterSubscribers() {
     const fetchSubscribers = async () => {
       try {
         const res = await adminAxios.get("/newsletter/subscribers");
-        setSubscribers(res.data);
+        setSubscribers(res.data || []);
       } catch (error) {
         toast.error("Failed to load subscribers");
+        setSubscribers([]);
       }
     };
 
@@ -32,7 +33,7 @@ export default function AdminNewsletterSubscribers() {
           </thead>
 
           <tbody>
-            {subscribers.map((s) => (
+            {Array.isArray(subscribers) && subscribers.map((s) => (
               <tr key={s._id}>
                 <td>{s.email}</td>
                 <td>{new Date(s.subscribedAt).toLocaleString()}</td>
