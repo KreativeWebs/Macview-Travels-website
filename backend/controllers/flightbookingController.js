@@ -130,8 +130,80 @@ export const createFlightBooking = async (req, res) => {
 //Get all flight bookings (for admin)
 export const getFlightBookings = async (req, res) => {
   try {
-    const bookings = await FlightBooking.find().sort({ createdAt: -1 });
-     return res.status(200).json({ bookings });
+    const {
+      page = 1,
+      limit = 10,
+      tripType = 'all',
+      status = 'all',
+      search = '',
+      year = '',
+      month = '',
+      week = ''
+    } = req.query;
+
+    let query = {};
+
+    // Filter by trip type
+    if (tripType !== 'all') {
+      query.tripType = tripType;
+    }
+
+    // Filter by status (if status field exists)
+    if (status !== 'all') {
+      query.status = status;
+    }
+
+    // Search filter
+    if (search) {
+      query.$or = [
+        { fullName: { $regex: search, $options: 'i' } },
+        { email: { $regex: search, $options: 'i' } }
+      ];
+    }
+
+    // Date filters
+    if (year) {
+      const startDate = new Date(`${year}-01-01`);
+      const endDate = new Date(`${parseInt(year) + 1}-01-01`);
+      query.createdAt = { ...query.createdAt, $gte: startDate, $lt: endDate };
+    }
+
+    if (month && year) {
+      const startDate = new Date(`${year}-${month.padStart(2, '0')}-01`);
+      const endDate = new Date(`${year}-${month.padStart(2, '0')}-01`);
+      endDate.setMonth(endDate.getMonth() + 1);
+      query.createdAt = { ...query.createdAt, $gte: startDate, $lt: endDate };
+    }
+
+    // Week filter (simplified - week of month)
+    if (week && month && year) {
+      const monthStart = new Date(`${year}-${month.padStart(2, '0')}-01`);
+      const weekStart = new Date(monthStart);
+      weekStart.setDate((parseInt(week) - 1) * 7 + 1);
+      const weekEnd = new Date(weekStart);
+      weekEnd.setDate(weekStart.getDate() + 6);
+
+      query.createdAt = { ...query.createdAt, $gte: weekStart, $lte: weekEnd };
+    }
+
+    const pageNum = parseInt(page);
+    const limitNum = parseInt(limit);
+    const skip = (pageNum - 1) * limitNum;
+
+    const bookings = await FlightBooking.find(query)
+      .sort({ createdAt: -1 })
+      .skip(skip)
+      .limit(limitNum);
+
+    const total = await FlightBooking.countDocuments(query);
+    const totalPages = Math.ceil(total / limitNum);
+
+    return res.status(200).json({
+      bookings,
+      totalPages,
+      currentPage: pageNum,
+      total
+    });
   } catch (error) {
     console.error("Error fetching flight bookings:", error);
     res.status(500).json({ message: "Error fetching flight bookings" });

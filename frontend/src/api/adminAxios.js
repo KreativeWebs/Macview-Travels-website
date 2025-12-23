@@ -3,7 +3,15 @@ import axios from "axios";
 // Ensure cookies are sent with ALL axios requests
 axios.defaults.withCredentials = true;
 
-const BASE_URL = import.meta.env.VITE_API_BASE_URL;
+let BASE_URL = import.meta.env.VITE_API_BASE_URL;
+
+// Ensure the URL has a protocol
+if (BASE_URL && !BASE_URL.startsWith('http://') && !BASE_URL.startsWith('https://')) {
+  BASE_URL = `https://${BASE_URL}`;
+}
+
+// Debug logging to verify the URL
+console.log('Admin API Base URL:', BASE_URL);
 
 const adminAxios = axios.create({
   baseURL: `${BASE_URL}/api/admin`, // backend admin route base
