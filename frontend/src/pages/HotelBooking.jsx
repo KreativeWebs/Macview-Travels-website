@@ -111,8 +111,14 @@ function HotelBooking() {
     }));
 
     try {
+      // Ensure the URL has a protocol
+      let baseUrl = import.meta.env.VITE_API_BASE_URL;
+      if (baseUrl && !baseUrl.startsWith('http://') && !baseUrl.startsWith('https://')) {
+        baseUrl = `https://${baseUrl}`;
+      }
+
       const res = await fetch(
-        `${import.meta.env.VITE_API_BASE_URL}/hotel-bookings/upload-document`,
+        `${baseUrl}/api/hotel-bookings/upload-document`,
         {
           method: "POST",
           body: form,
