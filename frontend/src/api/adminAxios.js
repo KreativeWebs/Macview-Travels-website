@@ -1,9 +1,13 @@
 import axios from "axios";
 
+// Ensure cookies are sent with ALL axios requests
+axios.defaults.withCredentials = true;
+
 const BASE_URL = import.meta.env.VITE_API_BASE_URL;
 
 const adminAxios = axios.create({
   baseURL: `${BASE_URL}/api/admin`, // backend admin route base
+  withCredentials: true, // Required for cookies to be sent with requests
 });
 
 // Auto attach token for every request

@@ -16,9 +16,10 @@ export default function PackagesManagement() {
   const fetchPackages = async () => {
     try {
       const response = await adminAxios.get("/packages");
-      setPackages(response.data.packages);
+      setPackages(response.data.packages || []);
     } catch (error) {
       console.error("Error fetching packages:", error);
+      setPackages([]);
     } finally {
       setLoading(false);
     }

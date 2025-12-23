@@ -48,7 +48,7 @@ export default function Settings() {
       const response = await adminAxios.get(`/visa-applications/report?month=${visaMonth}&year=${visaYear}`);
       const { applications, month, year } = response.data;
 
-      if (applications.length === 0) {
+      if (!Array.isArray(applications) || applications.length === 0) {
         toast.info(`No visa applications found for ${months.find(m => m.value === parseInt(month))?.label} ${year}`);
         return;
       }
@@ -114,7 +114,7 @@ export default function Settings() {
       const response = await adminAxios.get(`/flight-bookings/report?month=${flightMonth}&year=${flightYear}`);
       const { bookings, month, year } = response.data;
 
-      if (bookings.length === 0) {
+      if (!Array.isArray(bookings) || bookings.length === 0) {
         toast.info(`No flight bookings found for ${months.find(m => m.value === parseInt(month))?.label} ${year}`);
         return;
       }
@@ -189,7 +189,7 @@ export default function Settings() {
       const response = await adminAxios.get(`/hotel-bookings/report?month=${hotelMonth}&year=${hotelYear}`);
       const { bookings, month, year } = response.data;
 
-      if (bookings.length === 0) {
+      if (!Array.isArray(bookings) || bookings.length === 0) {
         toast.info(`No hotel bookings found for ${months.find(m => m.value === parseInt(month))?.label} ${year}`);
         return;
       }
@@ -237,7 +237,7 @@ export default function Settings() {
       const response = await adminAxios.get(`/package-bookings/report?month=${packageMonth}&year=${packageYear}`);
       const { bookings, month, year } = response.data;
 
-      if (bookings.length === 0) {
+      if (!Array.isArray(bookings) || bookings.length === 0) {
         toast.info(`No package bookings found for ${months.find(m => m.value === parseInt(month))?.label} ${year}`);
         return;
       }

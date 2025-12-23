@@ -18,10 +18,11 @@ export default function VisaRequirements() {
     try {
       setLoading(true);
       const response = await adminAxios.get("/visa-requirements");
-      setRequirements(response.data.requirements);
+      setRequirements(response.data.requirements || []);
     } catch (error) {
       console.error("Error fetching visa requirements:", error);
       toast.error("Failed to fetch visa requirements");
+      setRequirements([]);
     } finally {
       setLoading(false);
     }

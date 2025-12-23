@@ -29,7 +29,8 @@ export default function FlightBookings() {
       console.log('FlightBookings: New flight booking received:', newBooking);
       // Prepend the new booking to the list
       setBookings(prevBookings => {
-        const newBookings = [newBooking, ...prevBookings];
+        const currentBookings = Array.isArray(prevBookings) ? prevBookings : [];
+        const newBookings = [newBooking, ...currentBookings];
         setTotalPages(Math.ceil(newBookings.length / 10));
         return newBookings;
       });
@@ -239,7 +240,7 @@ export default function FlightBookings() {
                       </div>
                     </td>
                   </tr>
-                ) : bookings.length === 0 ? (
+                ) : !Array.isArray(bookings) || bookings.length === 0 ? (
                   <tr>
                     <td colSpan="8" className="text-center py-4 text-muted">
                       No flight bookings found

@@ -231,7 +231,7 @@ export default function HotelBookings() {
                       </div>
                     </td>
                   </tr>
-                ) : bookings.length === 0 ? (
+                ) : !Array.isArray(bookings) || bookings.length === 0 ? (
                   <tr>
                     <td colSpan="8" className="text-center py-4 text-muted">
                       No hotel bookings found

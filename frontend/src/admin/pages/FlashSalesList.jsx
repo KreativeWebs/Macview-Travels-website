@@ -97,10 +97,12 @@ export default function FlashSalesList() {
       });
 
       const res = await adminAxios.get(`/flash-sale-bookings?${params}`);
-      setBookings(res.data.bookings);
-      setTotalPages(res.data.totalPages);
+      setBookings(res.data.bookings || []);
+      setTotalPages(res.data.totalPages || 1);
     } catch (error) {
       console.error("Error fetching flash sale bookings:", error);
+      setBookings([]);
+      setTotalPages(1);
     } finally {
       setLoading(false);
     }
@@ -245,7 +247,7 @@ export default function FlashSalesList() {
                       </div>
                     </td>
                   </tr>
-                ) : bookings.length === 0 ? (
+                ) : !Array.isArray(bookings) || bookings.length === 0 ? (
                   <tr>
                     <td colSpan="6" className="text-center py-4 text-muted">
                       No flash sale bookings found
