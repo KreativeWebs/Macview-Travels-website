@@ -440,7 +440,7 @@ export default function ManageBookings() {
         }}>My Bookings</h2>
 
         <ul className="nav nav-tabs mb-4">
-          <li className="nav-item">
+          <li className="nav-item" style={{color: "#175aa1"}}>
             <button
               className={`nav-link ${activeTab === "visa" ? "active" : ""}`}
               onClick={() => setActiveTab("visa")}
@@ -448,7 +448,7 @@ export default function ManageBookings() {
               Visa Applications
             </button>
           </li>
-          <li className="nav-item">
+          <li className="nav-item" style={{color: "#175aa1"}}>
             <button
               className={`nav-link ${activeTab === "flight" ? "active" : ""}`}
               onClick={() => setActiveTab("flight")}
@@ -456,7 +456,7 @@ export default function ManageBookings() {
               Flight Bookings
             </button>
           </li>
-          <li className="nav-item">
+          <li className="nav-item" style={{color: "#175aa1"}}>
             <button
               className={`nav-link ${activeTab === "hotel" ? "active" : ""}`}
               onClick={() => setActiveTab("hotel")}
@@ -464,7 +464,7 @@ export default function ManageBookings() {
               Hotel Bookings
             </button>
           </li>
-          <li className="nav-item">
+          <li className="nav-item" style={{color: "#175aa1"}}>
             <button
               className={`nav-link ${activeTab === "package" ? "active" : ""}`}
               onClick={() => setActiveTab("package")}
@@ -472,7 +472,7 @@ export default function ManageBookings() {
               Package Bookings
             </button>
           </li>
-          <li className="nav-item">
+          <li className="nav-item" style={{color: "#175aa1"}}>
             <button
               className={`nav-link ${activeTab === "flashsale" ? "active" : ""}`}
               onClick={() => setActiveTab("flashsale")}
