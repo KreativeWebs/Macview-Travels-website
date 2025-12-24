@@ -64,7 +64,7 @@ function AboutUs() {
               </h1>
               <p className="mb-4 text-darkblack">
                 Macview Travels is your trusted partner for exploring the globe.
-                With over a decade of experience, we specialize in crafting
+                With over 4 years of experience, we specialize in crafting
                 personalized travel packages, luxury escapes, and adventure
                 tours for every kind of traveler.
               </p>
@@ -161,7 +161,7 @@ function AboutUs() {
         <div className="container">
           <div className="text-center wow fadeInUp" data-wow-delay="0.1s">
             <h6
-              className="section-title bg-white text-center text-primary px-3"
+              className="section-title bg-white text-center text-secondary px-3"
               style={{ color: "#f1741e", fontFamily: "Raleway" }}
             >
               Travel Experts
@@ -186,13 +186,55 @@ function AboutUs() {
                   className="position-relative d-flex justify-content-center"
                   style={{ marginTop: "-19px" }}
                 >
-                  <a className="btn btn-square mx-1" href="#">
+                  <a
+                    className="btn btn-square mx-1"
+                    href="#"
+                    style={{
+                      borderRadius: '50%',
+                      backgroundColor: '#ffffff',
+                      color: '#175aa1',
+                      display: 'flex',
+                      alignItems: 'center',
+                      justifyContent: 'center',
+                      width: '38px',
+                      height: '38px',
+                      textDecoration: 'none'
+                    }}
+                  >
                     <i className="fab fa-facebook-f" />
                   </a>
-                  <a className="btn btn-square mx-1" href="#">
+                  <a
+                    className="btn btn-square mx-1"
+                    href="#"
+                    style={{
+                      borderRadius: '50%',
+                      backgroundColor: '#ffffff',
+                      color: '#175aa1',
+                      display: 'flex',
+                      alignItems: 'center',
+                      justifyContent: 'center',
+                      width: '38px',
+                      height: '38px',
+                      textDecoration: 'none'
+                    }}
+                  >
                     <i className="fab fa-linkedin" />
                   </a>
-                  <a className="btn btn-square mx-1" href="#">
+                  <a
+                    className="btn btn-square mx-1"
+                    href="#"
+                    style={{
+                      borderRadius: '50%',
+                      backgroundColor: '#ffffff',
+                      color: '#175aa1',
+                      display: 'flex',
+                      alignItems: 'center',
+                      justifyContent: 'center',
+                      width: '38px',
+                      height: '38px',
+                      textDecoration: 'none'
+                    }}
+                  >
                     <i className="fab fa-instagram" />
                   </a>
                 </div>
@@ -218,13 +260,55 @@ function AboutUs() {
                   className="position-relative d-flex justify-content-center"
                   style={{ marginTop: "-19px" }}
                 >
-                  <a className="btn btn-square mx-1" href="#">
+                  <a
+                    className="btn btn-square mx-1"
+                    href="#"
+                    style={{
+                      borderRadius: '50%',
+                      backgroundColor: '#ffffff',
+                      color: '#175aa1',
+                      display: 'flex',
+                      alignItems: 'center',
+                      justifyContent: 'center',
+                      width: '38px',
+                      height: '38px',
+                      textDecoration: 'none'
+                    }}
+                  >
                     <i className="fab fa-facebook-f" />
                   </a>
-                  <a className="btn btn-square mx-1" href="#">
+                  <a
+                    className="btn btn-square mx-1"
+                    href="#"
+                    style={{
+                      borderRadius: '50%',
+                      backgroundColor: '#ffffff',
+                      color: '#175aa1',
+                      display: 'flex',
+                      alignItems: 'center',
+                      justifyContent: 'center',
+                      width: '38px',
+                      height: '38px',
+                      textDecoration: 'none'
+                    }}
+                  >
                     <i className="fab fa-linkedin" />
                   </a>
-                  <a className="btn btn-square mx-1" href="#">
+                  <a
+                    className="btn btn-square mx-1"
+                    href="#"
+                    style={{
+                      borderRadius: '50%',
+                      backgroundColor: '#ffffff',
+                      color: '#175aa1',
+                      display: 'flex',
+                      alignItems: 'center',
+                      justifyContent: 'center',
+                      width: '38px',
+                      height: '38px',
+                      textDecoration: 'none'
+                    }}
+                  >
                     <i className="fab fa-instagram" />
                   </a>
                 </div>
@@ -250,13 +334,55 @@ function AboutUs() {
                   className="position-relative d-flex justify-content-center"
                   style={{ marginTop: "-19px" }}
                 >
-                  <a className="btn btn-square mx-1" href="#">
+                  <a
+                    className="btn btn-square mx-1"
+                    href="#"
+                    style={{
+                      borderRadius: '50%',
+                      backgroundColor: '#ffffff',
+                      color: '#175aa1',
+                      display: 'flex',
+                      alignItems: 'center',
+                      justifyContent: 'center',
+                      width: '38px',
+                      height: '38px',
+                      textDecoration: 'none'
+                    }}
+                  >
                     <i className="fab fa-facebook-f" />
                   </a>
-                  <a className="btn btn-square mx-1" href="#">
+                  <a
+                    className="btn btn-square mx-1"
+                    href="#"
+                    style={{
+                      borderRadius: '50%',
+                      backgroundColor: '#ffffff',
+                      color: '#175aa1',
+                      display: 'flex',
+                      alignItems: 'center',
+                      justifyContent: 'center',
+                      width: '38px',
+                      height: '38px',
+                      textDecoration: 'none'
+                    }}
+                  >
                     <i className="fab fa-linkedin" />
                   </a>
-                  <a className="btn btn-square mx-1" href="#">
+                  <a
+                    className="btn btn-square mx-1"
+                    href="#"
+                    style={{
+                      borderRadius: '50%',
+                      backgroundColor: '#ffffff',
+                      color: '#175aa1',
+                      display: 'flex',
+                      alignItems: 'center',
+                      justifyContent: 'center',
+                      width: '38px',
+                      height: '38px',
+                      textDecoration: 'none'
+                    }}
+                  >
                     <i className="fab fa-instagram" />
                   </a>
                 </div>
@@ -282,13 +408,43 @@ function AboutUs() {
                   className="position-relative d-flex justify-content-center"
                   style={{ marginTop: "-19px" }}
                 >
-                  <a className="btn btn-square mx-1" href="#">
+                  <a className="btn btn-square mx-1" href="#" style={{
+                      borderRadius: '50%',
+                      backgroundColor: '#ffffff',
+                      color: '#175aa1',
+                      display: 'flex',
+                      alignItems: 'center',
+                      justifyContent: 'center',
+                      width: '38px',
+                      height: '38px',
+                      textDecoration: 'none'
+                    }}>
                     <i className="fab fa-facebook-f" />
                   </a>
-                  <a className="btn btn-square mx-1" href="#">
+                  <a className="btn btn-square mx-1" href="#" style={{
+                      borderRadius: '50%',
+                      backgroundColor: '#ffffff',
+                      color: '#175aa1',
+                      display: 'flex',
+                      alignItems: 'center',
+                      justifyContent: 'center',
+                      width: '38px',
+                      height: '38px',
+                      textDecoration: 'none'
+                    }}>
                     <i className="fab fa-linkedin" />
                   </a>
-                  <a className="btn btn-square mx-1" href="#">
+                  <a className="btn btn-square mx-1" href="#" style={{
+                      borderRadius: '50%',
+                      backgroundColor: '#ffffff',
+                      color: '#175aa1',
+                      display: 'flex',
+                      alignItems: 'center',
+                      justifyContent: 'center',
+                      width: '38px',
+                      height: '38px',
+                      textDecoration: 'none'
+                    }}>
                     <i className="fab fa-instagram" />
                   </a>
                 </div>
