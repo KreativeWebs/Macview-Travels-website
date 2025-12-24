@@ -37,3 +37,7 @@ admin-desktop/out/
 *.exe
 *.dmg
 *.zip
+
+
+# Vite cache
+.vite/
