@@ -29,3 +29,11 @@ dist-ssr
 .env.development
 .env.production
 .env.test
+
+admin-desktop/dist/
+admin-desktop/build/
+admin-desktop/release/
+admin-desktop/out/
+*.exe
+*.dmg
+*.zip
