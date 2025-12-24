@@ -113,6 +113,50 @@ button:active {
   box-shadow: none !important;
 }
 
+/* Remove Bootstrap form focus outline */
+.form-control:focus,
+.form-select:focus {
+  box-shadow: none !important;
+  outline: none !important;
+}
+
+/* Remove autofill background color and ensure text is visible */
+.form-control:-webkit-autofill,
+.form-control:-webkit-autofill:hover,
+.form-control:-webkit-autofill:focus,
+.form-control:-webkit-autofill:active,
+.form-select:-webkit-autofill,
+.form-select:-webkit-autofill:hover,
+.form-select:-webkit-autofill:focus,
+.form-select:-webkit-autofill:active,
+input:-webkit-autofill,
+input:-webkit-autofill:hover,
+input:-webkit-autofill:focus,
+input:-webkit-autofill:active,
+select:-webkit-autofill,
+select:-webkit-autofill:hover,
+select:-webkit-autofill:focus,
+select:-webkit-autofill:active {
+  -webkit-box-shadow: 0 0 0 1000px white inset !important;
+  background-color: transparent !important;
+  -webkit-text-fill-color: #000000 !important;
+  color: #000000 !important;
+  transition: background-color 5000s ease-in-out 0s;
+}
+
+/* Firefox autofill styles */
+input:-moz-autofill,
+select:-moz-autofill {
+  background-color: transparent !important;
+  color: #000000 !important;
+}
+
+/* General autofill override for all browsers */
+input[data-autofill="true"],
+select[data-autofill="true"] {
+  color: #000000 !important;
+}
+
 /*** Navbar ***/
 
 .navbar-light .navbar-nav .nav-link {
