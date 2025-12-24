@@ -44,15 +44,15 @@ function FeaturedPackagesCard({
           </div>
           <div className="d-flex border-bottom">
             <small className="flex-fill text-center border-end py-2">
-              <i className="fa fa-map-marker-alt text-secondary me-2" />
+              <i className="fa fa-map-marker-alt me-2" style={{color: "#175AA1"}}/>
               {packagecity}
             </small>
             <small className="flex-fill text-center border-end py-2">
-              <i className="fa fa-calendar-alt text-secondary me-2" />
+              <i className="fa fa-calendar-alt me-2" style={{color: "#175AA1"}}/>
               {packagenights}
             </small>
             <small className="flex-fill text-center py-2">
-              <i className="fa fa-user text-secondary me-2" />
+              <i className="fa fa-user me-2" style={{color: "#175AA1"}} />
               {packagepersons}
             </small>
           </div>
@@ -73,13 +73,15 @@ function FeaturedPackagesCard({
             <div className="d-flex justify-content-center mb-2">
               <Link
                 to={`/package/${packageId}`}
-                className="btn btn-sm btn-secondary px-5"
+                className="btn btn-sm px-5"
                 style={{
                   borderRadius: "12px",
                   fontFamily: "Raleway",
                   fontWeight: "800",
                   outline: "none",
                   border: "none",
+                  backgroundColor: "#f1741e",
+                  color: "white"
                 }}
               >
                 Book Now

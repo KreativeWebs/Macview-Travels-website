@@ -196,9 +196,9 @@ function PackageConfirmation() {
     <div className="container-xxl" style={{ paddingTop: "150px" }}>
       <div className="container">
         <h2 className="fw-bold">Confirm & Pay</h2>
-        <p>Please confirm your package booking details and make payment.</p>
+        <p className="mb-2">Please confirm your package booking details and make payment.</p>
 
-        <div className="mt-4">
+        <div className="mt-1 mt-md-2">
           <h5>Personal Information</h5>
           <p><strong>Full Name:</strong> {formData.fullName}</p>
           <p><strong>WhatsApp Number:</strong> {formData.whatsappNumber}</p>
@@ -235,9 +235,10 @@ function PackageConfirmation() {
           ))}
         </div>
 
-        <div className="mt-5">
+        <div className="mt-5 d-flex flex-column flex-md-row gap-3">
           <button
-            className="btn btn-secondary me-3"
+            className="btn flex-fill"
+            style={{ backgroundColor: "#175aa1", color: "white", border: "none" }}
             onClick={() =>
               navigate(-1, {
                 state: { formData, packageData },
@@ -248,20 +249,24 @@ function PackageConfirmation() {
           </button>
 
           {isConverting ? (
-            <div className="text-center">
+            <div className="text-center flex-fill">
               <div className="spinner-border text-primary" role="status">
                 <span className="visually-hidden">Converting currency...</span>
               </div>
               <p className="mt-2">Converting currency...</p>
             </div>
           ) : (
-            <PaystackPayment
-              amount={convertedAmount}
-              buttonText="Pay for Package"
-              email={formData.email}
-              fullName={formData.fullName}
-              onSuccess={handlePaymentSuccess}
-            />
+            <div className="flex-fill" style={{ backgroundColor: "#f1741e", border: "none", textAlign: "center", color: "white", padding: "0.375rem 0.75rem", borderRadius: "0.375rem", cursor: "pointer" }}>
+              <PaystackPayment
+                amount={convertedAmount}
+                buttonText="Pay for Package"
+                email={formData.email}
+                fullName={formData.fullName}
+                onSuccess={handlePaymentSuccess}
+                className="btn flex-fill text-white"
+                style={{ backgroundColor: "transparent", color: "white", border: "none", textAlign: "center", width: "100%" }}
+              />
+            </div>
           )}
         </div>
       </div>

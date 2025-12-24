@@ -7,6 +7,8 @@ export default function PaystackPayment({
   fullName,
   onSuccess,
   buttonText = "Pay Now",
+  className,
+  style,
 }) {
   const publicKey = import.meta.env.VITE_PAYSTACK_PUBLIC_KEY;
 
@@ -75,7 +77,8 @@ export default function PaystackPayment({
   return (
     <PaystackButton
       {...componentProps}
-      className="btn btn-success w-100 px-4 py-2"
+      className={className}
+      style={style}
     />
   );
 }
