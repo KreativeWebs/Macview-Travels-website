@@ -233,6 +233,7 @@ function FlashSaleDetails() {
     <Container className="py-5">
       {currentStep === "form" && (
         <Row
+          className="flash-sale-details-row"
           style={{
             marginTop: "100px",
           }}
@@ -453,6 +454,7 @@ function FlashSaleDetails() {
 
       {currentStep === "confirmation" && (
         <Row
+          className="flash-sale-details-row"
           style={{
             marginTop: "100px",
           }}
@@ -572,10 +574,9 @@ function FlashSaleDetails() {
                 )}
                 <div className="d-flex flex-column flex-md-row justify-content-between gap-3 mt-4">
                   <Button
-                    variant="secondary"
                     onClick={handleBack}
                     className="w-100 mt-3"
-                    style={{ paddingTop: "1rem", paddingBottom: "1rem" }}
+                    style={{ paddingTop: "1rem", paddingBottom: "1rem", backgroundColor: "#175aa1", border: "none", color: "white" }}
                   >
                     Back
                   </Button>
