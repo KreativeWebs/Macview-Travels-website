@@ -12,7 +12,7 @@ function AboutUs() {
     >
       <HeroHeader
         heroheadertitle="About Us"
-        heroheaderbg="assets/img/7626.jpg"
+        heroheaderbg="/assets/img/7626.jpg"
         heroheaderdesc="Our mission is to meet all your travel needs while delivering exceptional value for your money."
         pageName="About Us"
       />
@@ -29,7 +29,7 @@ function AboutUs() {
               <div className="position-relative h-100">
                 <img
                   className="img-fluid position-absolute w-100 h-100"
-                  src="assets/img/passport-flight-businessman-standing-airport-checking-departure-times-schedule-travel-work-trip-professional-african-male-waiting-by-terminal-with-his-ticket-board-plane.jpg"
+                  src="/assets/img/passport-flight-businessman-standing-airport-checking-departure-times-schedule-travel-work-trip-professional-african-male-waiting-by-terminal-with-his-ticket-board-plane.jpg"
                   alt="Travelers enjoying a scenic view"
                   style={{ objectFit: "cover", borderRadius: "8px" }}
                 />
@@ -177,7 +177,7 @@ function AboutUs() {
                 <div className="overflow-hidden" style={{ objectFit: "cover" }}>
                   <img
                     className="img-fluid"
-                    src="assets\img\mr jerry.png"
+                    src="/assets/img/mr jerry.png"
                     style={{ width: "" }}
                     alt="Mr Jerry"
                   />
@@ -252,7 +252,7 @@ function AboutUs() {
                 <div className="overflow-hidden">
                   <img
                     className="img-fluid"
-                    src="assets/img/mr godwin.png"
+                    src="/assets/img/mr godwin.png"
                     alt="Mr Godwin"
                   />
                 </div>
@@ -326,7 +326,7 @@ function AboutUs() {
                 <div className="overflow-hidden">
                   <img
                     className="img-fluid"
-                    src="assets\img\fadekemi.png"
+                    src="/assets/img/fadekemi.png"
                     alt="fadekemi"
                   />
                 </div>
@@ -400,7 +400,7 @@ function AboutUs() {
                 <div className="overflow-hidden">
                   <img
                     className="img-fluid"
-                    src="assets/img/ridwan.png"
+                    src="/assets/img/ridwan.png"
                     alt="David Kim"
                   />
                 </div>
