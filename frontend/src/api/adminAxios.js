@@ -5,13 +5,26 @@ axios.defaults.withCredentials = true;
 
 let BASE_URL = import.meta.env.VITE_API_BASE_URL;
 
+// Check if running in Electron (desktop app)
+const isElectron = window && window.electronAPI;
+
+// For Electron app, use localhost in development, production URL otherwise
+if (isElectron) {
+  // In Electron development, connect to localhost
+  if (import.meta.env.DEV) {
+    BASE_URL = 'http://localhost:5000';
+  } else {
+    // In Electron production, use the production URL
+    BASE_URL = 'https://macview-travels-website-production.up.railway.app';
+  }
+}
+
 // Ensure the URL has a protocol
 if (BASE_URL && !BASE_URL.startsWith('http://') && !BASE_URL.startsWith('https://')) {
   BASE_URL = `https://${BASE_URL}`;
 }
 
 // Debug logging to verify the URL
-console.log('Admin API Base URL:', BASE_URL);
 
 const adminAxios = axios.create({
   baseURL: `${BASE_URL}/api/admin`, // backend admin route base
@@ -31,34 +44,25 @@ adminAxios.interceptors.request.use(
   (error) => Promise.reject(error)
 );
 
-// Response interceptor to handle token refresh
+// Response interceptor to handle token expiration
 adminAxios.interceptors.response.use(
   (response) => response,
   async (error) => {
     const originalRequest = error.config;
 
     if (error.response?.status === 401 && !originalRequest._retry) {
-      originalRequest._retry = true;
+      // For admin tokens, don't try to refresh - just clear the token
+      // Admin will need to log in again
+      localStorage.removeItem("adminToken");
 
-      try {
-        // Attempt to refresh the token
-        const refreshResponse = await axios.post(`${BASE_URL}/api/refresh`, {}, { withCredentials: true });
+      // You could emit an event or show a notification here
+      console.warn("Admin session expired. Please log in again.");
 
-        const newToken = refreshResponse.data.accessToken;
-
-        // Update localStorage with new token
-        localStorage.setItem("adminToken", newToken);
-
-        // Update the original request with new token
-        originalRequest.headers.Authorization = `Bearer ${newToken}`;
-
-        // Retry the original request
-        return adminAxios(originalRequest);
-      } catch (refreshError) {
-        // If refresh fails, clear token and reject
-        localStorage.removeItem("adminToken");
-        return Promise.reject(refreshError);
-      }
+      // Reject the request - the UI should handle redirecting to login
+      return Promise.reject({
+        ...error,
+        message: "Admin session expired. Please log in again."
+      });
     }
 
     return Promise.reject(error);
