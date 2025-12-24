@@ -1,6 +1,14 @@
 import React, { useState, useEffect } from "react";
 import { useParams, useNavigate } from "react-router-dom";
-import { Container, Card, Button, Form, Alert, Row, Col } from "react-bootstrap";
+import {
+  Container,
+  Card,
+  Button,
+  Form,
+  Alert,
+  Row,
+  Col,
+} from "react-bootstrap";
 import userAxios from "../api/userAxios";
 import { countryCodes } from "../data/countryCodes";
 import { toast } from "react-toastify";
@@ -54,16 +62,19 @@ function FlashSaleDetails() {
     form.append("file", file);
 
     // Set initial progress
-    setUploadProgress(prev => ({
+    setUploadProgress((prev) => ({
       ...prev,
-      [`${reqLabel}-${fileIndex}`]: { status: 'uploading', progress: 0 }
+      [`${reqLabel}-${fileIndex}`]: { status: "uploading", progress: 0 },
     }));
 
     try {
-      const res = await fetch(`${import.meta.env.VITE_API_BASE_URL}/flash-sales/upload-document`, {
-        method: "POST",
-        body: form,
-      });
+      const res = await fetch(
+        "https://macview-travels-website-production.up.railway.app/api/flash-sales/upload-document",
+        {
+          method: "POST",
+          body: form,
+        }
+      );
 
       if (!res.ok) throw new Error("File upload failed");
       const data = await res.json();
@@ -71,9 +82,9 @@ function FlashSaleDetails() {
       if (!data.success) throw new Error(data.error || "File upload failed");
 
       // Update progress to success
-      setUploadProgress(prev => ({
+      setUploadProgress((prev) => ({
         ...prev,
-        [`${reqLabel}-${fileIndex}`]: { status: 'success', progress: 100 }
+        [`${reqLabel}-${fileIndex}`]: { status: "success", progress: 100 },
       }));
 
       return {
@@ -82,9 +93,9 @@ function FlashSaleDetails() {
       };
     } catch (error) {
       console.error("Upload error:", error);
-      setUploadProgress(prev => ({
+      setUploadProgress((prev) => ({
         ...prev,
-        [`${reqLabel}-${fileIndex}`]: { status: 'error', progress: 0 }
+        [`${reqLabel}-${fileIndex}`]: { status: "error", progress: 0 },
       }));
       throw error;
     }
@@ -95,7 +106,7 @@ function FlashSaleDetails() {
     if (!file) return;
 
     // Validate file type
-    const allowedTypes = ['image/jpeg', 'image/png', 'image/jpg'];
+    const allowedTypes = ["image/jpeg", "image/png", "image/jpg"];
     if (!allowedTypes.includes(file.type)) {
       toast.error("Please upload a valid image file (JPEG, PNG, JPG)");
       return;
@@ -107,22 +118,35 @@ function FlashSaleDetails() {
       return;
     }
 
-    setSelectedFiles(prev => ({ ...prev, [reqLabel]: file }));
+    setSelectedFiles((prev) => ({ ...prev, [reqLabel]: file }));
 
     try {
       const uploadResult = await handleFileUpload(file, reqLabel, 0);
-      setFormData(prev => ({ ...prev, [reqLabel]: uploadResult.fileUrl, [`${reqLabel}Name`]: uploadResult.originalName }));
+      setFormData((prev) => ({
+        ...prev,
+        [reqLabel]: uploadResult.fileUrl,
+        [`${reqLabel}Name`]: uploadResult.originalName,
+      }));
       toast.success("File uploaded successfully!");
     } catch (error) {
       toast.error("File upload failed. Please try again.");
-      setSelectedFiles(prev => ({ ...prev, [reqLabel]: null }));
+      setSelectedFiles((prev) => ({ ...prev, [reqLabel]: null }));
     }
   };
 
   const handleNext = () => {
     // Check if all required fields are filled
-    if (!formData.name || !formData.whatsappNumber || !formData.dateOfBirth || !formData.gender || !formData.passportPhotograph || !formData.adults) {
-      toast.error("Please fill all required fields and upload your passport photograph");
+    if (
+      !formData.name ||
+      !formData.whatsappNumber ||
+      !formData.dateOfBirth ||
+      !formData.gender ||
+      !formData.passportPhotograph ||
+      !formData.adults
+    ) {
+      toast.error(
+        "Please fill all required fields and upload your passport photograph"
+      );
       return;
     }
     setCurrentStep("confirmation");
@@ -208,21 +232,38 @@ function FlashSaleDetails() {
   return (
     <Container className="py-5">
       {currentStep === "form" && (
-        <Row style={{
-          marginTop: "100px"
-        }}>
+        <Row
+          style={{
+            marginTop: "100px",
+          }}
+        >
           <Col lg={8}>
             <Card>
-              <Card.Img variant="top" src={flashSale.backgroundImage} alt={flashSale.destinationCity} />
+              <Card.Img
+                variant="top"
+                src={flashSale.backgroundImage}
+                alt={flashSale.destinationCity}
+              />
               <Card.Body>
                 <Card.Title>{flashSale.destinationCity} Flash Sale</Card.Title>
                 <Card.Text>
-                  <strong>Price:</strong> ₦{flashSale.price}<br />
-                  <strong>From:</strong> {flashSale.departureCity}<br />
-                  <strong>To:</strong> {flashSale.destinationCity}<br />
-                  <strong>Airline:</strong> {flashSale.airline}<br />
-                  <strong>Valid From:</strong> {flashSale.dateValidFrom ? new Date(flashSale.dateValidFrom).toLocaleDateString() : 'N/A'}<br />
-                  <strong>Valid Until:</strong> {flashSale.dateValid ? new Date(flashSale.dateValid).toLocaleDateString() : 'N/A'}
+                  <strong>Price:</strong> ₦{flashSale.price}
+                  <br />
+                  <strong>From:</strong> {flashSale.departureCity}
+                  <br />
+                  <strong>To:</strong> {flashSale.destinationCity}
+                  <br />
+                  <strong>Airline:</strong> {flashSale.airline}
+                  <br />
+                  <strong>Valid From:</strong>{" "}
+                  {flashSale.dateValidFrom
+                    ? new Date(flashSale.dateValidFrom).toLocaleDateString()
+                    : "N/A"}
+                  <br />
+                  <strong>Valid Until:</strong>{" "}
+                  {flashSale.dateValid
+                    ? new Date(flashSale.dateValid).toLocaleDateString()
+                    : "N/A"}
                 </Card.Text>
               </Card.Body>
             </Card>
@@ -233,7 +274,15 @@ function FlashSaleDetails() {
                 <h4>Book Now</h4>
               </Card.Header>
               <Card.Body>
-                {message && <Alert variant={message.includes("successfully") ? "success" : "danger"}>{message}</Alert>}
+                {message && (
+                  <Alert
+                    variant={
+                      message.includes("successfully") ? "success" : "danger"
+                    }
+                  >
+                    {message}
+                  </Alert>
+                )}
                 <Form onSubmit={handleSubmit}>
                   <Form.Group className="mb-3">
                     <Form.Label>Name</Form.Label>
@@ -276,39 +325,62 @@ function FlashSaleDetails() {
                     <Form.Control
                       type="file"
                       accept="image/*"
-                      onChange={(e) => handleFileChange(e, 'passportPhotograph')}
+                      onChange={(e) =>
+                        handleFileChange(e, "passportPhotograph")
+                      }
                       required
                     />
                     {selectedFiles.passportPhotograph && (
                       <div className="mt-2">
-                        <small className="text-muted">{selectedFiles.passportPhotograph.name}</small>
-                        {uploadProgress['passportPhotograph-0'] && (
-                          <div className="progress mt-1" style={{ height: "6px" }}>
+                        <small className="text-muted">
+                          {selectedFiles.passportPhotograph.name}
+                        </small>
+                        {uploadProgress["passportPhotograph-0"] && (
+                          <div
+                            className="progress mt-1"
+                            style={{ height: "6px" }}
+                          >
                             <div
                               className={`progress-bar ${
-                                uploadProgress['passportPhotograph-0'].status === "success"
+                                uploadProgress["passportPhotograph-0"]
+                                  .status === "success"
                                   ? "bg-success"
-                                  : uploadProgress['passportPhotograph-0'].status === "error"
+                                  : uploadProgress["passportPhotograph-0"]
+                                      .status === "error"
                                   ? "bg-danger"
                                   : "bg-primary"
                               }`}
                               role="progressbar"
-                              style={{ width: `${uploadProgress['passportPhotograph-0'].progress}%` }}
-                              aria-valuenow={uploadProgress['passportPhotograph-0'].progress}
+                              style={{
+                                width: `${uploadProgress["passportPhotograph-0"].progress}%`,
+                              }}
+                              aria-valuenow={
+                                uploadProgress["passportPhotograph-0"].progress
+                              }
                               aria-valuemin="0"
                               aria-valuemax="100"
                             ></div>
                           </div>
                         )}
-                        {uploadProgress['passportPhotograph-0'] && uploadProgress['passportPhotograph-0'].status === "success" && (
-                          <small className="text-success">✓ Uploaded successfully</small>
-                        )}
-                        {uploadProgress['passportPhotograph-0'] && uploadProgress['passportPhotograph-0'].status === "error" && (
-                          <small className="text-danger">✗ Upload failed</small>
-                        )}
-                        {uploadProgress['passportPhotograph-0'] && uploadProgress['passportPhotograph-0'].status === "uploading" && (
-                          <small className="text-primary">Uploading...</small>
-                        )}
+                        {uploadProgress["passportPhotograph-0"] &&
+                          uploadProgress["passportPhotograph-0"].status ===
+                            "success" && (
+                            <small className="text-success">
+                              ✓ Uploaded successfully
+                            </small>
+                          )}
+                        {uploadProgress["passportPhotograph-0"] &&
+                          uploadProgress["passportPhotograph-0"].status ===
+                            "error" && (
+                            <small className="text-danger">
+                              ✗ Upload failed
+                            </small>
+                          )}
+                        {uploadProgress["passportPhotograph-0"] &&
+                          uploadProgress["passportPhotograph-0"].status ===
+                            "uploading" && (
+                            <small className="text-primary">Uploading...</small>
+                          )}
                       </div>
                     )}
                   </Form.Group>
@@ -324,7 +396,12 @@ function FlashSaleDetails() {
                   </Form.Group>
                   <Form.Group className="mb-3">
                     <Form.Label>Gender</Form.Label>
-                    <Form.Select name="gender" value={formData.gender} onChange={handleInputChange} required>
+                    <Form.Select
+                      name="gender"
+                      value={formData.gender}
+                      onChange={handleInputChange}
+                      required
+                    >
                       <option value="">Select Gender</option>
                       <option value="male">Male</option>
                       <option value="female">Female</option>
@@ -359,7 +436,12 @@ function FlashSaleDetails() {
                       onChange={handleInputChange}
                     />
                   </Form.Group>
-                  <Button type="button" onClick={handleNext} variant="primary" disabled={bookingLoading}>
+                  <Button
+                    type="button"
+                    onClick={handleNext}
+                    style={{ backgroundColor: "#f1741e", color: "white", border: "none", paddingLeft : "20px", paddingRight : "20px" }}
+                    disabled={bookingLoading}
+                  >
                     {bookingLoading ? "Submitting..." : "Next"}
                   </Button>
                 </Form>
@@ -370,21 +452,38 @@ function FlashSaleDetails() {
       )}
 
       {currentStep === "confirmation" && (
-        <Row style={{
-          marginTop: "100px"
-        }}>
+        <Row
+          style={{
+            marginTop: "100px",
+          }}
+        >
           <Col lg={8}>
             <Card>
-              <Card.Img variant="top" src={flashSale.backgroundImage} alt={flashSale.destinationCity} />
+              <Card.Img
+                variant="top"
+                src={flashSale.backgroundImage}
+                alt={flashSale.destinationCity}
+              />
               <Card.Body>
                 <Card.Title>{flashSale.destinationCity} Flash Sale</Card.Title>
                 <Card.Text>
-                  <strong>Price:</strong> ₦{flashSale.price}<br />
-                  <strong>From:</strong> {flashSale.departureCity}<br />
-                  <strong>To:</strong> {flashSale.destinationCity}<br />
-                  <strong>Airline:</strong> {flashSale.airline}<br />
-                  <strong>Valid From:</strong> {flashSale.dateValidFrom ? new Date(flashSale.dateValidFrom).toLocaleDateString() : 'N/A'}<br />
-                  <strong>Valid Until:</strong> {flashSale.dateValid ? new Date(flashSale.dateValid).toLocaleDateString() : 'N/A'}
+                  <strong>Price:</strong> ₦{flashSale.price}
+                  <br />
+                  <strong>From:</strong> {flashSale.departureCity}
+                  <br />
+                  <strong>To:</strong> {flashSale.destinationCity}
+                  <br />
+                  <strong>Airline:</strong> {flashSale.airline}
+                  <br />
+                  <strong>Valid From:</strong>{" "}
+                  {flashSale.dateValidFrom
+                    ? new Date(flashSale.dateValidFrom).toLocaleDateString()
+                    : "N/A"}
+                  <br />
+                  <strong>Valid Until:</strong>{" "}
+                  {flashSale.dateValid
+                    ? new Date(flashSale.dateValid).toLocaleDateString()
+                    : "N/A"}
                 </Card.Text>
               </Card.Body>
             </Card>
@@ -396,37 +495,79 @@ function FlashSaleDetails() {
               </Card.Header>
               <Card.Body>
                 <h5>Booking Details:</h5>
-                <p><strong>Name:</strong> {formData.name}</p>
-                <p><strong>WhatsApp Number:</strong> {formData.countryCode} {formData.whatsappNumber}</p>
-                <p><strong>Date of Birth:</strong> {formData.dateOfBirth}</p>
-                <p><strong>Gender:</strong> {formData.gender}</p>
-                <p><strong>Adults:</strong> {formData.adults}</p>
-                <p><strong>Children:</strong> {formData.children || 0}</p>
-                <p><strong>Infants:</strong> {formData.infants || 0}</p>
-                <p><strong>Passport Photograph:</strong></p>
+                <p>
+                  <strong>Name:</strong> {formData.name}
+                </p>
+                <p>
+                  <strong>WhatsApp Number:</strong> {formData.countryCode}{" "}
+                  {formData.whatsappNumber}
+                </p>
+                <p>
+                  <strong>Date of Birth:</strong> {formData.dateOfBirth}
+                </p>
+                <p>
+                  <strong>Gender:</strong> {formData.gender}
+                </p>
+                <p>
+                  <strong>Adults:</strong> {formData.adults}
+                </p>
+                <p>
+                  <strong>Children:</strong> {formData.children || 0}
+                </p>
+                <p>
+                  <strong>Infants:</strong> {formData.infants || 0}
+                </p>
+                <p>
+                  <strong>Passport Photograph:</strong>
+                </p>
                 {formData.passportPhotograph && (
                   <div className="mt-2">
                     <img
                       src={formData.passportPhotograph}
                       alt="Passport Photograph"
-                      style={{ maxWidth: "200px", maxHeight: "200px", objectFit: "cover" }}
+                      style={{
+                        maxWidth: "200px",
+                        maxHeight: "200px",
+                        objectFit: "cover",
+                      }}
                       className="img-thumbnail"
-                      onLoad={() => console.log("Image loaded successfully:", formData.passportPhotograph)}
+                      onLoad={() =>
+                        console.log(
+                          "Image loaded successfully:",
+                          formData.passportPhotograph
+                        )
+                      }
                       onError={(e) => {
-                        console.error("Image failed to load:", formData.passportPhotograph);
+                        console.error(
+                          "Image failed to load:",
+                          formData.passportPhotograph
+                        );
                         // Try to fetch the image to see the response
                         fetch(formData.passportPhotograph)
-                          .then(response => {
-                            console.log("Image fetch response:", response.status, response.statusText);
+                          .then((response) => {
+                            console.log(
+                              "Image fetch response:",
+                              response.status,
+                              response.statusText
+                            );
                             if (!response.ok) {
-                              console.error("Image not accessible:", response.status);
+                              console.error(
+                                "Image not accessible:",
+                                response.status
+                              );
                             }
                           })
-                          .catch(error => console.error("Fetch error:", error));
-                        e.target.style.display = 'none';
+                          .catch((error) =>
+                            console.error("Fetch error:", error)
+                          );
+                        e.target.style.display = "none";
                       }}
                     />
-                    <p className="mt-2 mb-0"><small className="text-muted">{formData.passportPhotographName || "Uploaded image"}</small></p>
+                    <p className="mt-2 mb-0">
+                      <small className="text-muted">
+                        {formData.passportPhotographName || "Uploaded image"}
+                      </small>
+                    </p>
                   </div>
                 )}
                 <div className="d-flex flex-column flex-md-row justify-content-between gap-3 mt-4">
@@ -434,7 +575,7 @@ function FlashSaleDetails() {
                     variant="secondary"
                     onClick={handleBack}
                     className="w-100 mt-3"
-                    style={{ paddingTop: '1rem', paddingBottom: '1rem' }}
+                    style={{ paddingTop: "1rem", paddingBottom: "1rem" }}
                   >
                     Back
                   </Button>
