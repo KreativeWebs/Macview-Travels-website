@@ -135,16 +135,25 @@ function Login() {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         credentials: "include",
-        body: JSON.stringify({ idToken, email: user.email }),
+        body: JSON.stringify({ idToken, email: user.email, firstName: user.displayName }),
       });
 
-      const data = await response.json();
+      let data;
+      try {
+        data = await response.json();
+      } catch (parseError) {
+        console.error("Failed to parse response as JSON:", parseError);
+        setGoogleLoading(false);
+        toast.error("Server error occurred during Google login");
+        return;
+      }
+
       setGoogleLoading(false);
 
       if (response.ok) {
         const authStore = useAuthStore.getState();
-        authStore.user = data.user;
-        authStore.accessToken = data.accessToken;
+        authStore.setUser(data.user);
+        authStore.setAccessToken(data.accessToken);
 
         toast.success("Login successful");
 

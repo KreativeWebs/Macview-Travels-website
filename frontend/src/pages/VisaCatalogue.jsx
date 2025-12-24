@@ -146,7 +146,7 @@ export default function VisaCatalogue() {
       <div className="container">
         <div className="text-center wow fadeInUp" data-wow-delay="0.1s">
           <h6
-            className="section-title bg-white text-center text-primary px-3"
+            className="section-title bg-white text-center text-secondary px-3"
             style={{ fontFamily: "Raleway", color: "#f1741e" }}
           >
             Visas
@@ -332,13 +332,13 @@ export default function VisaCatalogue() {
 
           {/* Navigation Buttons */}
           <div
-            className="d-none d-lg-flex justify-content-between position-absolute top-50 start-0 end-0 px-3"
+            className="d-flex justify-content-between position-absolute top-50 start-0 end-0 px-3"
             style={{ pointerEvents: "none" }}
           >
-            <button className="visa-prev" style={{ pointerEvents: "all" }}>
+            <button className="visa-prev" style={{ pointerEvents: "all", background: "white", color: "black", border: "none", borderRadius: "50%", width: "40px", height: "40px", display: "flex", alignItems: "center", justifyContent: "center", boxShadow: "0 2px 5px rgba(0,0,0,0.2)" }}>
               <i className="fa fa-chevron-left"></i>
             </button>
-            <button className="visa-next" style={{ pointerEvents: "all" }}>
+            <button className="visa-next" style={{ pointerEvents: "all", background: "white", color: "black", border: "none", borderRadius: "50%", width: "40px", height: "40px", display: "flex", alignItems: "center", justifyContent: "center", boxShadow: "0 2px 5px rgba(0,0,0,0.2)" }}>
               <i className="fa fa-chevron-right"></i>
             </button>
           </div>

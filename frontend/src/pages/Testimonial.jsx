@@ -33,7 +33,7 @@ function Testimonial() {
       {/* Section Title inside container */}
       <div className="container text-center mb-5">
         <h6
-          className="section-title text-primary px-3"
+          className="section-title text-secondary px-3"
           style={{ fontFamily: "'Raleway', sans-serif", color: "#f1741e" }}
         >
           Testimonials

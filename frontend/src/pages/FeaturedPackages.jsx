@@ -42,7 +42,7 @@ function FeaturedPackages() {
       <div className="container">
         <div className="text-center wow fadeInUp" data-wow-delay="0.1s">
           <h6
-            className="section-title bg-white text-center text-primary px-3"
+            className="section-title bg-white text-center text-secondary px-3"
             style={{
               fontFamily:
                 "'Raleway', system-ui, Avenir, Helvetica, Arial, sans-serif",
@@ -92,7 +92,9 @@ function FeaturedPackages() {
               outline: "none",
               border: "none",
               borderRadius: "4px",
-              width: "170px"
+              width: "170px",
+               backgroundColor: "#f1741e",
+                color: "#fff",
             }}
           >
             See More

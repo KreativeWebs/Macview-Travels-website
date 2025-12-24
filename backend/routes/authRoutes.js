@@ -465,13 +465,16 @@ router.get("/user/visa-applications", async (req, res) => {
   try {
     const decoded = jwt.verify(token, process.env.ACCESS_TOKEN_SECRET);
     const user = await User.findById(decoded.id).select("email");
-    if (!user) {
+    if (!user || !user.email) {
       return res.status(404).json({ message: "User not found" });
     }
 
+    // Escape regex special characters in email
+    const escapedEmail = user.email.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
+
     // Fetch visa applications for this user only
     const bookings = await VisaApplication.find({
-      email: { $regex: new RegExp(`^${user.email}$`, "i") },
+      email: { $regex: new RegExp(`^${escapedEmail}$`, "i") },
     }).sort({ createdAt: -1 });
 
     res.json({ bookings });
@@ -506,13 +509,16 @@ router.get("/user/flight-bookings", async (req, res) => {
   try {
     const decoded = jwt.verify(token, process.env.ACCESS_TOKEN_SECRET);
     const user = await User.findById(decoded.id).select("email");
-    if (!user) {
+    if (!user || !user.email) {
       return res.status(404).json({ message: "User not found" });
     }
 
+    // Escape regex special characters in email
+    const escapedEmail = user.email.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
+
     // Fetch flight bookings for this user only
     const bookings = await FlightBooking.find({
-      email: { $regex: new RegExp(`^${user.email}$`, "i") },
+      email: { $regex: new RegExp(`^${escapedEmail}$`, "i") },
     }).sort({ createdAt: -1 });
 
     res.json({ bookings });
@@ -543,13 +549,16 @@ router.get("/user/hotel-bookings", async (req, res) => {
   try {
     const decoded = jwt.verify(token, process.env.ACCESS_TOKEN_SECRET);
     const user = await User.findById(decoded.id).select("email");
-    if (!user) {
+    if (!user || !user.email) {
       return res.status(404).json({ message: "User not found" });
     }
 
+    // Escape regex special characters in email
+    const escapedEmail = user.email.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
+
     // Fetch hotel bookings for this user only
     const bookings = await HotelBooking.find({
-      email: { $regex: new RegExp(`^${user.email}$`, "i") },
+      email: { $regex: new RegExp(`^${escapedEmail}$`, "i") },
     }).sort({ createdAt: -1 });
 
     res.json({ bookings });
@@ -580,13 +589,16 @@ router.get("/user/package-bookings", async (req, res) => {
   try {
     const decoded = jwt.verify(token, process.env.ACCESS_TOKEN_SECRET);
     const user = await User.findById(decoded.id).select("email");
-    if (!user) {
+    if (!user || !user.email) {
       return res.status(404).json({ message: "User not found" });
     }
 
+    // Escape regex special characters in email
+    const escapedEmail = user.email.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
+
     // Fetch package bookings for this user only
     const bookings = await PackageBooking.find({
-      email: { $regex: new RegExp(`^${user.email}$`, "i") },
+      email: { $regex: new RegExp(`^${escapedEmail}$`, "i") },
     })
       .populate("packageId", "city title")
       .sort({ createdAt: -1 });

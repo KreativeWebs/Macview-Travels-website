@@ -27,10 +27,11 @@ function WhatWeOffer() {
       <div className="container">
         <div className="text-center wow fadeInUp" data-wow-delay="0.1s">
           <h6
-            className="section-title bg-white text-center text-primary px-3"
+            className="section-title bg-white text-secondary text-center px-3"
             style={{
               fontFamily:
                 "'Raleway', system-ui, Avenir, Helvetica, Arial, sans-serif",
+                
             }}
           >
             Services
@@ -89,7 +90,7 @@ function WhatWeOffer() {
           <div className="text-center mt-5">
             <Link
               to="/services"
-              className="btn btn-secondary py-3 px-5 mt-1"
+              className="btn py-3 px-5 mt-1"
               style={{
                 fontFamily:
                   "'Raleway', system-ui, Avenir, Helvetica, Arial, sans-serif",
@@ -97,6 +98,8 @@ function WhatWeOffer() {
                 outline: "none",
                 border: "none",
                 borderRadius: "4px",
+                backgroundColor: "#f1741e",
+                color: "#fff",
               }}
             >
               See More
