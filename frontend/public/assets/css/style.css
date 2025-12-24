@@ -624,8 +624,7 @@ button:active {
 .team-item .btn {
   background: #ffffff;
   color: var(--primary);
-  border-radius: 20px;
-  border-bottom: 1px solid var(--primary);
+  border-radius: 50%;
 }
 
 .team-item .btn:hover {

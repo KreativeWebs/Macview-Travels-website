@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+  import React, { useState, useEffect } from "react";
 import { useAuthStore } from "../store/authStore";
 import { toast } from "react-toastify";
 import userAxios from "../api/userAxios";
@@ -8,12 +8,21 @@ export default function ManageBookings() {
   const [bookings, setBookings] = useState([]);
   const [loading, setLoading] = useState(true);
   const [activeTab, setActiveTab] = useState("visa");
+  const [isMobile, setIsMobile] = useState(window.innerWidth < 768);
 
   useEffect(() => {
     if (user && accessToken) {
       fetchBookings(activeTab);
     }
   }, [user, accessToken, activeTab]);
+
+  useEffect(() => {
+    const handleResize = () => {
+      setIsMobile(window.innerWidth < 768);
+    };
+    window.addEventListener('resize', handleResize);
+    return () => window.removeEventListener('resize', handleResize);
+  }, []);
 
   const fetchBookings = async (type) => {
     setLoading(true);
@@ -37,238 +46,377 @@ export default function ManageBookings() {
   };
 
   const getStatusBadge = (status) => {
-    const statusClasses = {
-      received: "badge bg-warning",
-      confirmed: "badge bg-success",
-      cancelled: "badge bg-danger",
-      pending: "badge bg-secondary",
-      paid: "badge bg-info",
-      failed: "badge bg-danger",
-    };
-    return statusClasses[status] || "badge bg-secondary";
+    let color = '#f1741e'; // secondary
+    if (status === 'confirmed' || status === 'paid') {
+      color = '#175aa1'; // primary
+    }
+    return { backgroundColor: color, color: 'white' };
   };
 
-  const renderVisaApplications = () => (
-    <div className="table-responsive">
-      <table className="table table-striped">
-        <thead>
-          <tr>
-            <th>Full Name</th>
-            <th>Destination</th>
-            <th>Visa Type</th>
-            <th>Status</th>
-            <th>Payment</th>
-            <th>Date</th>
-          </tr>
-        </thead>
-        <tbody>
+  const renderVisaApplications = () => {
+    if (bookings.length === 0) {
+      return <div className="text-center">No Visa Applications yet</div>;
+    }
+    if (isMobile) {
+      return (
+        <div className="row">
           {bookings.map((booking) => (
-            <tr key={booking._id}>
-              <td>{booking.fullName}</td>
-              <td>{booking.destinationCountry}</td>
-              <td>{booking.visaType}</td>
-              <td>
-                <span className={getStatusBadge(booking.status)}>
-                  {booking.status}
-                </span>
-              </td>
-              <td>
-                <span className={getStatusBadge(booking.payment?.status)}>
-                  {booking.payment?.status}
-                </span>
-              </td>
-              <td>{new Date(booking.createdAt).toLocaleDateString()}</td>
-            </tr>
+            <div key={booking._id} className="col-12 mb-3">
+              <div className="card" style={{ boxShadow: '0 0 45px rgba(0, 0, 0, 0.08)', fontFamily: 'Raleway, sans-serif' }}>
+                <div className="card-body">
+                  <h5 className="card-title">{booking.fullName}</h5>
+                  <div className="card-text">
+                    <div className="mb-2"><strong>Destination:</strong> {booking.destinationCountry}</div>
+                    <div className="mb-2"><strong>Visa Type:</strong> {booking.visaType}</div>
+                    <div className="mb-2"><strong>Status:</strong> <span style={getStatusBadge(booking.status)} className="badge">{booking.status}</span></div>
+                    <div className="mb-2"><strong>Payment:</strong> <span style={getStatusBadge(booking.payment?.status)} className="badge">{booking.payment?.status}</span></div>
+                    <div className="mb-2"><strong>Date:</strong> {new Date(booking.createdAt).toLocaleDateString()}</div>
+                  </div>
+                </div>
+              </div>
+            </div>
           ))}
-        </tbody>
-      </table>
-    </div>
-  );
+        </div>
+      );
+    }
+    return (
+      <div className="table-responsive">
+        <table className="table table-striped">
+          <thead>
+            <tr>
+              <th>Full Name</th>
+              <th>Destination</th>
+              <th>Visa Type</th>
+              <th>Status</th>
+              <th>Payment</th>
+              <th>Date</th>
+            </tr>
+          </thead>
+          <tbody>
+            {bookings.map((booking) => (
+              <tr key={booking._id}>
+                <td>{booking.fullName}</td>
+                <td>{booking.destinationCountry}</td>
+                <td>{booking.visaType}</td>
+                <td>
+                  <span className={getStatusBadge(booking.status)}>
+                    {booking.status}
+                  </span>
+                </td>
+                <td>
+                  <span className={getStatusBadge(booking.payment?.status)}>
+                    {booking.payment?.status}
+                  </span>
+                </td>
+                <td>{new Date(booking.createdAt).toLocaleDateString()}</td>
+              </tr>
+            ))}
+          </tbody>
+        </table>
+      </div>
+    );
+  };
 
-  const renderFlightBookings = () => (
-    <div className="table-responsive">
-      <table className="table table-striped">
-        <thead>
-          <tr>
-            <th>Full Name</th>
-            <th>Trip Type</th>
-            <th>Departure</th>
-            <th>Destination</th>
-            <th>Departure Date</th>
-            <th>Status</th>
-            <th>Payment</th>
-            <th>Date</th>
-          </tr>
-        </thead>
-        <tbody>
+  const renderFlightBookings = () => {
+    if (bookings.length === 0) {
+      return <div className="text-center">No Flight Bookings yet</div>;
+    }
+    if (isMobile) {
+      return (
+        <div className="row">
           {bookings.map((booking) => (
-            <tr key={booking._id}>
-              <td>{booking.fullName}</td>
-              <td>{booking.tripType}</td>
-              <td>{booking.departureCity}</td>
-              <td>{booking.destinationCity}</td>
-              <td>
-                {booking.departureDate
-                  ? new Date(booking.departureDate).toLocaleDateString()
-                  : "N/A"}
-              </td>
-              <td>
-                <span className={getStatusBadge(booking.status)}>
-                  {booking.status}
-                </span>
-              </td>
-              <td>
-                <span className={getStatusBadge(booking.payment?.status)}>
-                  {booking.payment?.status}
-                </span>
-              </td>
-              <td>{new Date(booking.createdAt).toLocaleDateString()}</td>
-            </tr>
+            <div key={booking._id} className="col-12 mb-3">
+              <div className="card" style={{ boxShadow: '0 0 45px rgba(0, 0, 0, 0.08)', fontFamily: 'Raleway, sans-serif' }}>
+                <div className="card-body">
+                  <h5 className="card-title">{booking.fullName}</h5>
+                  <div className="card-text">
+                    <div className="mb-2"><strong>Trip Type:</strong> {booking.tripType}</div>
+                    <div className="mb-2"><strong>Departure:</strong> {booking.departureCity}</div>
+                    <div className="mb-2"><strong>Destination:</strong> {booking.destinationCity}</div>
+                    <div className="mb-2"><strong>Departure Date:</strong> {booking.departureDate ? new Date(booking.departureDate).toLocaleDateString() : "N/A"}</div>
+                    <div className="mb-2"><strong>Status:</strong> <span style={getStatusBadge(booking.status)} className="badge">{booking.status}</span></div>
+                    <div className="mb-2"><strong>Payment:</strong> <span style={getStatusBadge(booking.payment?.status)} className="badge">{booking.payment?.status}</span></div>
+                    <div className="mb-2"><strong>Date:</strong> {new Date(booking.createdAt).toLocaleDateString()}</div>
+                  </div>
+                </div>
+              </div>
+            </div>
           ))}
-        </tbody>
-      </table>
-    </div>
-  );
+        </div>
+      );
+    }
+    return (
+      <div className="table-responsive">
+        <table className="table table-striped">
+          <thead>
+            <tr>
+              <th>Full Name</th>
+              <th>Trip Type</th>
+              <th>Departure</th>
+              <th>Destination</th>
+              <th>Departure Date</th>
+              <th>Status</th>
+              <th>Payment</th>
+              <th>Date</th>
+            </tr>
+          </thead>
+          <tbody>
+            {bookings.map((booking) => (
+              <tr key={booking._id}>
+                <td>{booking.fullName}</td>
+                <td>{booking.tripType}</td>
+                <td>{booking.departureCity}</td>
+                <td>{booking.destinationCity}</td>
+                <td>
+                  {booking.departureDate
+                    ? new Date(booking.departureDate).toLocaleDateString()
+                    : "N/A"}
+                </td>
+                <td>
+                  <span className={getStatusBadge(booking.status)}>
+                    {booking.status}
+                  </span>
+                </td>
+                <td>
+                  <span className={getStatusBadge(booking.payment?.status)}>
+                    {booking.payment?.status}
+                  </span>
+                </td>
+                <td>{new Date(booking.createdAt).toLocaleDateString()}</td>
+              </tr>
+            ))}
+          </tbody>
+        </table>
+      </div>
+    );
+  };
 
-  const renderHotelBookings = () => (
-    <div className="table-responsive">
-      <table className="table table-striped">
-        <thead>
-          <tr>
-            <th>Full Name</th>
-            <th>Destination</th>
-            <th>Check-in</th>
-            <th>Check-out</th>
-            <th>Rooms</th>
-            <th>Guests</th>
-            <th>Status</th>
-            <th>Payment</th>
-            <th>Date</th>
-          </tr>
-        </thead>
-        <tbody>
+  const renderHotelBookings = () => {
+    if (bookings.length === 0) {
+      return <div className="text-center">No Hotel Bookings yet</div>;
+    }
+    if (isMobile) {
+      return (
+        <div className="row">
           {bookings.map((booking) => (
-            <tr key={booking._id}>
-              <td>{booking.fullName}</td>
-              <td>{booking.destination}</td>
-              <td>
-                {booking.checkInDate
-                  ? new Date(booking.checkInDate).toLocaleDateString()
-                  : "N/A"}
-              </td>
-              <td>
-                {booking.checkOutDate
-                  ? new Date(booking.checkOutDate).toLocaleDateString()
-                  : "N/A"}
-              </td>
-              <td>{booking.rooms}</td>
-              <td>{booking.guests}</td>
-              <td>
-                <span className={getStatusBadge(booking.status)}>
-                  {booking.status}
-                </span>
-              </td>
-              <td>
-                <span className={getStatusBadge(booking.payment?.status)}>
-                  {booking.payment?.status}
-                </span>
-              </td>
-              <td>{new Date(booking.createdAt).toLocaleDateString()}</td>
-            </tr>
+            <div key={booking._id} className="col-12 mb-3">
+              <div className="card" style={{ boxShadow: '0 0 45px rgba(0, 0, 0, 0.08)', fontFamily: 'Raleway, sans-serif' }}>
+                <div className="card-body">
+                  <h5 className="card-title">{booking.fullName}</h5>
+                  <div className="card-text">
+                    <div className="mb-2"><strong>Destination:</strong> {booking.destination}</div>
+                    <div className="mb-2"><strong>Check-in:</strong> {booking.checkInDate ? new Date(booking.checkInDate).toLocaleDateString() : "N/A"}</div>
+                    <div className="mb-2"><strong>Check-out:</strong> {booking.checkOutDate ? new Date(booking.checkOutDate).toLocaleDateString() : "N/A"}</div>
+                    <div className="mb-2"><strong>Rooms:</strong> {booking.rooms}</div>
+                    <div className="mb-2"><strong>Guests:</strong> {booking.guests}</div>
+                    <div className="mb-2"><strong>Status:</strong> <span style={getStatusBadge(booking.status)} className="badge">{booking.status}</span></div>
+                    <div className="mb-2"><strong>Payment:</strong> <span style={getStatusBadge(booking.payment?.status)} className="badge">{booking.payment?.status}</span></div>
+                    <div className="mb-2"><strong>Date:</strong> {new Date(booking.createdAt).toLocaleDateString()}</div>
+                  </div>
+                </div>
+              </div>
+            </div>
           ))}
-        </tbody>
-      </table>
-    </div>
-  );
+        </div>
+      );
+    }
+    return (
+      <div className="table-responsive">
+        <table className="table table-striped">
+          <thead>
+            <tr>
+              <th>Full Name</th>
+              <th>Destination</th>
+              <th>Check-in</th>
+              <th>Check-out</th>
+              <th>Rooms</th>
+              <th>Guests</th>
+              <th>Status</th>
+              <th>Payment</th>
+              <th>Date</th>
+            </tr>
+          </thead>
+          <tbody>
+            {bookings.map((booking) => (
+              <tr key={booking._id}>
+                <td>{booking.fullName}</td>
+                <td>{booking.destination}</td>
+                <td>
+                  {booking.checkInDate
+                    ? new Date(booking.checkInDate).toLocaleDateString()
+                    : "N/A"}
+                </td>
+                <td>
+                  {booking.checkOutDate
+                    ? new Date(booking.checkOutDate).toLocaleDateString()
+                    : "N/A"}
+                </td>
+                <td>{booking.rooms}</td>
+                <td>{booking.guests}</td>
+                <td>
+                  <span className={getStatusBadge(booking.status)}>
+                    {booking.status}
+                  </span>
+                </td>
+                <td>
+                  <span className={getStatusBadge(booking.payment?.status)}>
+                    {booking.payment?.status}
+                  </span>
+                </td>
+                <td>{new Date(booking.createdAt).toLocaleDateString()}</td>
+              </tr>
+            ))}
+          </tbody>
+        </table>
+      </div>
+    );
+  };
 
-  const renderPackageBookings = () => (
-    <div className="table-responsive">
-      <table className="table table-striped">
-        <thead>
-          <tr>
-            <th>Full Name</th>
-            <th>Package</th>
-            <th>City</th>
-            <th>Travel Date</th>
-            <th>Price</th>
-            <th>Status</th>
-            <th>Payment</th>
-            <th>Date</th>
-          </tr>
-        </thead>
-        <tbody>
+  const renderPackageBookings = () => {
+    if (bookings.length === 0) {
+      return <div className="text-center">No Package Bookings yet</div>;
+    }
+    if (isMobile) {
+      return (
+        <div className="row">
           {bookings.map((booking) => (
-            <tr key={booking._id}>
-              <td>{booking.fullName}</td>
-              <td>{booking.packageTitle}</td>
-              <td>{booking.packageId?.city || "N/A"}</td>
-              <td>
-                {booking.travelDate
-                  ? new Date(booking.travelDate).toLocaleDateString()
-                  : "N/A"}
-              </td>
-              <td>
-                {booking.packageCurrency === "NGN" ? "₦" : "$"}
-                {booking.packagePrice?.toLocaleString()}
-              </td>
-              <td>
-                <span className={getStatusBadge(booking.status)}>
-                  {booking.status}
-                </span>
-              </td>
-              <td>
-                <span className={getStatusBadge(booking.payment?.status)}>
-                  {booking.payment?.status}
-                </span>
-              </td>
-              <td>{new Date(booking.createdAt).toLocaleDateString()}</td>
-            </tr>
+            <div key={booking._id} className="col-12 mb-3">
+              <div className="card" style={{ boxShadow: '0 0 45px rgba(0, 0, 0, 0.08)', fontFamily: 'Raleway, sans-serif' }}>
+                <div className="card-body">
+                  <h5 className="card-title">{booking.fullName}</h5>
+                  <div className="card-text">
+                    <div className="mb-2"><strong>Package:</strong> {booking.packageTitle}</div>
+                    <div className="mb-2"><strong>City:</strong> {booking.packageId?.city || "N/A"}</div>
+                    <div className="mb-2"><strong>Travel Date:</strong> {booking.travelDate ? new Date(booking.travelDate).toLocaleDateString() : "N/A"}</div>
+                    <div className="mb-2"><strong>Price:</strong> {booking.packageCurrency === "NGN" ? "₦" : "$"}{booking.packagePrice?.toLocaleString()}</div>
+                    <div className="mb-2"><strong>Status:</strong> <span style={getStatusBadge(booking.status)} className="badge">{booking.status}</span></div>
+                    <div className="mb-2"><strong>Payment:</strong> <span style={getStatusBadge(booking.payment?.status)} className="badge">{booking.payment?.status}</span></div>
+                    <div className="mb-2"><strong>Date:</strong> {new Date(booking.createdAt).toLocaleDateString()}</div>
+                  </div>
+                </div>
+              </div>
+            </div>
           ))}
-        </tbody>
-      </table>
-    </div>
-  );
+        </div>
+      );
+    }
+    return (
+      <div className="table-responsive">
+        <table className="table table-striped">
+          <thead>
+            <tr>
+              <th>Full Name</th>
+              <th>Package</th>
+              <th>City</th>
+              <th>Travel Date</th>
+              <th>Price</th>
+              <th>Status</th>
+              <th>Payment</th>
+              <th>Date</th>
+            </tr>
+          </thead>
+          <tbody>
+            {bookings.map((booking) => (
+              <tr key={booking._id}>
+                <td>{booking.fullName}</td>
+                <td>{booking.packageTitle}</td>
+                <td>{booking.packageId?.city || "N/A"}</td>
+                <td>
+                  {booking.travelDate
+                    ? new Date(booking.travelDate).toLocaleDateString()
+                    : "N/A"}
+                </td>
+                <td>
+                  {booking.packageCurrency === "NGN" ? "₦" : "$"}
+                  {booking.packagePrice?.toLocaleString()}
+                </td>
+                <td>
+                  <span className={getStatusBadge(booking.status)}>
+                    {booking.status}
+                  </span>
+                </td>
+                <td>
+                  <span className={getStatusBadge(booking.payment?.status)}>
+                    {booking.payment?.status}
+                  </span>
+                </td>
+                <td>{new Date(booking.createdAt).toLocaleDateString()}</td>
+              </tr>
+            ))}
+          </tbody>
+        </table>
+      </div>
+    );
+  };
 
-  const renderFlashSaleBookings = () => (
-    <div className="table-responsive">
-      <table className="table table-striped">
-        <thead>
-          <tr>
-            <th>Full Name</th>
-            <th>Destination</th>
-            <th>Airline</th>
-            <th>Price</th>
-            <th>Status</th>
-            <th>Payment</th>
-            <th>Date</th>
-          </tr>
-        </thead>
-        <tbody>
+  const renderFlashSaleBookings = () => {
+    if (bookings.length === 0) {
+      return <div className="text-center">No Flash Sale Bookings yet</div>;
+    }
+    if (isMobile) {
+      return (
+        <div className="row">
           {bookings.map((booking) => (
-            <tr key={booking._id}>
-              <td>{booking.name}</td>
-              <td>{booking.flashSaleId?.destinationCity || "N/A"}</td>
-              <td>{booking.flashSaleId?.airline || "N/A"}</td>
-              <td>
-                ₦{booking.flashSaleId?.price?.toLocaleString() || "N/A"}
-              </td>
-              <td>
-                <span className={getStatusBadge(booking.status)}>
-                  {booking.status}
-                </span>
-              </td>
-              <td>
-                <span className={getStatusBadge(booking.payment?.status)}>
-                  {booking.payment?.status}
-                </span>
-              </td>
-              <td>{new Date(booking.createdAt).toLocaleDateString()}</td>
-            </tr>
+            <div key={booking._id} className="col-12 mb-3">
+              <div className="card" style={{ boxShadow: '0 0 45px rgba(0, 0, 0, 0.08)', fontFamily: 'Raleway, sans-serif' }}>
+                <div className="card-body">
+                  <h5 className="card-title">{booking.name}</h5>
+                  <div className="card-text">
+                    <div className="mb-2"><strong>Destination:</strong> {booking.flashSaleId?.destinationCity || "N/A"}</div>
+                    <div className="mb-2"><strong>Airline:</strong> {booking.flashSaleId?.airline || "N/A"}</div>
+                    <div className="mb-2"><strong>Price:</strong> ₦{booking.flashSaleId?.price?.toLocaleString() || "N/A"}</div>
+                    <div className="mb-2"><strong>Status:</strong> <span style={getStatusBadge(booking.status)} className="badge">{booking.status}</span></div>
+                    <div className="mb-2"><strong>Payment:</strong> <span style={getStatusBadge(booking.payment?.status)} className="badge">{booking.payment?.status}</span></div>
+                    <div className="mb-2"><strong>Date:</strong> {new Date(booking.createdAt).toLocaleDateString()}</div>
+                  </div>
+                </div>
+              </div>
+            </div>
           ))}
-        </tbody>
-      </table>
-    </div>
-  );
+        </div>
+      );
+    }
+    return (
+      <div className="table-responsive">
+        <table className="table table-striped">
+          <thead>
+            <tr>
+              <th>Full Name</th>
+              <th>Destination</th>
+              <th>Airline</th>
+              <th>Price</th>
+              <th>Status</th>
+              <th>Payment</th>
+              <th>Date</th>
+            </tr>
+          </thead>
+          <tbody>
+            {bookings.map((booking) => (
+              <tr key={booking._id}>
+                <td>{booking.name}</td>
+                <td>{booking.flashSaleId?.destinationCity || "N/A"}</td>
+                <td>{booking.flashSaleId?.airline || "N/A"}</td>
+                <td>
+                  ₦{booking.flashSaleId?.price?.toLocaleString() || "N/A"}
+                </td>
+                <td>
+                  <span className={getStatusBadge(booking.status)}>
+                    {booking.status}
+                  </span>
+                </td>
+                <td>
+                  <span className={getStatusBadge(booking.payment?.status)}>
+                    {booking.payment?.status}
+                  </span>
+                </td>
+                <td>{new Date(booking.createdAt).toLocaleDateString()}</td>
+              </tr>
+            ))}
+          </tbody>
+        </table>
+      </div>
+    );
+  };
 
   if (!user) {
     return (
