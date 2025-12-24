@@ -1,9 +1,3 @@
-- [x] Update frontend/src/api/packages.js to use const BASE_URL = import.meta.env.VITE_API_BASE_URL; and adjust axios calls
-- [x] Update frontend/src/api/userAxios.js to use const BASE_URL = import.meta.env.VITE_API_BASE_URL; and adjust axios calls
-- [x] Update frontend/src/api/adminAxios.js to use const BASE_URL = import.meta.env.VITE_API_BASE_URL; and adjust axios calls
-- [x] Update frontend/src/store/authStore.jsx
-- [x] Update frontend/src/pages/Contact.jsx
-- [x] Update frontend/src/pages/Newsletter.jsx
-- [x] Update frontend/src/pages/Signup.jsx
-- [x] Update frontend/src/pages/Unsubscribe.jsx
-- [x] Update frontend/src/pages/Login.jsx
+- [x] Remove console.log from frontend/src/socket.js
+- [x] Remove console.log from frontend/src/api/adminAxios.js
+- [x] Remove console.log from frontend/src/App.jsx

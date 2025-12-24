@@ -1,14 +1,19 @@
 const { app, BrowserWindow, ipcMain, Notification } = require("electron");
 const path = require("path");
-const isDev = require("electron-is-dev"); // optional, for dev vs production
+const fs = require("fs");
+const isDev = require("electron-is-dev");
 
-// CRITICAL FOR WINDOWS NOTIFICATIONS - Set AppUserModelID
+// ✅ MUST be set early for Windows notifications
+app.setName("Macview Admin Dashboard");
 app.setAppUserModelId("com.macviewtravels.admin");
 
+let mainWindow;
+
 function createWindow() {
-  const win = new BrowserWindow({
+  mainWindow = new BrowserWindow({
     width: 1200,
     height: 800,
+    show: false,
     webPreferences: {
       contextIsolation: true,
       nodeIntegration: false,
@@ -17,29 +22,72 @@ function createWindow() {
   });
 
   if (isDev) {
-    // In development, load from Vite dev server
-    win.loadURL("http://localhost:5173/#/adminlogin");
-    win.webContents.openDevTools();
+    mainWindow.loadURL("http://localhost:5173/#/adminlogin");
+    mainWindow.webContents.openDevTools();
   } else {
-    // In production, load from the packaged build
-    win.loadFile(path.join(__dirname, "resources", "frontend", "dist", "index.html"));
-  }
-}
+    const possiblePaths = [
+      path.join(process.resourcesPath, "frontend", "dist", "index.html"),
+      path.join(app.getAppPath(), "frontend", "dist", "index.html"),
+      path.join(__dirname, "frontend", "dist", "index.html"),
+    ];
 
-// System notification listener
-ipcMain.on("notify", (event, { title, body }) => {
-  const notification = new Notification({
-    title, // this WILL now show correctly
-    body,
+    let foundPath = null;
+
+    for (const p of possiblePaths) {
+      console.log("🔍 Checking:", p);
+      if (fs.existsSync(p)) {
+        foundPath = p;
+        console.log("✅ Found index.html at:", p);
+        break;
+      }
+    }
+
+    if (!foundPath) {
+      console.error("❌ index.html NOT FOUND in any expected location");
+      console.error("❌ process.resourcesPath:", process.resourcesPath);
+      console.error("❌ app.getAppPath():", app.getAppPath());
+      console.error("❌ __dirname:", __dirname);
+      return;
+    }
+
+    // Load the file and navigate to admin login route
+    mainWindow.loadFile(foundPath).then(() => {
+      mainWindow.webContents.executeJavaScript(`
+        if (window.location.hash !== '#/adminlogin') {
+          window.location.hash = '#/adminlogin';
+        }
+      `);
+    }).catch((err) => {
+      console.error("❌ Failed to load file:", err);
+    });
+  }
+
+  mainWindow.once("ready-to-show", () => {
+    mainWindow.show();
   });
 
-  notification.show();
+  mainWindow.webContents.on("did-fail-load", (_, code, desc) => {
+    console.error("❌ Failed to load:", code, desc);
+  });
+
+  mainWindow.webContents.on("console-message", (_, level, message) => {
+    console.log("🖥 Renderer:", message);
+  });
+}
+
+// 🔔 System notifications
+ipcMain.on("notify", (_, { title, body }) => {
+  new Notification({
+    title,
+    body,
+    icon: path.join(process.resourcesPath, "icon.ico"),
+  }).show();
 });
 
-app.whenReady().then(() => {
-  // Set app name after app is ready
-  app.setName("Macview Admin Dashboard");
-  createWindow();
+app.whenReady().then(createWindow);
+
+app.on("activate", () => {
+  if (BrowserWindow.getAllWindows().length === 0) createWindow();
 });
 
 app.on("window-all-closed", () => {

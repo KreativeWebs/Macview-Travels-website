@@ -2,8 +2,6 @@ import { io } from 'socket.io-client';
 
 const API_URL = (import.meta.env.VITE_API_BASE_URL || 'https://macview-travels-website-production.up.railway.app').replace('/api', '');
 
-console.log('🔌 Initializing socket connection to:', API_URL);
-
 const socket = io(API_URL, {
   withCredentials: true,
   transports: ['websocket', 'polling'],
