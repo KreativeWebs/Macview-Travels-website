@@ -49,7 +49,7 @@ function About() {
             </h1>
             <p className="mb-4 text-darkblack">
               Macview Travels is your trusted partner for exploring the globe.
-              With over a decade of experience, we specialize in crafting
+              With over 4 Years of experience, we specialize in crafting
               personalized travel packages, luxury escapes, and adventure tours
               for every kind of traveler.
             </p>
@@ -99,7 +99,7 @@ function About() {
             </div>
             <Link
               to="/aboutus"
-              className="btn btn-secondary py-3 px-5 mt-4"
+              className="btn py-3 px-5 mt-4"
               style={{
                 fontFamily:
                   "'Raleway', system-ui, Avenir, Helvetica, Arial, sans-serif",
@@ -107,6 +107,8 @@ function About() {
                 outline: "none",
                 border: "none",
                 borderRadius: "4px",
+                backgroundColor: "#f1741e",
+                color: "#fff",
               }}
             >
               Learn More

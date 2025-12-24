@@ -65,6 +65,30 @@ function Header() {
         loginModal.show();
       }
     }
+
+    // Close mobile nav if open
+    const navbarCollapseElement = document.getElementById("navbarCollapse");
+    if (navbarCollapseElement && navbarCollapseElement.classList.contains("show")) {
+      const collapseInstance = Collapse.getOrCreateInstance(navbarCollapseElement);
+      collapseInstance.hide();
+    }
+  };
+
+  const handleNavLinkClick = () => {
+    // Close mobile nav if open
+    const navbarCollapseElement = document.getElementById("navbarCollapse");
+    if (navbarCollapseElement && navbarCollapseElement.classList.contains("show")) {
+      const collapseInstance = Collapse.getOrCreateInstance(navbarCollapseElement);
+      collapseInstance.hide();
+    }
+  };
+
+  const handleToggle = () => {
+    const navbarCollapseElement = document.getElementById("navbarCollapse");
+    if (navbarCollapseElement) {
+      const collapseInstance = Collapse.getOrCreateInstance(navbarCollapseElement);
+      collapseInstance.toggle();
+    }
   };
 
   useEffect(() => {
@@ -116,12 +140,13 @@ function Header() {
               alt="Macview Travels Logo"
             />
             <h1
-              className="text-primary m-0"
+              className="m-0"
               style={{
                 fontSize: "1rem",
                 paddingLeft: "10px",
                 fontFamily:
                   "'Raleway', system-ui, Avenir, Helvetica, Arial, sans-serif",
+                  fontWeight: "600",
               }}
             >
               Macview Travels
@@ -152,8 +177,7 @@ function Header() {
           <button
             className="navbar-toggler"
             type="button"
-            data-bs-toggle="collapse"
-            data-bs-target="#navbarCollapse"
+            onClick={handleToggle}
           >
             <span className="fa fa-bars" />
           </button>
@@ -167,6 +191,7 @@ function Header() {
               <Link
                 to="/"
                 className="nav-item nav-link"
+                onClick={handleNavLinkClick}
                 style={{
                   fontFamily: "'Raleway', sans-serif",
                   fontWeight: "500",
@@ -181,6 +206,7 @@ function Header() {
               <Link
                 to="/AboutUs"
                 className="nav-item nav-link"
+                onClick={handleNavLinkClick}
                 style={{
                   fontFamily: "'Raleway', sans-serif",
                   fontWeight: "500",
@@ -195,6 +221,7 @@ function Header() {
               <Link
                 to="/Services"
                 className="nav-item nav-link"
+                   onClick={handleNavLinkClick}
                 style={{
                   fontFamily: "'Raleway', sans-serif",
                   fontWeight: "500",
@@ -209,6 +236,7 @@ function Header() {
               <Link
                 to="/Packages"
                 className="nav-item nav-link"
+                   onClick={handleNavLinkClick}
                 style={{
                   fontFamily: "'Raleway', sans-serif",
                   fontWeight: "500",
@@ -239,6 +267,7 @@ function Header() {
               <Link
                 to="/Contact"
                 className="nav-item nav-link"
+                onClick={handleNavLinkClick}
                 style={{
                   fontFamily: "'Raleway', sans-serif",
                   fontWeight: "500",

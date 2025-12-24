@@ -6,7 +6,7 @@ return (
       <div className="container-xxl py-5">
         <div className="container">
           <div className="text-center pb-4 wow fadeInUp" data-wow-delay="0.1s">
-            <h6 className="section-title bg-white text-center text-primary px-3" style={{fontFamily: "Raleway", color: "#f1741e"}}>
+            <h6 className="section-title bg-white text-center text-secondary px-3" style={{fontFamily: "Raleway", color: "#f1741e"}}>
               Process
             </h6>
             <h1 className="mb-5" style={{fontFamily: "Raleway"}}>How It Works</h1>
