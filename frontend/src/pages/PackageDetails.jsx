@@ -6,7 +6,7 @@ import { toast } from "react-toastify";
 import axios from "axios";
 import { countryCodes } from "../data/countryCodes";
 
-const API_BASE_URL = import.meta.env.VITE_API_BASE_URL + "/api";
+const API_BASE_URL = (import.meta.env.DEV ? "http://localhost:5000" : import.meta.env.VITE_API_BASE_URL) + "/api";
 
 export default function PackageDetails() {
   const { id } = useParams();
@@ -303,28 +303,28 @@ export default function PackageDetails() {
                 <div className="row mb-4">
                   <div className="col-md-3">
                     <div className="text-center">
-                      <i className="fa fa-map-marker-alt text-primary mb-2" style={{ fontSize: "24px" }} />
+                      <i className="fa fa-map-marker-alt mb-2" style={{ fontSize: "24px", color: "#175AA1"}} />
                       <h5>{packageData.city}</h5>
                       <small>Location</small>
                     </div>
                   </div>
                   <div className="col-md-3">
                     <div className="text-center">
-                      <i className="fa fa-calendar-alt text-primary mb-2" style={{ fontSize: "24px" }} />
+                      <i className="fa fa-calendar-alt mb-2" style={{ fontSize: "24px", color: "#175AA1" }} />
                       <h5>{packageData.nights} Nights</h5>
                       <small>Duration</small>
                     </div>
                   </div>
                   <div className="col-md-3">
                     <div className="text-center">
-                      <i className="fa fa-user text-primary mb-2" style={{ fontSize: "24px" }} />
+                      <i className="fa fa-user mb-2" style={{ fontSize: "24px", color: "#175AA1" }} />
                       <h5>{packageData.persons} Persons</h5>
                       <small>Capacity</small>
                     </div>
                   </div>
                   <div className="col-md-3">
                     <div className="text-center">
-                      <i className="fa fa-money-bill text-primary mb-2" style={{ fontSize: "24px" }} />
+                      <i className="fa fa-money-bill mb-2" style={{ fontSize: "24px", color: "#175AA1" }} />
                       <h5>{packageData.currency === "NGN" ? "₦" : "$"}{packageData.price.toLocaleString()}</h5>
                       <small>Price</small>
                     </div>
@@ -353,7 +353,7 @@ export default function PackageDetails() {
                     <ul className="list-group">
                       {packageData.requirements.map((req, index) => (
                         <li key={index} className="list-group-item">
-                          <i className="fa fa-list text-primary me-2" />
+                          <i className="fa fa-list me-2" />
                           {req.label}
                         </li>
                       ))}
@@ -506,7 +506,7 @@ export default function PackageDetails() {
                       )}
                     </div>
 
-                    <button type="submit" className="btn btn-primary w-100">
+                    <button type="submit" className="btn w-100" style={{backgroundColor: "#f1741e", color: "white"}}>
                       Proceed to Payment
                     </button>
                   </form>

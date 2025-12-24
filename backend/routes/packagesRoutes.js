@@ -91,30 +91,23 @@ router.get("/:id", async (req, res) => {
 // -----------------------------------------------------------
 // Upload Document to Cloudinary
 // -----------------------------------------------------------
-router.post("/upload-document", (req, res) => {
-  upload.single("file")(req, res, (err) => {
-    if (err) {
-      console.error("Upload error:", err);
-      return res.status(500).json({ success: false, error: err.message });
-    }
-
-    try {
-      if (!req.file) {
-        return res.status(400).json({
-          success: false,
-          error: "No file uploaded"
-        });
-      }
-
-      return res.json({
-        success: true,
-        fileUrl: req.file.path,
+router.post("/upload-document", upload.single("file"), (req, res) => {
+  try {
+    if (!req.file) {
+      return res.status(400).json({
+        success: false,
+        error: "No file uploaded"
       });
-    } catch (error) {
-      console.error("Upload error:", error);
-      res.status(500).json({ success: false, error: error.message });
     }
-  });
+
+    return res.json({
+      success: true,
+      fileUrl: req.file.path,
+    });
+  } catch (error) {
+    console.error("Upload error:", error);
+    res.status(500).json({ success: false, error: error.message });
+  }
 });
 
 // -----------------------------------------------------------
