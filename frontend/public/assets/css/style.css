@@ -823,3 +823,27 @@ select[data-autofill="true"] {
   padding-right: 0;
   border-right: none;
 }
+
+/* Flash Sale Details Mobile Spacing */
+@media (max-width: 991.98px) {
+  .flash-sale-details-row {
+    margin-top: 50px !important; /* Reduce top margin on mobile */
+  }
+
+  .flash-sale-details-row .card:first-child {
+    margin-bottom: 20px; /* Add space between the two cards on mobile */
+  }
+}
+
+/* Ensure all text uses Raleway font */
+* {
+  font-family: "Raleway", sans-serif !important;
+}
+
+/* Custom Paystack Button Styling */
+.paystack-flash-sale-btn {
+  background-color: #f1741e !important;
+  color: white !important;
+  border: none !important;
+  border-radius: 25px !important;
+}

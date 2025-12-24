@@ -27,15 +27,17 @@ export default function PaystackPayment({
     amount: amount * 100, // Paystack requires kobo
     metadata: { fullName },
     publicKey,
-    text: "Pay Visa Fee",
+    text: "Pay Flash Sale Fee",
     onSuccess: (ref) => onSuccess(ref),
     onClose: () => alert("Transaction was not completed"),
   };
 
   return (
-    <PaystackButton
-      {...componentProps}
-      className="btn btn-success w-100 mt-3 pt-3 pb-3"
-    />
+    <div className="paystack-flash-sale-btn">
+      <PaystackButton
+        {...componentProps}
+        className="btn w-100 mt-3 pb-3 text-white" style={{ borderRadius: "3px"}}
+      />
+    </div>
   );
 }
