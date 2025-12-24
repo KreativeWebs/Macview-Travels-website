@@ -3,7 +3,7 @@ const path = require("path");
 const fs = require("fs");
 const isDev = require("electron-is-dev");
 
-// ✅ MUST be set early for Windows notifications
+// MUST be set early for Windows notifications
 app.setName("Macview Admin Dashboard");
 app.setAppUserModelId("com.macviewtravels.admin");
 
