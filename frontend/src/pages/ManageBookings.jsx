@@ -99,12 +99,12 @@ export default function ManageBookings() {
                 <td>{booking.destinationCountry}</td>
                 <td>{booking.visaType}</td>
                 <td>
-                  <span className={getStatusBadge(booking.status)}>
+                  <span style={getStatusBadge(booking.status)}>
                     {booking.status}
                   </span>
                 </td>
                 <td>
-                  <span className={getStatusBadge(booking.payment?.status)}>
+                  <span style={getStatusBadge(booking.payment?.status)}>
                     {booking.payment?.status}
                   </span>
                 </td>
@@ -173,12 +173,12 @@ export default function ManageBookings() {
                     : "N/A"}
                 </td>
                 <td>
-                  <span className={getStatusBadge(booking.status)}>
+                  <span style={getStatusBadge(booking.status)} className="badge">
                     {booking.status}
                   </span>
                 </td>
                 <td>
-                  <span className={getStatusBadge(booking.payment?.status)}>
+                  <span style={getStatusBadge(booking.payment?.status)} className="badge">
                     {booking.payment?.status}
                   </span>
                 </td>
@@ -254,12 +254,12 @@ export default function ManageBookings() {
                 <td>{booking.rooms}</td>
                 <td>{booking.guests}</td>
                 <td>
-                  <span className={getStatusBadge(booking.status)}>
+                  <span style={getStatusBadge(booking.status)} className="badge">
                     {booking.status}
                   </span>
                 </td>
                 <td>
-                  <span className={getStatusBadge(booking.payment?.status)}>
+                  <span style={getStatusBadge(booking.payment?.status)} className="badge">
                     {booking.payment?.status}
                   </span>
                 </td>
@@ -331,12 +331,12 @@ export default function ManageBookings() {
                   {booking.packagePrice?.toLocaleString()}
                 </td>
                 <td>
-                  <span className={getStatusBadge(booking.status)}>
+                  <span style={getStatusBadge(booking.status)} className="badge">
                     {booking.status}
                   </span>
                 </td>
                 <td>
-                  <span className={getStatusBadge(booking.payment?.status)}>
+                  <span style={getStatusBadge(booking.payment?.status)} className="badge">
                     {booking.payment?.status}
                   </span>
                 </td>
@@ -400,12 +400,12 @@ export default function ManageBookings() {
                   ₦{booking.flashSaleId?.price?.toLocaleString() || "N/A"}
                 </td>
                 <td>
-                  <span className={getStatusBadge(booking.status)}>
+                  <span style={getStatusBadge(booking.status)} className="badge">
                     {booking.status}
                   </span>
                 </td>
                 <td>
-                  <span className={getStatusBadge(booking.payment?.status)}>
+                  <span style={getStatusBadge(booking.payment?.status)} className="badge">
                     {booking.payment?.status}
                   </span>
                 </td>
@@ -436,7 +436,7 @@ export default function ManageBookings() {
         marginBottom: "50px"
       }}>
         <h2 className="mb-4" style={{
-          marginTop: "100px",
+          marginTop: isMobile ? "20px" : "100px",
         }}>My Bookings</h2>
 
         <ul className="nav nav-tabs mb-4">

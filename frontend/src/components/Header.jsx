@@ -304,7 +304,7 @@ function Header() {
                 <a
                   href="#"
                   onClick={handleOpenLogin}
-                  className="btn btn-secondary py-2 px-4 signin"
+                  className="btn py-2 px-4 signin"
                   style={{
                     width: "120px",
                     height: "30px",
@@ -313,6 +313,8 @@ function Header() {
                     alignItems: "center",
                     justifyContent: "center",
                     borderRadius: "8px",
+                      backgroundColor: "#175aa1",
+                    color: "white",
                     border: "none",
                     cursor: "pointer",
                   }}
