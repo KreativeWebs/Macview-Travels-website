@@ -37,20 +37,23 @@ const PORT = process.env.PORT || 5000;
 // -----------------------------
 const allowedOrigins = [
   "http://localhost:5173",
+  "http://localhost:5174",
   "https://healthcheck.railway.app",
-  "https://www.macviewtravel.com"
+  "https://www.macviewtravel.com",
 ];
 
-app.use(cors({
-  origin: (origin, callback) => {
-    if (!origin || allowedOrigins.includes(origin)) {
-      callback(null, true);
-    } else {
-      callback(new Error("Not allowed by CORS"));
-    }
-  },
-  credentials: true
-}));
+app.use(
+  cors({
+    origin: (origin, callback) => {
+      if (!origin || allowedOrigins.includes(origin)) {
+        callback(null, true);
+      } else {
+        callback(new Error("Not allowed by CORS"));
+      }
+    },
+    credentials: true,
+  })
+);
 
 // -----------------------------
 // Security Middleware (Helmet)
@@ -67,14 +70,14 @@ app.use(
           "'self'",
           "'unsafe-inline'",
           "https://fonts.googleapis.com",
-          "https://cdn.jsdelivr.net"
+          "https://cdn.jsdelivr.net",
         ],
         fontSrc: ["'self'", "https://fonts.gstatic.com"],
         scriptSrc: [
           "'self'",
           "https://js.paystack.co",
           "https://www.paypal.com",
-          "https://accounts.google.com"
+          "https://accounts.google.com",
         ],
         imgSrc: ["'self'", "data:", "https:", "blob:"],
         connectSrc: [
@@ -82,7 +85,7 @@ app.use(
           "https://api.paystack.co",
           "https://accounts.google.com",
           "ws:",
-          "wss:"
+          "wss:",
         ],
       },
     },
@@ -93,7 +96,9 @@ app.use(
 // Request logging using Winston
 // -----------------------------
 app.use((req, res, next) => {
-  logger.info(`${req.method} ${req.path} - ${req.ip} - ${req.get("User-Agent")}`);
+  logger.info(
+    `${req.method} ${req.path} - ${req.ip} - ${req.get("User-Agent")}`
+  );
   next();
 });
 
@@ -130,7 +135,6 @@ const apiLimiter = rateLimit({
   legacyHeaders: false,
 });
 
-
 app.get("/health", (req, res) => res.status(200).json({ status: "ok" }));
 
 app.use("/", generalLimiter);
@@ -159,14 +163,14 @@ const io = new Server(server, {
   cors: {
     origin: allowedOrigins,
     credentials: true,
-    methods: ["GET", "POST"]
+    methods: ["GET", "POST"],
   },
   transports: ["websocket", "polling"],
   allowEIO3: true,
   pingTimeout: 60000,
   pingInterval: 25000,
   connectTimeout: 45000,
-  maxHttpBufferSize: 1e8
+  maxHttpBufferSize: 1e8,
 });
 
 io.on("connection", (socket) => {

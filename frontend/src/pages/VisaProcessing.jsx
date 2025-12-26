@@ -24,6 +24,18 @@ function VisaProcessing() {
   const [processingTime, setProcessingTime] = useState(prevState.processingTime || "");
   const [uploadProgress, setUploadProgress] = useState({});
   const [selectedFiles, setSelectedFiles] = useState({});
+  const [paddingTop, setPaddingTop] = useState(150);
+
+  useEffect(() => {
+    const updatePadding = () => {
+      setPaddingTop(window.innerWidth < 768 ? 50 : 150);
+    };
+
+    updatePadding();
+    window.addEventListener('resize', updatePadding);
+
+    return () => window.removeEventListener('resize', updatePadding);
+  }, []);
 
   // Input change for text fields
   const handleInputChange = (e) => {
@@ -236,7 +248,7 @@ function VisaProcessing() {
   };
 
   return (
-    <div className="container-xxl" style={{ paddingTop: "150px" }}>
+    <div className="container-xxl" style={{ paddingTop: `${paddingTop}px` }}>
       <div className="container">
         <h1 className="text-start" style={{ fontFamily: "Raleway" }}>Visa Application</h1>
 
@@ -377,9 +389,9 @@ function VisaProcessing() {
 
           <button
             type="button"
-            className="btn btn-secondary py-3 px-4 mt-5"
+            className="btn py-3 px-4 mt-5"
             onClick={handleNext}
-            style={{ fontFamily: "Raleway", fontWeight: "600", border: "none", borderRadius: "4px" }}
+            style={{ fontFamily: "Raleway", fontWeight: "600", border: "none", borderRadius: "4px", backgroundColor: "#ff5e14", color: "#fff" }}
           >
             Next
           </button>

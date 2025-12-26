@@ -91,6 +91,7 @@ function FeaturedHotels() {
                         outline: "none",
                         border: "none",
                         whiteSpace: "nowrap",
+                        backgroundColor: "#f1741e",
                       }}
                     >
                       Book Now
@@ -160,6 +161,7 @@ function FeaturedHotels() {
                         outline: "none",
                         border: "none",
                         whiteSpace: "nowrap",
+                        backgroundColor: "#f1741e",
                       }}
                     >
                       Book Now
@@ -228,6 +230,7 @@ function FeaturedHotels() {
                         outline: "none",
                         border: "none",
                         whiteSpace: "nowrap",
+                        backgroundColor: "#f1741e",
                       }}
                     >
                       Book Now
@@ -295,6 +298,7 @@ function FeaturedHotels() {
                         outline: "none",
                         border: "none",
                         whiteSpace: "nowrap",
+                        backgroundColor: "#f1741e",
                       }}
                     >
                       Book Now
@@ -354,6 +358,7 @@ function FeaturedHotels() {
                         outline: "none",
                         border: "none",
                         whiteSpace: "nowrap",
+                        backgroundColor: "#f1741e",
                       }}
                     >
                       Book Now
@@ -413,6 +418,7 @@ function FeaturedHotels() {
                         outline: "none",
                         border: "none",
                         whiteSpace: "nowrap",
+                        backgroundColor: "#f1741e",
                       }}
                     >
                       Book Now
