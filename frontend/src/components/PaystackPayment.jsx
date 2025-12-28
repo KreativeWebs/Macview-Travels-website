@@ -78,7 +78,7 @@ export default function PaystackPayment({
     <PaystackButton
       {...componentProps}
       className={className}
-      style={style}
+      style={buttonStyle}
     />
   );
 }
