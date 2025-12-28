@@ -48,16 +48,18 @@ function About() {
               </span>
             </h1>
             <p className="mb-4 text-darkblack">
-              Macview Travels is your trusted partner for exploring the globe.
-              With over 4 Years of experience, we specialize in crafting
-              personalized travel packages, luxury escapes, and adventure tours
-              for every kind of traveler.
+              Macview Travels is a dependable travel agency committed to helping
+              you see the world with ease. Backed by over four years of
+              experience, we design customized travel solutions, from premium
+              vacations to thrilling adventure trips, tailored to individual
+              preferences.
             </p>
             <p className="mb-4 text-black">
-              Our dedicated team ensures seamless planning, exclusive deals, and
-              24/7 support, so you can focus on making memories. Whether you
-              dream of relaxing on tropical beaches, discovering vibrant cities,
-              or embarking on cultural journeys, we make it happen.
+              Our professional team manages every stage of your journey,
+              providing smooth coordination, special travel offers, and
+              continuous support. Whether your plans include beachside
+              relaxation, urban discoveries, or rich cultural trips, we bring
+              your travel plans to life with confidence and care.
             </p>
             <div className="row gy-2 gx-4 mb-4">
               <div className="col-sm-6">

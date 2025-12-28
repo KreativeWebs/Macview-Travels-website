@@ -644,7 +644,16 @@ function HotelBooking() {
             placeholder="Like a Preferred Hotel..."
           />
 
-          <button type="button" onClick={handleNext} className="btn btn-secondary py-3 px-4 mt-4">
+          <button type="button" onClick={handleNext} className="btn py-3 px-4 mt-4" style={{
+            fontFamily:
+              "'Raleway', system-ui, Avenir, Helvetica, Arial, sans-serif",
+            fontWeight: "600",
+            outline: "none",
+            border: "none",
+            borderRadius: "4px",
+            backgroundColor: "#f1741e",
+            color: "#fff",
+          }}>
             Next
           </button>
         </form>

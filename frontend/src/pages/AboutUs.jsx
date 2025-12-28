@@ -63,16 +63,18 @@ function AboutUs() {
                 </span>
               </h1>
               <p className="mb-4 text-darkblack">
-                Macview Travels is your trusted partner for exploring the globe.
-                With over 4 years of experience, we specialize in crafting
-                personalized travel packages, luxury escapes, and adventure
-                tours for every kind of traveler.
+                Macview Travels is a dependable travel agency committed to
+                helping you see the world with ease. Backed by over four years
+                of experience, we design customized travel solutions, from
+                premium vacations to thrilling adventure trips, tailored to
+                individual preferences.
               </p>
               <p className="mb-4 text-black">
-                Our dedicated team ensures seamless planning, exclusive deals,
-                and 24/7 support, so you can focus on making memories. Whether
-                you dream of relaxing on tropical beaches, discovering vibrant
-                cities, or embarking on cultural journeys, we make it happen.
+                Our professional team manages every stage of your journey,
+                providing smooth coordination, special travel offers, and
+                continuous support. Whether your plans include beachside
+                relaxation, urban discoveries, or rich cultural trips, we bring
+                your travel plans to life with confidence and care.
               </p>
               <div className="row gy-2 gx-4 mb-4">
                 <div className="col-sm-6">
@@ -130,7 +132,10 @@ function AboutUs() {
               style={{ fontSize: "100px", color: "#f1741e" }}
             ></i>
 
-            <h1 className="mb-4" style={{ fontFamily: "Raleway", color: "#175aa1" }}>
+            <h1
+              className="mb-4"
+              style={{ fontFamily: "Raleway", color: "#175aa1" }}
+            >
               Vision
             </h1>
             <p>
@@ -145,7 +150,10 @@ function AboutUs() {
               style={{ fontSize: "100px", color: "#f1741e" }}
             ></i>
 
-            <h1 className="mb-4" style={{ fontFamily: "Raleway", color: "#175aa1"  }}>
+            <h1
+              className="mb-4"
+              style={{ fontFamily: "Raleway", color: "#175aa1" }}
+            >
               Mission
             </h1>
             <p>
@@ -157,7 +165,10 @@ function AboutUs() {
       </div>
 
       {/* Team Start */}
-      <div className="container-xxl py-5" style={{fontFamily: "Raleway", marginTop: "40px" }}>
+      <div
+        className="container-xxl py-5"
+        style={{ fontFamily: "Raleway", marginTop: "40px" }}
+      >
         <div className="container">
           <div className="text-center wow fadeInUp" data-wow-delay="0.1s">
             <h6
@@ -166,7 +177,9 @@ function AboutUs() {
             >
               Travel Experts
             </h6>
-            <h1 className="mb-5" style={{fontFamily: "Raleway" }}>Meet Our Team</h1>
+            <h1 className="mb-5" style={{ fontFamily: "Raleway" }}>
+              Meet Our Team
+            </h1>
           </div>
           <div className="row g-4">
             <div
@@ -190,15 +203,15 @@ function AboutUs() {
                     className="btn btn-square mx-1"
                     href="#"
                     style={{
-                      borderRadius: '50%',
-                      backgroundColor: '#ffffff',
-                      color: '#175aa1',
-                      display: 'flex',
-                      alignItems: 'center',
-                      justifyContent: 'center',
-                      width: '38px',
-                      height: '38px',
-                      textDecoration: 'none'
+                      borderRadius: "50%",
+                      backgroundColor: "#ffffff",
+                      color: "#175aa1",
+                      display: "flex",
+                      alignItems: "center",
+                      justifyContent: "center",
+                      width: "38px",
+                      height: "38px",
+                      textDecoration: "none",
                     }}
                   >
                     <i className="fab fa-facebook-f" />
@@ -207,15 +220,15 @@ function AboutUs() {
                     className="btn btn-square mx-1"
                     href="#"
                     style={{
-                      borderRadius: '50%',
-                      backgroundColor: '#ffffff',
-                      color: '#175aa1',
-                      display: 'flex',
-                      alignItems: 'center',
-                      justifyContent: 'center',
-                      width: '38px',
-                      height: '38px',
-                      textDecoration: 'none'
+                      borderRadius: "50%",
+                      backgroundColor: "#ffffff",
+                      color: "#175aa1",
+                      display: "flex",
+                      alignItems: "center",
+                      justifyContent: "center",
+                      width: "38px",
+                      height: "38px",
+                      textDecoration: "none",
                     }}
                   >
                     <i className="fab fa-linkedin" />
@@ -224,22 +237,24 @@ function AboutUs() {
                     className="btn btn-square mx-1"
                     href="#"
                     style={{
-                      borderRadius: '50%',
-                      backgroundColor: '#ffffff',
-                      color: '#175aa1',
-                      display: 'flex',
-                      alignItems: 'center',
-                      justifyContent: 'center',
-                      width: '38px',
-                      height: '38px',
-                      textDecoration: 'none'
+                      borderRadius: "50%",
+                      backgroundColor: "#ffffff",
+                      color: "#175aa1",
+                      display: "flex",
+                      alignItems: "center",
+                      justifyContent: "center",
+                      width: "38px",
+                      height: "38px",
+                      textDecoration: "none",
                     }}
                   >
                     <i className="fab fa-instagram" />
                   </a>
                 </div>
                 <div className="text-center p-4">
-                  <h5 className="mb-0" style={{fontFamily: "Raleway" }}>Mademoye Balogun. J</h5>
+                  <h5 className="mb-0" style={{ fontFamily: "Raleway" }}>
+                    Mademoye Balogun. J
+                  </h5>
                   <small>MD/CEO</small>
                 </div>
               </div>
@@ -264,15 +279,15 @@ function AboutUs() {
                     className="btn btn-square mx-1"
                     href="#"
                     style={{
-                      borderRadius: '50%',
-                      backgroundColor: '#ffffff',
-                      color: '#175aa1',
-                      display: 'flex',
-                      alignItems: 'center',
-                      justifyContent: 'center',
-                      width: '38px',
-                      height: '38px',
-                      textDecoration: 'none'
+                      borderRadius: "50%",
+                      backgroundColor: "#ffffff",
+                      color: "#175aa1",
+                      display: "flex",
+                      alignItems: "center",
+                      justifyContent: "center",
+                      width: "38px",
+                      height: "38px",
+                      textDecoration: "none",
                     }}
                   >
                     <i className="fab fa-facebook-f" />
@@ -281,15 +296,15 @@ function AboutUs() {
                     className="btn btn-square mx-1"
                     href="#"
                     style={{
-                      borderRadius: '50%',
-                      backgroundColor: '#ffffff',
-                      color: '#175aa1',
-                      display: 'flex',
-                      alignItems: 'center',
-                      justifyContent: 'center',
-                      width: '38px',
-                      height: '38px',
-                      textDecoration: 'none'
+                      borderRadius: "50%",
+                      backgroundColor: "#ffffff",
+                      color: "#175aa1",
+                      display: "flex",
+                      alignItems: "center",
+                      justifyContent: "center",
+                      width: "38px",
+                      height: "38px",
+                      textDecoration: "none",
                     }}
                   >
                     <i className="fab fa-linkedin" />
@@ -298,22 +313,24 @@ function AboutUs() {
                     className="btn btn-square mx-1"
                     href="#"
                     style={{
-                      borderRadius: '50%',
-                      backgroundColor: '#ffffff',
-                      color: '#175aa1',
-                      display: 'flex',
-                      alignItems: 'center',
-                      justifyContent: 'center',
-                      width: '38px',
-                      height: '38px',
-                      textDecoration: 'none'
+                      borderRadius: "50%",
+                      backgroundColor: "#ffffff",
+                      color: "#175aa1",
+                      display: "flex",
+                      alignItems: "center",
+                      justifyContent: "center",
+                      width: "38px",
+                      height: "38px",
+                      textDecoration: "none",
                     }}
                   >
                     <i className="fab fa-instagram" />
                   </a>
                 </div>
                 <div className="text-center p-4">
-                  <h5 className="mb-0" style={{fontFamily: "Raleway" }}>Mr Noah Godwin</h5>
+                  <h5 className="mb-0" style={{ fontFamily: "Raleway" }}>
+                    Mr Noah Godwin
+                  </h5>
                   <small>COO</small>
                 </div>
               </div>
@@ -338,15 +355,15 @@ function AboutUs() {
                     className="btn btn-square mx-1"
                     href="#"
                     style={{
-                      borderRadius: '50%',
-                      backgroundColor: '#ffffff',
-                      color: '#175aa1',
-                      display: 'flex',
-                      alignItems: 'center',
-                      justifyContent: 'center',
-                      width: '38px',
-                      height: '38px',
-                      textDecoration: 'none'
+                      borderRadius: "50%",
+                      backgroundColor: "#ffffff",
+                      color: "#175aa1",
+                      display: "flex",
+                      alignItems: "center",
+                      justifyContent: "center",
+                      width: "38px",
+                      height: "38px",
+                      textDecoration: "none",
                     }}
                   >
                     <i className="fab fa-facebook-f" />
@@ -355,15 +372,15 @@ function AboutUs() {
                     className="btn btn-square mx-1"
                     href="#"
                     style={{
-                      borderRadius: '50%',
-                      backgroundColor: '#ffffff',
-                      color: '#175aa1',
-                      display: 'flex',
-                      alignItems: 'center',
-                      justifyContent: 'center',
-                      width: '38px',
-                      height: '38px',
-                      textDecoration: 'none'
+                      borderRadius: "50%",
+                      backgroundColor: "#ffffff",
+                      color: "#175aa1",
+                      display: "flex",
+                      alignItems: "center",
+                      justifyContent: "center",
+                      width: "38px",
+                      height: "38px",
+                      textDecoration: "none",
                     }}
                   >
                     <i className="fab fa-linkedin" />
@@ -372,22 +389,24 @@ function AboutUs() {
                     className="btn btn-square mx-1"
                     href="#"
                     style={{
-                      borderRadius: '50%',
-                      backgroundColor: '#ffffff',
-                      color: '#175aa1',
-                      display: 'flex',
-                      alignItems: 'center',
-                      justifyContent: 'center',
-                      width: '38px',
-                      height: '38px',
-                      textDecoration: 'none'
+                      borderRadius: "50%",
+                      backgroundColor: "#ffffff",
+                      color: "#175aa1",
+                      display: "flex",
+                      alignItems: "center",
+                      justifyContent: "center",
+                      width: "38px",
+                      height: "38px",
+                      textDecoration: "none",
                     }}
                   >
                     <i className="fab fa-instagram" />
                   </a>
                 </div>
                 <div className="text-center p-4">
-                  <h5 className="mb-0" style={{fontFamily: "Raleway" }}>Lateef Fadekemi</h5>
+                  <h5 className="mb-0" style={{ fontFamily: "Raleway" }}>
+                    Lateef Fadekemi
+                  </h5>
                   <small>Head of Ticketing</small>
                 </div>
               </div>
@@ -408,48 +427,62 @@ function AboutUs() {
                   className="position-relative d-flex justify-content-center"
                   style={{ marginTop: "-19px" }}
                 >
-                  <a className="btn btn-square mx-1" href="#" style={{
-                      borderRadius: '50%',
-                      backgroundColor: '#ffffff',
-                      color: '#175aa1',
-                      display: 'flex',
-                      alignItems: 'center',
-                      justifyContent: 'center',
-                      width: '38px',
-                      height: '38px',
-                      textDecoration: 'none'
-                    }}>
+                  <a
+                    className="btn btn-square mx-1"
+                    href="#"
+                    style={{
+                      borderRadius: "50%",
+                      backgroundColor: "#ffffff",
+                      color: "#175aa1",
+                      display: "flex",
+                      alignItems: "center",
+                      justifyContent: "center",
+                      width: "38px",
+                      height: "38px",
+                      textDecoration: "none",
+                    }}
+                  >
                     <i className="fab fa-facebook-f" />
                   </a>
-                  <a className="btn btn-square mx-1" href="#" style={{
-                      borderRadius: '50%',
-                      backgroundColor: '#ffffff',
-                      color: '#175aa1',
-                      display: 'flex',
-                      alignItems: 'center',
-                      justifyContent: 'center',
-                      width: '38px',
-                      height: '38px',
-                      textDecoration: 'none'
-                    }}>
+                  <a
+                    className="btn btn-square mx-1"
+                    href="#"
+                    style={{
+                      borderRadius: "50%",
+                      backgroundColor: "#ffffff",
+                      color: "#175aa1",
+                      display: "flex",
+                      alignItems: "center",
+                      justifyContent: "center",
+                      width: "38px",
+                      height: "38px",
+                      textDecoration: "none",
+                    }}
+                  >
                     <i className="fab fa-linkedin" />
                   </a>
-                  <a className="btn btn-square mx-1" href="#" style={{
-                      borderRadius: '50%',
-                      backgroundColor: '#ffffff',
-                      color: '#175aa1',
-                      display: 'flex',
-                      alignItems: 'center',
-                      justifyContent: 'center',
-                      width: '38px',
-                      height: '38px',
-                      textDecoration: 'none'
-                    }}>
+                  <a
+                    className="btn btn-square mx-1"
+                    href="#"
+                    style={{
+                      borderRadius: "50%",
+                      backgroundColor: "#ffffff",
+                      color: "#175aa1",
+                      display: "flex",
+                      alignItems: "center",
+                      justifyContent: "center",
+                      width: "38px",
+                      height: "38px",
+                      textDecoration: "none",
+                    }}
+                  >
                     <i className="fab fa-instagram" />
                   </a>
                 </div>
                 <div className="text-center p-4">
-                  <h5 className="mb-0" style={{fontFamily: "Raleway" }}>ABDULJELEEL RIDWAN</h5>
+                  <h5 className="mb-0" style={{ fontFamily: "Raleway" }}>
+                    ABDULJELEEL RIDWAN
+                  </h5>
                   <small>Visa Assistant Manager</small>
                 </div>
               </div>

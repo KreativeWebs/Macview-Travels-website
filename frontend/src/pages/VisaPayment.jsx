@@ -138,148 +138,91 @@ function VisaPayment() {
   };
 
   return (
-    <div className="container-xxl" style={{ paddingTop: `${paddingTop}px` }}>
+    <div className="container-xxl" style={{ paddingTop: "150px" }}>
       <div className="container">
-        <h2 className="fw-bold mb-3" style={{ fontFamily: "Raleway" }}>Confirm & Pay</h2>
-        <p className="text-muted mb-4">Please confirm your visa details and make payment.</p>
+        <h1 className="text-start" style={{ fontFamily: "Raleway" }}>
+          Confirm Your Visa Application
+        </h1>
+        <p>Please review your information before submitting.</p>
 
-        <div className="row g-4">
-          {/* Personal Information Card */}
-          <div className="col-lg-6">
-            <div className="card shadow-sm border-0">
-              <div className="card-header bg-primary text-white">
-                <i className="fas fa-user me-2"></i>
-                <strong>Personal Information</strong>
-              </div>
+        <div className="row">
+          <div className="col-md-8">
+            <div className="card">
               <div className="card-body">
-                <div className="mb-3">
-                  <i className="fas fa-user-circle text-primary me-2"></i>
-                  <strong>Full Name:</strong> {formData.fullName}
-                </div>
-                <div className="mb-3">
-                  <i className="fab fa-whatsapp text-success me-2"></i>
-                  <strong>WhatsApp Number:</strong> {formData.phoneNumber}
-                </div>
-              </div>
-            </div>
-          </div>
-
-          {/* Visa Details Card */}
-          <div className="col-lg-6">
-            <div className="card shadow-sm border-0">
-              <div className="card-header bg-success text-white">
-                <i className="fas fa-passport me-2"></i>
-                <strong>Visa Details</strong>
-              </div>
-              <div className="card-body">
-                <div className="mb-3">
-                  <i className="fas fa-globe text-info me-2"></i>
-                  <strong>Country:</strong> {selectedCountry}
-                </div>
-                <div className="mb-3">
-                  <i className="fas fa-id-card text-warning me-2"></i>
-                  <strong>Visa Type:</strong> {selectedVisaType}
-                </div>
-                {processingTime && (
-                  <div className="mb-3">
-                    <i className="fas fa-clock text-secondary me-2"></i>
-                    <strong>Processing Time:</strong> {processingTime}
+                <h5 className="card-title">Personal Information</h5>
+                <hr />
+                <div className="row">
+                  <div className="col-md-6">
+                    <p><strong>Full Name:</strong> {formData.fullName}</p>
+                    <p><strong>Phone Number:</strong> {formData.phoneNumber}</p>
                   </div>
-                )}
-                <div className="mb-3">
-                  <i className="fas fa-money-bill-wave text-danger me-2"></i>
-                  <strong>Fee:</strong> ₦{fee.toLocaleString()}
                 </div>
               </div>
             </div>
-          </div>
 
-          {/* Documents Card */}
-          <div className="col-12">
-            <div className="card shadow-sm border-0">
-              <div className="card-header bg-info text-white">
-                <i className="fas fa-file-alt me-2"></i>
-                <strong>Documents</strong>
-              </div>
+            <div className="card mt-4">
               <div className="card-body">
+                <h5 className="card-title">Visa Details</h5>
+                <hr />
+                <div className="row">
+                  <div className="col-md-6">
+                    <p><strong>Destination Country:</strong> {selectedCountry}</p>
+                    <p><strong>Visa Type:</strong> {selectedVisaType}</p>
+                    <p><strong>Processing Time:</strong> {processingTime}</p>
+                    <p><strong>Fee:</strong> ₦{fee.toLocaleString()}</p>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <div className="card mt-4">
+              <div className="card-body">
+                <h5 className="card-title">Documents</h5>
+                <hr />
                 {touristRequirements.map((req, idx) => (
                   <div key={idx} className="mb-3">
-                    <div className="d-flex align-items-start">
-                      <i className="fas fa-paperclip text-muted me-2 mt-1"></i>
-                      <div>
-                        <strong>{req.label}:</strong>
-                        {formData[req.label] ? (
-                          (Array.isArray(formData[req.label]) ? formData[req.label] : [formData[req.label]]).map((f, i) => (
-                            <div key={i} className="ms-3 mt-1">
-                              {f.failed ? (
-                                <span className="text-danger">
-                                  <i className="fas fa-exclamation-triangle me-1"></i>
-                                  {f.originalName} (Upload failed)
-                                </span>
-                              ) : (
-                                <span className="text-success">
-                                  <i className="fas fa-check-circle me-1"></i>
-                                  {typeof f === "string" ? f : (f.originalName || decodeURIComponent(f.fileUrl.split("/").pop().split("?")[0]))}
-                                </span>
-                              )}
-                            </div>
-                          ))
-                        ) : (
-                          <div className="ms-3 mt-1 text-muted">
-                            <i className="fas fa-times-circle me-1"></i>
-                            Not uploaded
-                          </div>
-                        )}
-                      </div>
-                    </div>
+                    <p><strong>{req.label}:</strong> {getFileNameFromUrl(formData[req.label])}</p>
                   </div>
                 ))}
               </div>
             </div>
           </div>
-        </div>
 
-        {/* Buttons */}
-        <div className={`mt-5 d-flex ${isMobile ? 'flex-column' : 'justify-content-start'}`}>
-          <button
-            className="btn me-3 mb-3"
-            style={{
-              backgroundColor: "#175aa1",
-              color: "#fff",
-              border: "none",
-              borderRadius: "8px",
-              padding: "12px 24px",
-              fontWeight: "600",
-              fontFamily: "Raleway",
-              width: isMobile ? "100%" : "auto"
-            }}
-            onClick={() =>
-              navigate("/visaprocessing", {
-                state: { formData, selectedCountry, touristRequirements, fee, processingTime },
-              })
-            }
-          >
-            <i className="fas fa-arrow-left me-2"></i>
-            Back
-          </button>
+          <div className="col-md-4">
+            <div className="card">
+              <div className="card-body">
+                <h5 className="card-title">Application Summary</h5>
+                <hr />
+                <p><strong>Country:</strong> {selectedCountry}</p>
+                <p><strong>Visa Type:</strong> {selectedVisaType}</p>
+                <p><strong>Fee:</strong> ₦{fee.toLocaleString()}</p>
+              </div>
+            </div>
 
-          <div style={{ width: isMobile ? "100%" : "auto" }}>
-            <PaystackPayment
-              amount={fee}
-              fullName={formData.fullName}
-              onSuccess={handlePaymentSuccess}
-              buttonText="Pay Visa Fee"
-              buttonStyle={{
-                backgroundColor: "#f1741e",
-                color: "#fff",
-                border: "none",
-                borderRadius: "8px",
-                padding: "12px 24px",
-                fontWeight: "600",
-                fontFamily: "Raleway",
-                width: "100%"
-              }}
-            />
+            <div className="mt-4">
+              <button
+                onClick={() => navigate("/visaprocessing", { state: { formData, selectedCountry, touristRequirements, fee, processingTime } })}
+                className="btn btn-outline-secondary w-100 mb-2"
+              >
+                Edit Information
+              </button>
+              <PaystackPayment
+                amount={fee}
+                fullName={formData.fullName}
+                onSuccess={handlePaymentSuccess}
+                buttonText="Confirm & Pay"
+                buttonStyle={{
+                  backgroundColor: "#f1741e",
+                  color: "#fff",
+                  border: "none",
+                  borderRadius: "8px",
+                  padding: "12px 24px",
+                  fontWeight: "600",
+                  fontFamily: "Raleway",
+                  width: "100%"
+                }}
+              />
+            </div>
           </div>
         </div>
       </div>
