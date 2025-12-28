@@ -1,5 +1,5 @@
 import React from "react";
-import { usePaystackPayment } from "react-paystack";
+import { PaystackButton } from "react-paystack";
 import { useAuthStore } from "../store/authStore";
 
 export default function PaystackPayment({
@@ -8,7 +8,7 @@ export default function PaystackPayment({
   onSuccess,
   buttonText = "Pay Now",
   className,
-  buttonStyle,
+  style,
 }) {
   const publicKey = import.meta.env.VITE_PAYSTACK_PUBLIC_KEY;
 
@@ -46,7 +46,7 @@ export default function PaystackPayment({
     );
   }
 
-  const config = {
+  const componentProps = {
     email,
     amount: Math.floor(Number(amount) * 100), // Paystack requires kobo, ensure it's an integer
     currency: 'NGN', // Explicitly set currency
@@ -61,14 +61,13 @@ export default function PaystackPayment({
       ]
     },
     publicKey,
+    text: buttonText,
     onSuccess: (ref) => onSuccess(ref),
     onClose: () => alert("Transaction was not completed"),
   };
 
-  const initializePayment = usePaystackPayment(config);
-
   // Debug logging
-  console.log("Paystack config:", {
+  console.log("Paystack component props:", {
     email,
     amount: amount * 100,
     fullName,
@@ -76,12 +75,10 @@ export default function PaystackPayment({
   });
 
   return (
-    <button
-      onClick={() => initializePayment()}
+    <PaystackButton
+      {...componentProps}
       className={className}
-      style={buttonStyle}
-    >
-      {buttonText}
-    </button>
+      style={style}
+    />
   );
 }
