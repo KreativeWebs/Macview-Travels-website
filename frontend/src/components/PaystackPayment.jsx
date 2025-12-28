@@ -8,7 +8,7 @@ export default function PaystackPayment({
   onSuccess,
   buttonText = "Pay Now",
   className,
-  style,
+  buttonStyle,
 }) {
   const publicKey = import.meta.env.VITE_PAYSTACK_PUBLIC_KEY;
 
@@ -79,7 +79,7 @@ export default function PaystackPayment({
     <button
       onClick={() => initializePayment()}
       className={className}
-      style={style}
+      style={buttonStyle}
     >
       {buttonText}
     </button>
