@@ -74,23 +74,11 @@ export default function PaystackPayment({
     publicKey: publicKey ? "Present" : "Missing"
   });
 
- // Wrap the PaystackButton to apply full styles
   return (
-    <div
-      style={{
-        backgroundColor: "#f1741e",
-        borderRadius: "8px",
-        width: "100%",
-        display: "inline-block", // ensures width behaves correctly
-        ...style, // merge any additional styles passed in
-      }}
-    >
-      <PaystackButton
-        {...componentProps}
-        className={className}
-        style={{ width: "100%", backgroundColor: "transparent", border: "none" }}
-      />
-    </div>
+    <PaystackButton
+      {...componentProps}
+      className={className}
+      style={{ borderRadius: "3px", backgroundColor: "#175aa1", color: "#fff"}}
+    />
   );
-
 }
