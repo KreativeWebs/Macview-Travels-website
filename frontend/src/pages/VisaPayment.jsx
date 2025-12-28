@@ -220,7 +220,7 @@ function VisaPayment() {
                 fullName={formData.fullName}
                 onSuccess={handlePaymentSuccess}
                 buttonText="Confirm & Pay"
-                buttonStyle={{
+                style={{
                   backgroundColor: "#f1741e",
                   color: "#fff",
                   border: "none",
