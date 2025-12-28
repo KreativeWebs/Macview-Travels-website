@@ -224,7 +224,7 @@ function VisaPayment() {
                 style={{
                   color: "#fff",
                   border: "none",
-                  borderRadius: "8px",
+                  borderRadius: "3px",
                   padding: "12px 24px",
                   fontWeight: "600",
                   fontFamily: "Raleway"
