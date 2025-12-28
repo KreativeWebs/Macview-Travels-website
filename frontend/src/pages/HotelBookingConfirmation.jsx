@@ -115,7 +115,7 @@ function HotelBookingConfirmation() {
                     <p><strong>Preferred Amenities:</strong></p>
                     <div className="d-flex flex-wrap gap-2">
                       {formData.amenities.map((amenity, index) => (
-                        <span key={index} className="badge bg-secondary">{amenity}</span>
+                        <span key={index} className="badge" style={{ backgroundColor: "#175aa1", color: "#fff" }}>{amenity}</span>
                       ))}
                     </div>
                   </div>
@@ -143,13 +143,31 @@ function HotelBookingConfirmation() {
             <div className="mt-4">
               <button
                 onClick={() => navigate("/hotelbooking", { state: { formData } })}
-                className="btn btn-outline-secondary w-100 mb-2"
+                className="btn w-100 mb-2"
+                style={{
+                  backgroundColor: "#175aa1",
+                  color: "#fff",
+                  border: "none",
+                  borderRadius: "8px",
+                  padding: "12px 24px",
+                  fontWeight: "600",
+                  fontFamily: "Raleway"
+                }}
               >
                 Edit Information
               </button>
               <button
                 onClick={handleSubmit}
-                className="btn btn-secondary w-100"
+                className="btn w-100"
+                style={{
+                  backgroundColor: "#f1741e",
+                  color: "#fff",
+                  border: "none",
+                  borderRadius: "8px",
+                  padding: "12px 24px",
+                  fontWeight: "600",
+                  fontFamily: "Raleway"
+                }}
               >
                 Confirm & Submit Booking
               </button>
