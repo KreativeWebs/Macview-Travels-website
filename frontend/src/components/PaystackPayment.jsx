@@ -78,7 +78,7 @@ export default function PaystackPayment({
     <PaystackButton
       {...componentProps}
       className={className}
-      style={{ borderRadius: "3px", backgroundColor: "#175aa1", color: "#fff"}}
+      style={{ borderRadius: "3px", backgroundColor: "#175aa1", color: "#fff", ...style}}
     />
   );
 }

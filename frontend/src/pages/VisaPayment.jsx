@@ -220,15 +220,14 @@ function VisaPayment() {
                 fullName={formData.fullName}
                 onSuccess={handlePaymentSuccess}
                 buttonText="Confirm & Pay"
+                className="paystack-flash-sale-btn w-100"
                 style={{
-                  backgroundColor: "#f1741e",
                   color: "#fff",
                   border: "none",
                   borderRadius: "8px",
                   padding: "12px 24px",
                   fontWeight: "600",
-                  fontFamily: "Raleway",
-                  width: "100%"
+                  fontFamily: "Raleway"
                 }}
               />
             </div>
