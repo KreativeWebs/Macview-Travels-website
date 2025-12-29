@@ -97,10 +97,11 @@ function Contact() {
               </p>
               <div className="d-flex align-items-center mb-3">
                 <div
-                  className="d-flex align-items-center justify-content-center flex-shrink-0 bg-primary"
+                  className="d-flex align-items-center justify-content-center flex-shrink-0"
                   style={{
                     width: 50,
                     height: 50,
+                    backgroundColor: "#f1741e",
                     borderRadius: "50%",
                     marginRight: 15,
                   }}
@@ -108,18 +109,19 @@ function Contact() {
                   <i className="fa fa-map-marker-alt text-white"></i>
                 </div>
                 <div className="ms-3">
-                  <h5 className="text-primary" style={{ fontFamily: "Raleway" }}>Head Office</h5>
-                  <p className="mb-0" style={{ fontFamily: "Raleway" }}>
+                  <h5 className="" style={{ fontFamily: "Raleway", color: "#535151ff" }}>Head Office</h5>
+                  <p className="mb-0" style={{ fontFamily: "Raleway", color: "#535151ff" }}>
                    Suite 436, Ikeja Plaza, Lagos, Nigeria
                   </p>
                 </div>
               </div>
               <div className="d-flex align-items-center mb-3">
                 <div
-                  className="d-flex align-items-center justify-content-center flex-shrink-0 bg-primary"
+                  className="d-flex align-items-center justify-content-center flex-shrink-0"
                   style={{
                     width: 50,
                     height: 50,
+                     backgroundColor: "#f1741e",
                     borderRadius: "50%",
                     marginRight: 15,
                   }}
@@ -127,18 +129,19 @@ function Contact() {
                   <i className="fa fa-map-marker-alt text-white"></i>
                 </div>
                 <div className="ms-3">
-                  <h5 className="text-primary" style={{ fontFamily: "Raleway" }}>Branch Office</h5>
-                  <p className="mb-0" style={{ fontFamily: "Raleway" }}>
+                  <h5 className="" style={{ fontFamily: "Raleway", color: "#535151ff" }}>Branch Office</h5>
+                  <p className="mb-0" style={{ fontFamily: "Raleway", color: "#535151ff" }}>
                    Suite K39, Ikota Plaza, Lekki Lagos, Nigeria
                   </p>
                 </div>
               </div>
               <div className="d-flex align-items-center mb-3">
                 <div
-                  className="d-flex align-items-center justify-content-center flex-shrink-0 bg-primary"
+                  className="d-flex align-items-center justify-content-center flex-shrink-0"
                   style={{
                     width: 50,
                     height: 50,
+                     backgroundColor: "#f1741e",
                     borderRadius: "50%",
                     marginRight: 15,
                   }}
@@ -146,18 +149,19 @@ function Contact() {
                   <i className="fa fa-phone-alt text-white"></i>
                 </div>
                 <div className="ms-3">
-                  <h5 className="text-primary" style={{ fontFamily: "Raleway" }}>Phone Number</h5>
-                  <p className="mb-0" style={{ fontFamily: "Raleway" }}>
+                  <h5 className="" style={{ fontFamily: "Raleway", color: "#535151ff" }}>Phone Number</h5>
+                  <p className="mb-0" style={{ fontFamily: "Raleway", color: "#535151ff" }}>
                     +234 911 011 1120, +234 816 905 6956
                   </p>
                 </div>
               </div>
               <div className="d-flex align-items-center">
                 <div
-                  className="d-flex align-items-center justify-content-center flex-shrink-0 bg-primary"
+                  className="d-flex align-items-center justify-content-center flex-shrink-0"
                   style={{
                     width: 50,
                     height: 50,
+                     backgroundColor: "#f1741e",
                     borderRadius: "50%",
                     marginRight: 15,
                   }}
@@ -165,8 +169,8 @@ function Contact() {
                   <i className="fa fa-envelope-open text-white"></i>
                 </div>
                 <div className="ms-3">
-                  <h5 className="text-primary" style={{ fontFamily: "Raleway" }}>Email</h5>
-                  <p className="mb-0" style={{ fontFamily: "Raleway" }}>
+                  <h5 className="" style={{ fontFamily: "Raleway", color: "#535151ff" }}>Email</h5>
+                  <p className="mb-0" style={{ fontFamily: "Raleway", color: "#535151ff" }}>
                     info@macviewtravel.com
                   </p>
                 </div>

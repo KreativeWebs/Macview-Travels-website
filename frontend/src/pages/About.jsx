@@ -15,7 +15,7 @@ function About() {
               <img
                 className="img-fluid position-absolute w-100 h-100"
                 src="/assets/img/passport-flight-businessman-standing-airport-checking-departure-times-schedule-travel-work-trip-professional-african-male-waiting-by-terminal-with-his-ticket-board-plane.jpg"
-                alt="Travelers enjoying a scenic view"
+                alt="A traveler at an airport"
                 style={{ objectFit: "cover", borderRadius: "8px" }}
               />
             </div>
