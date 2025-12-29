@@ -275,7 +275,7 @@ router.post("/forgot-password", async (req, res) => {
     });
 
     const resetURL = `${
-      process.env.CLIENT_URL || "http://localhost:5173"
+      process.env.CLIENT_URL || "https://macviewtravel.com"
     }/reset-password/${resetToken}`;
     await sendPasswordResetEmail(user.email, resetURL);
 

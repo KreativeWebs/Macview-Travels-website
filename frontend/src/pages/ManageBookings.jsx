@@ -286,7 +286,7 @@ export default function ManageBookings() {
                   <h5 className="card-title">{booking.fullName}</h5>
                   <div className="card-text">
                     <div className="mb-2"><strong>Package:</strong> {booking.packageTitle}</div>
-                    <div className="mb-2"><strong>City:</strong> {booking.packageId?.city || "N/A"}</div>
+                    <div className="mb-2"><strong>City:</strong> {booking.packageCity || "N/A"}</div>
                     <div className="mb-2"><strong>Travel Date:</strong> {booking.travelDate ? new Date(booking.travelDate).toLocaleDateString() : "N/A"}</div>
                     <div className="mb-2"><strong>Price:</strong> {booking.packageCurrency === "NGN" ? "₦" : "$"}{booking.packagePrice?.toLocaleString()}</div>
                     <div className="mb-2"><strong>Status:</strong> <span style={getStatusBadge(booking.status)} className="badge">{booking.status}</span></div>
@@ -320,7 +320,7 @@ export default function ManageBookings() {
               <tr key={booking._id}>
                 <td>{booking.fullName}</td>
                 <td>{booking.packageTitle}</td>
-                <td>{booking.packageId?.city || "N/A"}</td>
+                <td>{booking.packageCity || "N/A"}</td>
                 <td>
                   {booking.travelDate
                     ? new Date(booking.travelDate).toLocaleDateString()

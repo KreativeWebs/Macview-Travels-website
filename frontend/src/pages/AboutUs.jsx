@@ -182,6 +182,7 @@ function AboutUs() {
             </h1>
           </div>
           <div className="row g-4">
+
             <div
               className="col-lg-3 col-md-6 wow fadeInUp"
               data-wow-delay="0.1s"
@@ -192,7 +193,7 @@ function AboutUs() {
                     className="img-fluid"
                     src="/assets/img/mr jerry.png"
                     style={{ width: "" }}
-                    alt="Mr Jerry"
+                    alt="CEO"
                   />
                 </div>
                 <div
@@ -259,6 +260,8 @@ function AboutUs() {
                 </div>
               </div>
             </div>
+
+
             <div
               className="col-lg-3 col-md-6 wow fadeInUp"
               data-wow-delay="0.3s"
@@ -268,7 +271,7 @@ function AboutUs() {
                   <img
                     className="img-fluid"
                     src="/assets/img/mr godwin.png"
-                    alt="Mr Godwin"
+                    alt="COO"
                   />
                 </div>
                 <div
@@ -335,6 +338,8 @@ function AboutUs() {
                 </div>
               </div>
             </div>
+
+
             <div
               className="col-lg-3 col-md-6 wow fadeInUp"
               data-wow-delay="0.5s"
@@ -344,7 +349,7 @@ function AboutUs() {
                   <img
                     className="img-fluid"
                     src="/assets/img/fadekemi.png"
-                    alt="fadekemi"
+                    alt="head of ticketing"
                   />
                 </div>
                 <div
@@ -411,6 +416,8 @@ function AboutUs() {
                 </div>
               </div>
             </div>
+
+
             <div
               className="col-lg-3 col-md-6 wow fadeInUp"
               data-wow-delay="0.7s"
@@ -420,7 +427,7 @@ function AboutUs() {
                   <img
                     className="img-fluid"
                     src="/assets/img/ridwan.png"
-                    alt="David Kim"
+                    alt="visa assistant manager"
                   />
                 </div>
                 <div
@@ -487,6 +494,164 @@ function AboutUs() {
                 </div>
               </div>
             </div>
+
+
+             {/* <div
+              className="col-lg-3 col-md-6 wow fadeInUp"
+              data-wow-delay="0.7s"
+            >
+              <div className="team-item">
+                <div className="overflow-hidden">
+                  <img
+                    className="img-fluid"
+                    src="/assets/img/ridwan.png"
+                    alt="visa assistant manager"
+                  />
+                </div>
+                <div
+                  className="position-relative d-flex justify-content-center"
+                  style={{ marginTop: "-19px" }}
+                >
+                  <a
+                    className="btn btn-square mx-1"
+                    href="#"
+                    style={{
+                      borderRadius: "50%",
+                      backgroundColor: "#ffffff",
+                      color: "#175aa1",
+                      display: "flex",
+                      alignItems: "center",
+                      justifyContent: "center",
+                      width: "38px",
+                      height: "38px",
+                      textDecoration: "none",
+                    }}
+                  >
+                    <i className="fab fa-facebook-f" />
+                  </a>
+                  <a
+                    className="btn btn-square mx-1"
+                    href="#"
+                    style={{
+                      borderRadius: "50%",
+                      backgroundColor: "#ffffff",
+                      color: "#175aa1",
+                      display: "flex",
+                      alignItems: "center",
+                      justifyContent: "center",
+                      width: "38px",
+                      height: "38px",
+                      textDecoration: "none",
+                    }}
+                  >
+                    <i className="fab fa-linkedin" />
+                  </a>
+                  <a
+                    className="btn btn-square mx-1"
+                    href="#"
+                    style={{
+                      borderRadius: "50%",
+                      backgroundColor: "#ffffff",
+                      color: "#175aa1",
+                      display: "flex",
+                      alignItems: "center",
+                      justifyContent: "center",
+                      width: "38px",
+                      height: "38px",
+                      textDecoration: "none",
+                    }}
+                  >
+                    <i className="fab fa-instagram" />
+                  </a>
+                </div>
+                <div className="text-center p-4">
+                  <h5 className="mb-0" style={{ fontFamily: "Raleway" }}>
+                 ISHAKA DAVID
+                  </h5>
+                  <small>Graphic Designer</small>
+                </div>
+              </div>
+            </div> */}
+
+             {/* <div
+              className="col-lg-3 col-md-6 wow fadeInUp"
+              data-wow-delay="0.7s"
+            >
+              <div className="team-item">
+                <div className="overflow-hidden">
+                  <img
+                    className="img-fluid"
+                    src="/assets/img/ridwan.png"
+                    alt="visa assistant manager"
+                  />
+                </div>
+                <div
+                  className="position-relative d-flex justify-content-center"
+                  style={{ marginTop: "-19px" }}
+                >
+                  <a
+                    className="btn btn-square mx-1"
+                    href="#"
+                    style={{
+                      borderRadius: "50%",
+                      backgroundColor: "#ffffff",
+                      color: "#175aa1",
+                      display: "flex",
+                      alignItems: "center",
+                      justifyContent: "center",
+                      width: "38px",
+                      height: "38px",
+                      textDecoration: "none",
+                    }}
+                  >
+                    <i className="fab fa-facebook-f" />
+                  </a>
+                  <a
+                    className="btn btn-square mx-1"
+                    href="#"
+                    style={{
+                      borderRadius: "50%",
+                      backgroundColor: "#ffffff",
+                      color: "#175aa1",
+                      display: "flex",
+                      alignItems: "center",
+                      justifyContent: "center",
+                      width: "38px",
+                      height: "38px",
+                      textDecoration: "none",
+                    }}
+                  >
+                    <i className="fab fa-linkedin" />
+                  </a>
+                  <a
+                    className="btn btn-square mx-1"
+                    href="#"
+                    style={{
+                      borderRadius: "50%",
+                      backgroundColor: "#ffffff",
+                      color: "#175aa1",
+                      display: "flex",
+                      alignItems: "center",
+                      justifyContent: "center",
+                      width: "38px",
+                      height: "38px",
+                      textDecoration: "none",
+                    }}
+                  >
+                    <i className="fab fa-instagram" />
+                  </a>
+                </div>
+                <div className="text-center p-4">
+                  <h5 className="mb-0" style={{ fontFamily: "Raleway" }}>
+                    ADEKUNLE JOHNSON
+                  </h5>
+                  <small>Social Media Manager</small>
+                </div>
+              </div>
+            </div> */}
+
+
+
           </div>
         </div>
       </div>
