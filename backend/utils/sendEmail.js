@@ -7,7 +7,7 @@ export const sendPasswordResetEmail = async (email, resetURL) => {
     await mailtrapClient.send({
       from: sender,
       to: recipients,
-      template_uuid: "dbc13ce9-458f-495c-9475-ff19a9195277",
+      template_uuid: process.env.MAILTRAP_RESET_TEMPLATE_ID,
       template_variables: {
         reset_url: resetURL,
         company_name: "Macview Travels",
