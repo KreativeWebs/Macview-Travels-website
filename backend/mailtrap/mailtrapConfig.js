@@ -5,6 +5,6 @@ export const mailtrapClient = new MailtrapClient({
 });
 
 export const sender = {
-  email: "macviewtravels@gmail.com",
+  email: "hello@macviewtravel.com",
   name: "Macview Travels",
 };
