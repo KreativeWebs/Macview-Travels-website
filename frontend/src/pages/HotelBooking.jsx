@@ -12,6 +12,17 @@ function HotelBooking() {
   const location = useLocation();
   const { user } = useAuthStore();
 
+  const [paddingTop, setPaddingTop] = useState("150px");
+
+  useEffect(() => {
+    const handleResize = () => {
+      setPaddingTop(window.innerWidth < 768 ? "100px" : "150px");
+    };
+    handleResize();
+    window.addEventListener('resize', handleResize);
+    return () => window.removeEventListener('resize', handleResize);
+  }, []);
+
   // Get today's date in YYYY-MM-DD format
   const today = new Date().toISOString().split('T')[0];
 
@@ -356,7 +367,7 @@ function HotelBooking() {
   };
 
   return (
-    <div className="container-xxl" style={{ paddingTop: "150px" }}>
+    <div className="container-xxl" style={{ paddingTop }}>
       <div className="container">
         <h1 className="text-start" style={{ fontFamily: "Raleway" }}>
           Book Your Hotel Stay

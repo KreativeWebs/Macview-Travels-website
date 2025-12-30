@@ -1,12 +1,23 @@
 import React from "react";
 import { useNavigate } from "react-router-dom";
-
+import { useState, useEffect } from "react";
 
 function TravelInsurance() {
   const navigate = useNavigate();
 
+  const [paddingTop, setPaddingTop] = useState("150px");
+
+  useEffect(() => {
+    const handleResize = () => {
+      setPaddingTop(window.innerWidth < 768 ? "100px" : "150px");
+    };
+    handleResize();
+    window.addEventListener('resize', handleResize);
+    return () => window.removeEventListener('resize', handleResize);
+  }, []);
+
   return (
-    <div className="container-xxl" style={{ paddingTop: "150px" }}>
+    <div className="container-xxl" style={{ paddingTop }}>
       <div className="container">
         <div className="row g-4">
           <div
@@ -17,6 +28,7 @@ function TravelInsurance() {
               backgroundSize: "cover",
               backgroundPosition: "center",
               position: "relative",
+              borderRadius: "15px",
             }}
           ></div>
         </div>

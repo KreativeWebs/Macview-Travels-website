@@ -6,7 +6,7 @@ function AirportTransfer() {
   const navigate = useNavigate();
 
   return (
-    <div className="container-xxl" style={{ paddingTop: "150px" }}>
+    <div className="container-xxl" style={{ paddingTop }}>
       <div className="container">
         <div className="row g-4">
           <div
@@ -17,6 +17,7 @@ function AirportTransfer() {
               backgroundSize: "cover",
               backgroundPosition: "center",
               position: "relative",
+              borderRadius: "15px",
             }}
           ></div>
         </div>

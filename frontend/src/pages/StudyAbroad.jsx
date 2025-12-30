@@ -1,10 +1,21 @@
 import React from "react";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import { toast } from "react-toastify";
 
 function StudyAbroad() {
   const navigate = useNavigate();
+
+  const [paddingTop, setPaddingTop] = useState("150px");
+
+  useEffect(() => {
+    const handleResize = () => {
+      setPaddingTop(window.innerWidth < 768 ? "100px" : "150px");
+    };
+    handleResize();
+    window.addEventListener('resize', handleResize);
+    return () => window.removeEventListener('resize', handleResize);
+  }, []);
 
   const [formData, setFormData] = useState({
     fullName: "",

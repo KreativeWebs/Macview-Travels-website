@@ -264,6 +264,15 @@ function Signup() {
                       }}
                       required
                     />
+                    <span
+                      className="position-absolute end-0 translate-middle-y me-3"
+                      style={{ cursor: "pointer", top: "50px" }}
+                      onClick={() => setShowPassword(!showPassword)}
+                    >
+                      <i
+                        className={`fa ${showPassword ? "fa-eye" : "fa-eye-slash"}`}
+                      ></i>
+                    </span>
                   </div>
 
                   {showPasswordStrength && (

@@ -10,6 +10,17 @@ function FlightBooking() {
   const { user } = useAuthStore();
   const formRef = useRef(null);
 
+  const [paddingTop, setPaddingTop] = useState("150px");
+
+  useEffect(() => {
+    const handleResize = () => {
+      setPaddingTop(window.innerWidth < 768 ? "100px" : "150px");
+    };
+    handleResize();
+    window.addEventListener('resize', handleResize);
+    return () => window.removeEventListener('resize', handleResize);
+  }, []);
+
   useEffect(() => {
     if (!user) {
       toast.error("Please log in to book a flight.");
@@ -244,7 +255,7 @@ function FlightBooking() {
   };
 
   return (
-    <div className="container-xxl" style={{ paddingTop: "150px" }}>
+    <div className="container-xxl" style={{ paddingTop }}>
       <div className="container">
         <h1 className="text-start" style={{ fontFamily: "Raleway" }}>
           Book Your Next Flight
