@@ -1,7 +1,5 @@
 import React from "react";
-import { useEffect } from "react";
 import "bootstrap/dist/css/bootstrap.min.css";
-import { Modal } from "bootstrap";
 import { useAuthStore } from "../store/authStore";
 import Hero from "./Hero";
 import About from "./About";
@@ -19,19 +17,6 @@ import FeaturedHotels from "./FeaturedHotels";
 export default function Home() {
   const { user } = useAuthStore();
 
-  useEffect(() => {
-    if (!user) {
-      const timer = setTimeout(() => {
-        const loginModalElement = document.getElementById("loginModal");
-        if (loginModalElement && !loginModalElement.classList.contains('show')) {
-          const loginModal = Modal.getOrCreateInstance(loginModalElement);
-          loginModal.show();
-        }
-      }, 10000); // 10seconds = 10000 milliseconds
-
-      return () => clearTimeout(timer);
-    }
-  }, [user]);
   return (
     <div
       style={{
