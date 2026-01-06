@@ -40,6 +40,7 @@ const allowedOrigins = [
   "http://localhost:5174",
   "https://healthcheck.railway.app",
   "https://www.macviewtravel.com",
+  "https://admin.macviewtravel.com",
 ];
 
 app.use(
@@ -150,6 +151,7 @@ app.use("/api/hotel-bookings", hotelRoutes);
 app.use("/api/visa", visaRoutes);
 app.use("/api/packages", packagesRoutes);
 app.use("/api/admin", adminRoutes);
+app.use("/api/admin", adminBasicAuth);
 app.use("/api/newsletter", newsletterRoutes);
 app.use("/api/admin/newsletter", adminNewsletterRoutes);
 app.use("/api/flash-sales", flashSaleRoutes);

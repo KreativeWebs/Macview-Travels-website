@@ -38,8 +38,10 @@ const createRefreshToken = (userId) => {
 const setRefreshCookie = (res, token) => {
   res.cookie("refreshToken", token, {
     httpOnly: true,
-    secure: process.env.NODE_ENV === "production",
-    sameSite: process.env.NODE_ENV === "production" ? "None" : "Lax",
+    secure: true,
+    sameSite: "none",
+    domain: ".macviewtravel.com",
+    path: "/",
     maxAge: 7 * 24 * 60 * 60 * 1000, // 7 days
   });
 };
@@ -245,8 +247,10 @@ router.post("/google-login", async (req, res) => {
 router.post("/logout", (req, res) => {
   res.clearCookie("refreshToken", {
     httpOnly: true,
-    secure: process.env.NODE_ENV === "production",
-    sameSite: process.env.NODE_ENV === "production" ? "None" : "Lax",
+    secure: true,
+    sameSite: "none",
+    domain: ".macviewtravel.com",
+    path: "/",
   });
   res.json({ message: "Logged out successfully" });
 });
