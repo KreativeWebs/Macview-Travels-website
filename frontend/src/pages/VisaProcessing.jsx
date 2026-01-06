@@ -314,9 +314,7 @@ function VisaProcessing() {
               ))
             ) : (
               <>
-                <option value="Kenya">Kenya</option>
-                <option value="South Africa">South Africa</option>
-                <option value="Egypt">Egypt</option>
+              
               </>
             )}
           </select>
