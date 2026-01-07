@@ -119,7 +119,7 @@ export default function HotelBookings() {
           <div className="d-flex justify-content-between align-items-center mb-3">
             <h2 className="fw-bold mb-0">Hotel Booking Requests</h2>
             <div className="d-flex gap-2">
-              <Link to="/admin/addnewhotel" className="btn btn-primary btn-sm">
+              <Link to="/hotels/add" className="btn btn-primary btn-sm">
                 <i className="fas fa-plus me-2"></i>
                 New Hotel
               </Link>
@@ -127,18 +127,19 @@ export default function HotelBookings() {
               <button
               onClick={handleRefresh}
               disabled={refreshing}
-              className="btn btn-outline-primary btn-sm"
+              className="btn btn-sm btn-outline-primary btn-icon"
               title="Refresh bookings"
+              aria-label="Refresh bookings"
             >
               {refreshing ? (
                 <>
-                  <span className="spinner-border spinner-border-sm me-2" role="status" aria-hidden="true"></span>
-                  Refreshing...
+                  <span className="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span>
+                  <span className="visually-hidden">Refreshing</span>
                 </>
               ) : (
                 <>
-                  <i className="fas fa-sync-alt me-2"></i>
-                  Refresh
+                  <i className="fas fa-sync-alt" aria-hidden="true"></i>
+                  <span className="visually-hidden">Refresh</span>
                 </>
               )}
             </button>
@@ -264,9 +265,12 @@ export default function HotelBookings() {
                       <td>
                         <button
                           onClick={() => openDetails(b)}
-                          className="btn btn-sm btn-outline-primary"
+                          className="btn btn-sm btn-outline-primary btn-icon"
+                          title="View"
+                          aria-label="View"
                         >
-                          View
+                          <i className="fas fa-eye" aria-hidden="true"></i>
+                          <span className="visually-hidden">View</span>
                         </button>
                       </td>
                     </tr>
@@ -489,17 +493,25 @@ export function HotelDetails({ booking, onStatusUpdate, updatePaymentStatus }) {
               title="Click to view full size"
             />
             <div className="mt-2">
-              <button
-                className="btn btn-sm btn-outline-primary me-2"
-                onClick={() => window.open(booking.passportPhotograph.fileUrl, '_blank')}
+              <a
+                className="btn btn-sm btn-outline-primary btn-icon me-2"
+                href={booking.passportPhotograph.fileUrl}
+                target="_blank"
+                rel="noopener noreferrer"
+                title="View full size"
+                aria-label="View full size"
               >
-                View Full Size
-              </button>
+                <i className="fas fa-eye" aria-hidden="true"></i>
+                <span className="visually-hidden">View full size</span>
+              </a>
               <button
-                className="btn btn-sm btn-outline-secondary"
+                className="btn btn-sm btn-outline-secondary btn-icon"
                 onClick={handleDownload}
+                title="Download"
+                aria-label="Download"
               >
-                Download
+                <i className="fas fa-download" aria-hidden="true"></i>
+                <span className="visually-hidden">Download</span>
               </button>
             </div>
           </div>

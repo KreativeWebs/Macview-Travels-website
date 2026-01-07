@@ -73,7 +73,7 @@ export default function PackagesManagement() {
         <div className="col-12">
           <div className="d-flex justify-content-between align-items-center">
             <h2 className="mb-0">Packages Management</h2>
-            <Link to="/admin/addnewpackage" className="btn btn-primary">
+            <Link to="/packages/add" className="btn btn-primary">
               <i className="fas fa-plus me-2"></i>Add New Package
             </Link>
           </div>
@@ -90,7 +90,7 @@ export default function PackagesManagement() {
                   <i className="fas fa-suitcase fa-3x text-muted mb-3"></i>
                   <h5 className="text-muted">No packages found</h5>
                   <p className="text-muted">Create your first package to get started</p>
-                  <Link to="/admin/addnewpackage" className="btn btn-primary">
+                  <Link to="/packages/add" className="btn btn-primary">
                     <i className="fas fa-plus me-2"></i>Create Package
                   </Link>
                 </div>
@@ -127,7 +127,7 @@ export default function PackagesManagement() {
                             <div className="btn-group" role="group">
                   
                               <Link
-                                to={`/admin/edit-package/${pkg._id}`}
+                                to={`/packages/edit/${pkg._id}`}
                                 className="btn btn-sm btn-outline-secondary"
                                 title="Edit"
                               >

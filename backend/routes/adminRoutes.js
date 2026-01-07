@@ -12,6 +12,7 @@ import PackageBooking from "../models/PackageBooking.js";
 import upload from "../config/multer.js";
 import FlashSale from "../models/FlashSale.js";
 import FlashSaleBooking from "../models/FlashSaleBooking.js";
+import User from "../models/User.js";
 
 const router = express.Router();
 
@@ -384,6 +385,119 @@ router.put('/visa-applications/:id/payment', async (req, res) => {
   }
 });
 
+// Get users (with pagination, search and optional date filters)
+router.get('/users', async (req, res) => {
+  try {
+    const { page = 1, limit = 10, search, year, month, week } = req.query;
+
+    let query = {};
+
+    if (search) {
+      let searchTerm = String(search).trim();
+      searchTerm = searchTerm.replace(/[.*+?^${}()|[\\]\\]/g, '\\$&');
+      query.$or = [
+        { firstName: { $regex: searchTerm, $options: 'i' } },
+        { email: { $regex: searchTerm, $options: 'i' } }
+      ];
+    }
+
+    // Date filtering by createdAt if provided
+    if (year || month || week) {
+      let startDate, endDate;
+      if (year && month && week) {
+        const parsedYear = parseInt(year, 10);
+        const parsedMonth = parseInt(month, 10) - 1;
+        const parsedWeek = parseInt(week, 10);
+
+        const monthStart = new Date(parsedYear, parsedMonth, 1);
+        const firstDayOfMonth = monthStart.getDay();
+        const weekStartOffset = (parsedWeek - 1) * 7 - (firstDayOfMonth === 0 ? 6 : firstDayOfMonth - 1);
+        startDate = new Date(parsedYear, parsedMonth, 1 + weekStartOffset);
+        endDate = new Date(startDate);
+        endDate.setDate(startDate.getDate() + 6);
+      } else if (year && month) {
+        const parsedYear = parseInt(year, 10);
+        const parsedMonth = parseInt(month, 10) - 1;
+        startDate = new Date(parsedYear, parsedMonth, 1);
+        endDate = new Date(parsedYear, parsedMonth + 1, 1);
+      } else if (year) {
+        const parsedYear = parseInt(year, 10);
+        startDate = new Date(parsedYear, 0, 1);
+        endDate = new Date(parsedYear + 1, 0, 1);
+      }
+
+      if (startDate && endDate) {
+        query.createdAt = { $gte: startDate, $lt: endDate };
+      }
+    }
+
+    // Query users - users model doesn't have timestamps by default; rely on _id timestamp if createdAt not present
+    const users = await User.find(query)
+      .sort({ _id: -1 })
+      .limit(Number(limit))
+      .skip((Number(page) - 1) * Number(limit))
+      .select('firstName email authProvider');
+
+    const total = await User.countDocuments(query);
+
+    // Map createdAt from document.createdAt or ObjectId timestamp
+    const mapped = users.map(u => ({
+      _id: u._id,
+      firstName: u.firstName,
+      email: u.email,
+      authProvider: u.authProvider || 'email',
+      createdAt: u.createdAt || u._id.getTimestamp()
+    }));
+
+    res.json({ users: mapped, totalPages: Math.ceil(total / limit), currentPage: Number(page), total });
+  } catch (error) {
+    console.error('Error fetching users:', error);
+    res.status(500).json({ message: 'Error fetching users' });
+  }
+});
+
+// Get single user by ID
+router.get('/users/:id', async (req, res) => {
+  try {
+    if (!mongoose.Types.ObjectId.isValid(req.params.id)) {
+      return res.status(400).json({ message: 'Invalid user ID' });
+    }
+
+    const user = await User.findById(req.params.id).select('firstName email authProvider createdAt');
+    if (!user) return res.status(404).json({ message: 'User not found' });
+
+    const result = {
+      _id: user._id,
+      firstName: user.firstName,
+      email: user.email,
+      authProvider: user.authProvider || 'email',
+      createdAt: user.createdAt || user._id.getTimestamp()
+    };
+
+    res.json({ user: result });
+  } catch (error) {
+    console.error('Error fetching user:', error);
+    res.status(500).json({ message: 'Error fetching user' });
+  }
+});
+
+// Delete user by ID
+router.delete('/users/:id', async (req, res) => {
+  try {
+    if (!mongoose.Types.ObjectId.isValid(req.params.id)) {
+      return res.status(400).json({ message: 'Invalid user ID' });
+    }
+
+    const user = await User.findByIdAndDelete(req.params.id);
+    if (!user) return res.status(404).json({ message: 'User not found' });
+
+    res.json({ message: 'User deleted successfully' });
+  } catch (error) {
+    console.error('Error deleting user:', error);
+    res.status(500).json({ message: 'Error deleting user' });
+  }
+});
+
 // Create new visa application from admin
 router.post("/visa-applications", async (req, res) => {
   try {
@@ -609,6 +723,7 @@ router.post("/hotel-bookings", async (req, res) => {
       phoneNumber: req.body.phoneNumber || 'none',
       gender: req.body.gender || 'none',
       dob: req.body.dob || 'none',
+      passportPhotograph: req.body.passportPhotograph || { label: "Passport Photograph", textValue: "Added by admin" },
       destination,
       checkInDate: checkInDate ? new Date(checkInDate) : undefined,
       checkOutDate: checkOutDate ? new Date(checkOutDate) : undefined,
@@ -1126,6 +1241,51 @@ router.delete("/packages/:id", async (req, res) => {
   }
 });
 
+// Create package booking from admin
+router.post("/package-bookings", async (req, res) => {
+  try {
+    const { fullName, whatsappNumber, email, travelDate, packageId, packageTitle, packagePrice, packageCurrency, packageCity } = req.body;
+
+    // Use admin email as the submitter
+    const adminEmail = req.admin?.email || 'admin@macviewtravels.com';
+
+    // Validate packageId
+    const packageData = await Package.findById(packageId);
+    if (!packageData || !packageData.isActive) {
+      return res.status(404).json({ message: 'Package not found or inactive' });
+    }
+
+    const newBooking = new PackageBooking({
+      fullName,
+      whatsappNumber: whatsappNumber || 'none',
+      email: email || adminEmail,
+      travelDate: new Date(travelDate),
+      packageId,
+      packageTitle: packageTitle || packageData.title,
+      packagePrice: packagePrice || packageData.price,
+      packageCurrency: packageCurrency || packageData.currency,
+      packageCity: packageCity || packageData.city,
+      payment: { status: 'paid' },
+      addedByAdmin: true,
+      createdAt: new Date()
+    });
+
+    await newBooking.save();
+
+    // Emit real-time update to admin clients
+    if (global.io) {
+      global.io.emit('newPackageBooking', newBooking);
+      const count = await PackageBooking.countDocuments();
+      global.io.emit('statsUpdate', { packageBookings: count });
+    }
+
+    res.status(201).json({ booking: newBooking });
+  } catch (error) {
+    console.error('Error creating package booking from admin:', error);
+    res.status(500).json({ message: 'Error creating package booking' });
+  }
+});
+
 // Get package bookings
 router.get("/package-bookings", async (req, res) => {
   try {
@@ -1416,7 +1576,7 @@ router.get("/flash-sale-bookings", async (req, res) => {
       .sort({ createdAt: -1 })
       .limit(limit * 1)
       .skip((page - 1) * limit)
-      .select('_id name whatsappNumber dateOfBirth gender flashSaleId status payment createdAt');
+      .select('_id name whatsappNumber dateOfBirth gender flashSaleId flashSaleData status payment createdAt');
 
     const total = await FlashSaleBooking.countDocuments(query);
 
@@ -1429,6 +1589,60 @@ router.get("/flash-sale-bookings", async (req, res) => {
   } catch (error) {
     console.error("Error fetching flash sale bookings:", error);
     res.status(500).json({ message: "Error fetching flash sale bookings" });
+  }
+});
+
+// Create flash sale booking from admin
+router.post("/flash-sale-bookings", async (req, res) => {
+  try {
+    const { name, whatsappNumber, dateOfBirth, gender, flashSaleId, adults, children, infants, status } = req.body;
+
+    // Use admin email as the submitter
+    const adminEmail = req.admin?.email || 'admin@macviewtravels.com';
+
+    // Validate flashSaleId
+    const flashSale = await FlashSale.findById(flashSaleId);
+    if (!flashSale || !flashSale.isActive) {
+      return res.status(404).json({ message: 'Flash sale not found or inactive' });
+    }
+
+    const newBooking = new FlashSaleBooking({
+      name,
+      whatsappNumber: whatsappNumber || 'none',
+      dateOfBirth: dateOfBirth || null,
+      gender: gender || 'none',
+      flashSaleId,
+      flashSaleData: {
+        destinationCity: flashSale.destinationCity,
+        airline: flashSale.airline,
+        price: flashSale.price,
+        departureCity: flashSale.departureCity
+      },
+      email: adminEmail,
+      adults: Number(adults || 1),
+      children: Number(children || 0),
+      infants: Number(infants || 0),
+      status: status || 'received',
+      payment: { status: 'paid' },
+      addedByAdmin: true,
+      createdAt: new Date()
+    });
+
+    await newBooking.save();
+
+    // Populate for socket
+    await newBooking.populate('flashSaleId');
+
+    if (global.io) {
+      global.io.emit('newFlashSaleBooking', newBooking);
+      const count = await FlashSaleBooking.countDocuments();
+      global.io.emit('statsUpdate', { flashSaleBookings: count });
+    }
+
+    res.status(201).json({ booking: newBooking });
+  } catch (error) {
+    console.error('Error creating flash sale booking from admin:', error);
+    res.status(500).json({ message: 'Error creating flash sale booking' });
   }
 });
 
@@ -1680,11 +1894,29 @@ router.put("/flash-sales/:id", upload.single("backgroundImage"), async (req, res
 // Delete flash sale
 router.delete("/flash-sales/:id", async (req, res) => {
   try {
-    const flashSale = await FlashSale.findByIdAndDelete(req.params.id);
+    const flashSaleId = new mongoose.Types.ObjectId(req.params.id);
+    const flashSale = await FlashSale.findById(flashSaleId);
 
     if (!flashSale) {
       return res.status(404).json({ message: "Flash sale not found" });
     }
+
+    // Store flash sale data in bookings before deleting
+    await FlashSaleBooking.updateMany(
+      { flashSaleId },
+      {
+        flashSaleId: null,
+        flashSaleData: {
+          destinationCity: flashSale.destinationCity,
+          airline: flashSale.airline,
+          price: flashSale.price,
+          departureCity: flashSale.departureCity
+        }
+      }
+    );
+
+    // Delete the flash sale
+    await FlashSale.findByIdAndDelete(flashSaleId);
 
     res.json({ message: "Flash sale deleted successfully" });
   } catch (error) {

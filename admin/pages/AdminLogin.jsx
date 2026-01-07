@@ -57,7 +57,7 @@ function AdminLogin() {
                       style={{
                         borderRadius: "4px",
                         boxShadow: "none",
-                        borderColor: "#c9b5b5ff",
+                        borderColor: "#ced4da",
                       }}
                     />
                   </div>
@@ -73,7 +73,7 @@ function AdminLogin() {
                       style={{
                         borderRadius: "4px",
                         boxShadow: "none",
-                        borderColor: "#c9b5b5ff",
+                        borderColor: "#ced4da",
                       }}
                     />
                     <span
@@ -90,7 +90,8 @@ function AdminLogin() {
                     className="btn btn-primary w-100 d-flex align-items-center justify-content-center gap-2"
                     disabled={isLoading}
                     style={{
-                      backgroundColor: "#f1741e",
+                      backgroundColor: "var(--secondary)",
+                      color: "#fff",
                       border: "none",
                       borderRadius: "4px",
                       fontFamily: "'Raleway', sans-serif",

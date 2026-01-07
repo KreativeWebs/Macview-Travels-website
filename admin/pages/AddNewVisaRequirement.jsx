@@ -12,7 +12,7 @@ export default function AddNewVisaRequirement() {
     visaTypes: [
       {
         name: "",
-        fee: 0,
+        fee: "",
         processingTime: "",
         requirements: [
           {
@@ -49,7 +49,7 @@ export default function AddNewVisaRequirement() {
         ...formData.visaTypes,
         {
           name: "",
-          fee: 0,
+          fee: "",
           processingTime: "",
           requirements: [
             {
@@ -122,17 +122,26 @@ export default function AddNewVisaRequirement() {
     try {
       setLoading(true);
 
+      // Convert any fee strings to numbers (empty -> 0) before sending
+      const payload = {
+        ...formData,
+        visaTypes: formData.visaTypes.map(v => ({
+          ...v,
+          fee: v.fee === "" ? 0 : Number(v.fee)
+        }))
+      };
+
       if (isEdit && requirementId) {
         // Update existing requirement
-        await adminAxios.put(`/visa-requirements/${requirementId}`, formData);
+        await adminAxios.put(`/visa-requirements/${requirementId}`, payload);
         toast.success("Visa requirement updated successfully");
       } else {
         // Create new requirement
-        await adminAxios.post("/visa-requirements", formData);
+        await adminAxios.post("/visa-requirements", payload);
         toast.success("Visa requirement added successfully");
       }
 
-      navigate("/admin/visa-requirements");
+      navigate("/visa-requirements");
     } catch (error) {
       console.error("Error saving visa requirement:", error);
       toast.error("Failed to save visa requirement");
@@ -152,13 +161,13 @@ export default function AddNewVisaRequirement() {
         const res = await adminAxios.get(`/visa-requirements/${id}`);
         const req = res.data.requirement;
         if (req) {
-          // Populate form with data from server
+          // Populate form with data from server (ensure fee is a string so empty input works)
           setFormData({
             country: req.country || "",
-            visaTypes: Array.isArray(req.visaTypes) && req.visaTypes.length > 0 ? req.visaTypes : [
+            visaTypes: Array.isArray(req.visaTypes) && req.visaTypes.length > 0 ? req.visaTypes.map(v => ({ ...v, fee: v.fee != null ? String(v.fee) : "" })) : [
               {
                 name: "",
-                fee: 0,
+                fee: "",
                 processingTime: "",
                 requirements: [
                   { label: "", type: "file", required: true, hint: "" }
@@ -179,8 +188,8 @@ export default function AddNewVisaRequirement() {
             if (found) {
               setFormData({
                 country: found.country || "",
-                visaTypes: Array.isArray(found.visaTypes) && found.visaTypes.length > 0 ? found.visaTypes : [
-                  { name: "", fee: 0, processingTime: "", requirements: [{ label: "", type: "file", required: true, hint: "" }] }
+                visaTypes: Array.isArray(found.visaTypes) && found.visaTypes.length > 0 ? found.visaTypes.map(v => ({ ...v, fee: v.fee != null ? String(v.fee) : "" })) : [
+                  { name: "", fee: "", processingTime: "", requirements: [{ label: "", type: "file", required: true, hint: "" }] }
                 ]
               });
               setIsEdit(true);
@@ -211,7 +220,7 @@ export default function AddNewVisaRequirement() {
         <button
           type="button"
           className="btn btn-outline-secondary"
-          onClick={() => navigate("/admin/visa-requirements")}
+          onClick={() => navigate("/visa-requirements")}
         >
           <i className="fas fa-arrow-left me-2"></i>
           Back to Requirements
@@ -267,8 +276,8 @@ export default function AddNewVisaRequirement() {
                   <input
                     type="number"
                     className="form-control"
-                    value={visaType.fee ?? 0}
-                    onChange={(e) => handleVisaTypeChange(visaTypeIndex, "fee", parseFloat(e.target.value) || 0)}
+                    value={visaType.fee ?? ""}
+                    onChange={(e) => handleVisaTypeChange(visaTypeIndex, "fee", e.target.value)}
                     min="0"
                     step="1000"
                   />
@@ -399,7 +408,7 @@ export default function AddNewVisaRequirement() {
             <button
               type="button"
               className="btn btn-outline-secondary"
-              onClick={() => navigate("/admin/visa-requirements")}
+              onClick={() => navigate("/visa-requirements")}
             >
               Cancel
             </button>

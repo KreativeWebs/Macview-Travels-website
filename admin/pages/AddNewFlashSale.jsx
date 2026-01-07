@@ -30,7 +30,7 @@ function AddNewFlashSale() {
   const fetchFlashSale = async () => {
     try {
       setLoading(true);
-      const response = await adminAxios.get(`/admin/flash-sales/${id}`);
+      const response = await adminAxios.get(`/flash-sales/${id}`);
       const sale = response.data.flashSale;
       setFormData({
         backgroundImage: null, // Keep null for file input
@@ -76,15 +76,15 @@ function AddNewFlashSale() {
 
     try {
       if (isEdit && id) {
-        await adminAxios.put(`/admin/flash-sales/${id}`, data, {
+        await adminAxios.put(`/flash-sales/${id}`, data, {
           headers: {
             "Content-Type": "multipart/form-data",
           },
         });
         toast.success("Flash sale updated successfully!");
-        navigate("/admin/flash-sales-bookings");
+        navigate("/flash-sales-bookings");
       } else {
-        await adminAxios.post("/admin/flash-sales", data, {
+        await adminAxios.post("/flash-sales", data, {
           headers: {
             "Content-Type": "multipart/form-data",
           },

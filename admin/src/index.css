@@ -1,4 +1,6 @@
 :root {
+  --primary: #175aa1;
+  --secondary: #f1741e;
   font-family: system-ui, Avenir, Helvetica, Arial, sans-serif;
   line-height: 1.5;
   font-weight: 400;
@@ -11,15 +13,21 @@
   text-rendering: optimizeLegibility;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
-}
+} 
 
 a {
   font-weight: 500;
-  color: #646cff;
+  color: var(--primary);
   text-decoration: inherit;
-}
+} 
 a:hover {
-  color: #535bf2;
+  color: var(--primary);
+} 
+
+/* helper: make hover/focus text white for a specific button */
+.hover-white:hover,
+.hover-white:focus {
+  color: #fff !important;
 }
 
 body {
@@ -49,8 +57,8 @@ button {
   transition: border-color 0.25s;
 }
 button:hover {
-  border-color: #646cff;
-}
+  border-color: var(--primary);
+} 
 button:focus,
 button:focus-visible {
   outline: 4px auto -webkit-focus-ring-color;
@@ -62,9 +70,256 @@ button:focus-visible {
     background-color: #ffffff;
   }
   a:hover {
-    color: #747bff;
+    color: var(--primary);
   }
   button {
     background-color: #f9f9f9;
   }
 }
+
+/* Ensure Bootstrap primary buttons use the approved palette */
+.btn-primary,
+button.btn-primary {
+  background-color: var(--primary) !important;
+  border-color: var(--primary) !important;
+  color: #ffffff !important;
+}
+.btn-primary:hover,
+button.btn-primary:hover {
+  background-color: var(--secondary) !important;
+  border-color: var(--secondary) !important;
+  color: #ffffff !important;
+} 
+
+/* Replace Bootstrap outline & status colors with approved palette */
+.btn-outline-primary {
+  color: var(--primary);
+  border-color: var(--primary);
+  background-color: transparent;
+}
+.btn-outline-primary:hover,
+.btn-outline-primary:focus {
+  color: #fff;
+  background-color: var(--secondary);
+  border-color: var(--secondary);
+}
+
+.btn-outline-secondary {
+  color: var(--secondary);
+  border-color: var(--secondary);
+  background-color: transparent;
+}
+.btn-outline-secondary:hover,
+.btn-outline-secondary:focus {
+  color: #fff;
+  background-color: var(--primary);
+  border-color: var(--primary);
+}
+
+.btn-outline-success {
+  color: var(--primary);
+  border-color: var(--primary);
+  background-color: transparent;
+}
+.btn-outline-success:hover {
+  color: #fff;
+  background-color: var(--secondary);
+  border-color: var(--secondary);
+}
+
+.btn-outline-danger {
+  color: var(--secondary);
+  border-color: var(--secondary);
+  background-color: transparent;
+}
+.btn-outline-danger:hover {
+  color: #fff;
+  background-color: var(--primary);
+  border-color: var(--primary);
+}
+
+.btn-success,
+button.btn-success {
+  background-color: var(--primary) !important;
+  border-color: var(--primary) !important;
+  color: #fff !important;
+}
+.btn-success:hover,
+button.btn-success:hover {
+  background-color: var(--secondary) !important;
+  border-color: var(--secondary) !important;
+}
+
+.btn-danger,
+button.btn-danger {
+  background-color: var(--secondary) !important;
+  border-color: var(--secondary) !important;
+  color: #fff !important;
+}
+.btn-danger:hover,
+button.btn-danger:hover {
+  background-color: var(--primary) !important;
+  border-color: var(--primary) !important;
+}
+
+/* Make .btn-link use primary */
+.btn-link,
+button.btn-link {
+  color: var(--primary) !important;
+}
+
+/* Ensure outline styles for small buttons also apply */
+.btn-sm.btn-outline-primary {
+  color: var(--primary);
+  border-color: var(--primary);
+}
+
+/* Disabled outlines should look subdued but within palette */
+.btn-outline-primary.disabled,
+.btn-outline-primary:disabled,
+.btn-outline-secondary.disabled,
+.btn-outline-secondary:disabled {
+  opacity: 0.6;
+  color: inherit;
+}
+
+/* Utility class overrides to enforce primary/secondary palette */
+.text-primary { color: var(--primary) !important; }
+.bg-primary { background-color: var(--primary) !important; color: #fff !important; }
+.text-success { color: var(--primary) !important; }
+.bg-success { background-color: var(--primary) !important; color: #fff !important; }
+.text-danger { color: var(--secondary) !important; }
+.bg-danger { background-color: var(--secondary) !important; color: #fff !important; }
+
+/* Pagination active state */
+.page-link { color: var(--primary); }
+.page-item.active .page-link {
+  background-color: var(--primary) !important;
+  border-color: var(--primary) !important;
+  color: #fff !important;
+}
+
+/* Ensure spinner utilities use primary color */
+.spinner-border.text-primary,
+.spinner-border-sm.text-primary { color: var(--primary); }
+
+/* Badge primary mapping (covers .badge.bg-primary) */
+.badge.bg-primary { background-color: var(--primary) !important; color: #fff !important; }
+
+/* Ensure secondary buttons display white text and proper hover */
+.btn-secondary,
+button.btn-secondary {
+  background-color: var(--secondary) !important;
+  border-color: var(--secondary) !important;
+  color: #fff !important;
+}
+.btn-secondary:hover,
+button.btn-secondary:hover {
+  background-color: var(--primary) !important;
+  border-color: var(--primary) !important;
+  color: #fff !important;
+}
+
+/* Remove default focus outlines and blue shadows from buttons and inputs */
+.btn:focus,
+.btn:active,
+.btn:focus-visible,
+button:focus,
+button:active,
+button:focus-visible {
+  outline: none !important;
+  box-shadow: none !important;
+}
+
+.form-control:focus,
+.form-select:focus,
+textarea:focus {
+  outline: none !important;
+  box-shadow: none !important; /* removes blue glow on focus */
+  border-color: var(--primary) !important; /* subtle primary border */
+}
+
+/* Remove all focus outlines and blue rings for interactive elements per design */
+/* Apply to links, nav items, pagination links, buttons, and form controls */
+
+a:focus, a:active,
+.nav-link:focus, .nav-link:active,
+.page-link:focus, .page-link:active,
+button:focus, button:active, button:focus-visible,
+.btn:focus, .btn:active, .btn:focus-visible,
+.form-control:focus, .form-select:focus, textarea:focus, input:focus {
+  outline: none !important;
+  box-shadow: none !important; /* remove browser blue glow */
+  -webkit-tap-highlight-color: transparent !important;
+}
+
+/* Force secondary button states (hover/focus/active) to use white text so contrast is preserved */
+.btn-secondary:hover, .btn-secondary:focus, .btn-secondary:active,
+button.btn-secondary:hover, button.btn-secondary:focus, button.btn-secondary:active {
+  color: #fff !important;
+}
+
+/* Icon-only button: remove border and make compact while preserving hover background */
+.btn-icon {
+  border: none !important;
+  padding: .35rem .5rem !important;
+  min-width: 36px;
+  height: auto;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  background-color: transparent !important;
+}
+.btn-icon i {
+  font-size: 0.95rem;
+}
+
+/* Keep hover behavior for icon buttons minimal: no background change, preserve icon color */
+.btn-icon.btn-outline-primary:hover,
+.btn-icon.btn-outline-primary:focus {
+  color: var(--primary) !important;
+  background-color: transparent !important;
+  border-color: transparent !important;
+  box-shadow: none !important;
+}
+
+/* Also for outline-secondary if used */
+.btn-icon.btn-outline-secondary:hover,
+.btn-icon.btn-outline-secondary:focus {
+  color: var(--secondary) !important;
+  background-color: transparent !important;
+  border-color: transparent !important;
+  box-shadow: none !important;
+}
+
+/* Icon-only success/danger: keep minimal hover (no background) */
+.btn-icon.btn-outline-success:hover,
+.btn-icon.btn-outline-success:focus {
+  color: var(--primary) !important;
+  background-color: transparent !important;
+  border-color: transparent !important;
+  box-shadow: none !important;
+}
+
+.btn-icon.btn-outline-danger:hover,
+.btn-icon.btn-outline-danger:focus {
+  color: var(--secondary) !important;
+  background-color: transparent !important;
+  border-color: transparent !important;
+  box-shadow: none !important;
+}
+
+/* Ensure page-link focus and nav-link focus don't get browser highlights */
+.page-link:focus, .page-link:active, .nav-link:focus, .nav-link:active {
+  outline: none !important;
+  box-shadow: none !important;
+}
+
+/* For completeness, prevent outline from appearing on elements with tabindex */
+[tabindex]:focus {
+  outline: none !important;
+  box-shadow: none !important;
+}
+
+
+

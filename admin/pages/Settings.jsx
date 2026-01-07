@@ -18,7 +18,12 @@ export default function Settings() {
   const [packageMonth, setPackageMonth] = useState(new Date().getMonth() + 1);
   const [flashSaleYear, setFlashSaleYear] = useState(new Date().getFullYear());
   const [flashSaleMonth, setFlashSaleMonth] = useState(new Date().getMonth() + 1);
-  const [loading, setLoading] = useState(false);
+  // Loading state per report so only the active button shows a spinner
+  const [visaLoading, setVisaLoading] = useState(false);
+  const [flightLoading, setFlightLoading] = useState(false);
+  const [hotelLoading, setHotelLoading] = useState(false);
+  const [packageLoading, setPackageLoading] = useState(false);
+  const [flashSaleLoading, setFlashSaleLoading] = useState(false);
 
   const months = [
     { value: 1, label: "January" },
@@ -43,7 +48,7 @@ export default function Settings() {
 
   const generatePDF = async () => {
     try {
-      setLoading(true);
+      setVisaLoading(true);
 
       const response = await adminAxios.get(`/visa-applications/report?month=${visaMonth}&year=${visaYear}`);
       const { applications, month, year } = response.data;
@@ -103,13 +108,13 @@ export default function Settings() {
       console.error("Error generating PDF:", error);
       toast.error("Failed to generate visa applications report.");
     } finally {
-      setLoading(false);
+      setVisaLoading(false);
     }
   };
 
   const generateFlightPDF = async () => {
     try {
-      setLoading(true);
+      setFlightLoading(true);
 
       const response = await adminAxios.get(`/flight-bookings/report?month=${flightMonth}&year=${flightYear}`);
       const { bookings, month, year } = response.data;
@@ -178,13 +183,13 @@ export default function Settings() {
         toast.error('Failed to generate flight bookings report.');
       }
     } finally {
-      setLoading(false);
+      setFlightLoading(false);
     }
   };
 
   const generateHotelPDF = async () => {
     try {
-      setLoading(true);
+      setHotelLoading(true);
 
       const response = await adminAxios.get(`/hotel-bookings/report?month=${hotelMonth}&year=${hotelYear}`);
       const { bookings, month, year } = response.data;
@@ -226,13 +231,13 @@ export default function Settings() {
       console.error("Error generating Hotel PDF:", error);
       toast.error("Failed to generate hotel bookings report.");
     } finally {
-      setLoading(false);
+      setHotelLoading(false);
     }
   };
 
   const generatePackagePDF = async () => {
     try {
-      setLoading(true);
+      setPackageLoading(true);
 
       const response = await adminAxios.get(`/package-bookings/report?month=${packageMonth}&year=${packageYear}`);
       const { bookings, month, year } = response.data;
@@ -275,13 +280,13 @@ export default function Settings() {
       console.error("Error generating Package PDF:", error);
       toast.error("Failed to generate package bookings report.");
     } finally {
-      setLoading(false);
+      setPackageLoading(false);
     }
   };
 
   const generateFlashSalePDF = async () => {
     try {
-      setLoading(true);
+      setFlashSaleLoading(true);
 
       const response = await adminAxios.get(`/flash-sale-bookings/report?month=${flashSaleMonth}&year=${flashSaleYear}`);
       const { bookings, month, year } = response.data;
@@ -303,9 +308,9 @@ export default function Settings() {
         index + 1,
         bk.name || '',
         bk.whatsappNumber || '',
-        bk.flashSaleId?.destinationCity || '',
-        bk.flashSaleId?.airline || '',
-        bk.flashSaleId?.price || '',
+        bk.flashSaleId?.destinationCity || bk.flashSaleData?.destinationCity || '',
+        bk.flashSaleId?.airline || bk.flashSaleData?.airline || '',
+        bk.flashSaleId?.price || bk.flashSaleData?.price || '',
         bk.status || '',
         new Date(bk.createdAt).toLocaleDateString(),
       ]);
@@ -324,7 +329,7 @@ export default function Settings() {
       console.error("Error generating Flash Sale PDF:", error);
       toast.error("Failed to generate flash sale bookings report.");
     } finally {
-      setLoading(false);
+      setFlashSaleLoading(false);
     }
   };
 
@@ -377,10 +382,10 @@ export default function Settings() {
 
             <button
               onClick={generatePDF}
-              disabled={loading}
+              disabled={visaLoading}
               className="btn btn-primary"
             >
-              {loading ? (
+              {visaLoading ? (
                 <>
                   <span className="spinner-border spinner-border-sm me-2" role="status" aria-hidden="true"></span>
                   Generating PDF...
@@ -435,10 +440,10 @@ export default function Settings() {
 
             <button
               onClick={generateFlightPDF}
-              disabled={loading}
+              disabled={flightLoading}
               className="btn btn-primary"
             >
-              {loading ? (
+              {flightLoading ? (
                 <>
                   <span className="spinner-border spinner-border-sm me-2" role="status" aria-hidden="true"></span>
                   Generating PDF...
@@ -462,7 +467,7 @@ export default function Settings() {
             </p>
 
             <div className="mt-3">
-              <Link to="/admin/visa-requirements" className="btn btn-outline-primary">
+              <Link to="/visa-requirements" className="btn btn-outline-primary">
                 Manage Visa Requirements
               </Link>
             </div>
@@ -501,8 +506,8 @@ export default function Settings() {
               </div>
             </div>
 
-            <button onClick={generateHotelPDF} disabled={loading} className="btn btn-primary">
-              {loading ? (
+            <button onClick={generateHotelPDF} disabled={hotelLoading} className="btn btn-primary">
+              {hotelLoading ? (
                 <>
                   <span className="spinner-border spinner-border-sm me-2" role="status" aria-hidden="true"></span>
                   Generating PDF...
@@ -549,8 +554,8 @@ export default function Settings() {
               </div>
             </div>
 
-            <button onClick={generatePackagePDF} disabled={loading} className="btn btn-primary">
-              {loading ? (
+            <button onClick={generatePackagePDF} disabled={packageLoading} className="btn btn-primary">
+              {packageLoading ? (
                 <>
                   <span className="spinner-border spinner-border-sm me-2" role="status" aria-hidden="true"></span>
                   Generating PDF...
@@ -597,8 +602,8 @@ export default function Settings() {
               </div>
             </div>
 
-            <button onClick={generateFlashSalePDF} disabled={loading} className="btn btn-primary">
-              {loading ? (
+            <button onClick={generateFlashSalePDF} disabled={flashSaleLoading} className="btn btn-primary">
+              {flashSaleLoading ? (
                 <>
                   <span className="spinner-border spinner-border-sm me-2" role="status" aria-hidden="true"></span>
                   Generating PDF...

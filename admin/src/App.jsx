@@ -27,9 +27,12 @@ import PackagesManagement from "../pages/PackagesManagement";
 import AddNewFlashSale from "../pages/AddNewFlashSale";
 import FlashSalesManagement from "../pages/FlashSalesManagement";
 import FlashSalesList from "../pages/FlashSalesList";
+import AddNewFlashSaleBooking from "../pages/AddNewFlashSaleBooking";
+import AddNewPackageBooking from "../pages/AddNewPackageBooking";
 import PackageBookings from "../pages/PackageBookings";
 import AdminCreateNewsletter from "../pages/AdminCreateNewsletter";
 import AdminNewsletterSubscribers from "../pages/AdminNewsletterSubscribers";
+import Users from "../pages/Users";
 
 import AdminSocketNotifications from "./components/AdminSocketNotifications";
 
@@ -81,12 +84,15 @@ export default function App() {
           <Route path="packages/add" element={<AddNewPackage />} />
           <Route path="packages/edit/:id" element={<AddNewPackage />} />
           <Route path="package-bookings" element={<PackageBookings />} />
+          <Route path="package-bookings/add" element={<AddNewPackageBooking />} />
           <Route path="flash-sales" element={<FlashSalesList />} />
           <Route path="flash-sales/add" element={<AddNewFlashSale />} />
+          <Route path="flash-sales/add-booking" element={<AddNewFlashSaleBooking />} />
           <Route path="flash-sales/edit/:id" element={<AddNewFlashSale />} />
           <Route path="flash-sales-bookings" element={<FlashSalesManagement />} />
           <Route path="newsletter/create" element={<AdminCreateNewsletter />} />
           <Route path="newsletter/subscribers" element={<AdminNewsletterSubscribers />} />
+          <Route path="users" element={<Users />} />
         </Route>
 
         {/* Catch-all */}

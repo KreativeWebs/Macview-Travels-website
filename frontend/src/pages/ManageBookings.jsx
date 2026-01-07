@@ -68,8 +68,8 @@ export default function ManageBookings() {
                   <div className="card-text">
                     <div className="mb-2"><strong>Destination:</strong> {booking.destinationCountry}</div>
                     <div className="mb-2"><strong>Visa Type:</strong> {booking.visaType}</div>
-                    <div className="mb-2"><strong>Status:</strong> <span style={getStatusBadge(booking.status)} className="badge">{booking.status}</span></div>
-                    <div className="mb-2"><strong>Payment:</strong> <span style={getStatusBadge(booking.payment?.status)} className="badge">{booking.payment?.status}</span></div>
+                    <div className="mb-2"><strong>Status:</strong> <span style={getStatusBadge(booking.status)} className="badge rounded-pill px-2">{booking.status}</span></div>
+                    <div className="mb-2"><strong>Payment:</strong> <span style={getStatusBadge(booking.payment?.status)} className="badge rounded-pill px-2">{booking.payment?.status}</span></div>
                     <div className="mb-2"><strong>Date:</strong> {new Date(booking.createdAt).toLocaleDateString()}</div>
                   </div>
                 </div>
@@ -99,12 +99,12 @@ export default function ManageBookings() {
                 <td>{booking.destinationCountry}</td>
                 <td>{booking.visaType}</td>
                 <td>
-                  <span style={getStatusBadge(booking.status)}>
+                  <span style={getStatusBadge(booking.status)} className="badge rounded-pill px-2">
                     {booking.status}
                   </span>
                 </td>
                 <td>
-                  <span style={getStatusBadge(booking.payment?.status)}>
+                  <span style={getStatusBadge(booking.payment?.status)} className="badge rounded-pill px-2">
                     {booking.payment?.status}
                   </span>
                 </td>
@@ -134,8 +134,8 @@ export default function ManageBookings() {
                     <div className="mb-2"><strong>Departure:</strong> {booking.departureCity}</div>
                     <div className="mb-2"><strong>Destination:</strong> {booking.destinationCity}</div>
                     <div className="mb-2"><strong>Departure Date:</strong> {booking.departureDate ? new Date(booking.departureDate).toLocaleDateString() : "N/A"}</div>
-                    <div className="mb-2"><strong>Status:</strong> <span style={getStatusBadge(booking.status)} className="badge">{booking.status}</span></div>
-                    <div className="mb-2"><strong>Payment:</strong> <span style={getStatusBadge(booking.payment?.status)} className="badge">{booking.payment?.status}</span></div>
+                    <div className="mb-2"><strong>Status:</strong> <span style={getStatusBadge(booking.status)} className="badge rounded-pill px-2">{booking.status}</span></div>
+                    <div className="mb-2"><strong>Payment:</strong> <span style={getStatusBadge(booking.payment?.status)} className="badge rounded-pill px-2">{booking.payment?.status}</span></div>
                     <div className="mb-2"><strong>Date:</strong> {new Date(booking.createdAt).toLocaleDateString()}</div>
                   </div>
                 </div>
@@ -209,8 +209,8 @@ export default function ManageBookings() {
                     <div className="mb-2"><strong>Check-out:</strong> {booking.checkOutDate ? new Date(booking.checkOutDate).toLocaleDateString() : "N/A"}</div>
                     <div className="mb-2"><strong>Rooms:</strong> {booking.rooms}</div>
                     <div className="mb-2"><strong>Guests:</strong> {booking.guests}</div>
-                    <div className="mb-2"><strong>Status:</strong> <span style={getStatusBadge(booking.status)} className="badge">{booking.status}</span></div>
-                    <div className="mb-2"><strong>Payment:</strong> <span style={getStatusBadge(booking.payment?.status)} className="badge">{booking.payment?.status}</span></div>
+                    <div className="mb-2"><strong>Status:</strong> <span style={getStatusBadge(booking.status)} className="badge rounded-pill px-2">{booking.status}</span></div>
+                    <div className="mb-2"><strong>Payment:</strong> <span style={getStatusBadge(booking.payment?.status)} className="badge rounded-pill px-2">{booking.payment?.status}</span></div>
                     <div className="mb-2"><strong>Date:</strong> {new Date(booking.createdAt).toLocaleDateString()}</div>
                   </div>
                 </div>
@@ -254,12 +254,12 @@ export default function ManageBookings() {
                 <td>{booking.rooms}</td>
                 <td>{booking.guests}</td>
                 <td>
-                  <span style={getStatusBadge(booking.status)} className="badge">
+                  <span style={getStatusBadge(booking.status)} className="badge rounded-pill px-2">
                     {booking.status}
                   </span>
                 </td>
                 <td>
-                  <span style={getStatusBadge(booking.payment?.status)} className="badge">
+                  <span style={getStatusBadge(booking.payment?.status)} className="badge rounded-pill px-2">
                     {booking.payment?.status}
                   </span>
                 </td>
@@ -289,8 +289,8 @@ export default function ManageBookings() {
                     <div className="mb-2"><strong>City:</strong> {booking.packageCity || "N/A"}</div>
                     <div className="mb-2"><strong>Travel Date:</strong> {booking.travelDate ? new Date(booking.travelDate).toLocaleDateString() : "N/A"}</div>
                     <div className="mb-2"><strong>Price:</strong> {booking.packageCurrency === "NGN" ? "₦" : "$"}{booking.packagePrice?.toLocaleString()}</div>
-                    <div className="mb-2"><strong>Status:</strong> <span style={getStatusBadge(booking.status)} className="badge">{booking.status}</span></div>
-                    <div className="mb-2"><strong>Payment:</strong> <span style={getStatusBadge(booking.payment?.status)} className="badge">{booking.payment?.status}</span></div>
+                    <div className="mb-2"><strong>Status:</strong> <span style={getStatusBadge(booking.status)} className="badge rounded-pill px-2">{booking.status}</span></div>
+                    <div className="mb-2"><strong>Payment:</strong> <span style={getStatusBadge(booking.payment?.status)} className="badge rounded-pill px-2">{booking.payment?.status}</span></div>
                     <div className="mb-2"><strong>Date:</strong> {new Date(booking.createdAt).toLocaleDateString()}</div>
                   </div>
                 </div>
@@ -331,12 +331,12 @@ export default function ManageBookings() {
                   {booking.packagePrice?.toLocaleString()}
                 </td>
                 <td>
-                  <span style={getStatusBadge(booking.status)} className="badge">
+                  <span style={getStatusBadge(booking.status)} className="badge rounded-pill px-2">
                     {booking.status}
                   </span>
                 </td>
                 <td>
-                  <span style={getStatusBadge(booking.payment?.status)} className="badge">
+                  <span style={getStatusBadge(booking.payment?.status)} className="badge rounded-pill px-2">
                     {booking.payment?.status}
                   </span>
                 </td>
@@ -365,8 +365,8 @@ export default function ManageBookings() {
                     <div className="mb-2"><strong>Destination:</strong> {booking.flashSaleId?.destinationCity || "N/A"}</div>
                     <div className="mb-2"><strong>Airline:</strong> {booking.flashSaleId?.airline || "N/A"}</div>
                     <div className="mb-2"><strong>Price:</strong> ₦{booking.flashSaleId?.price?.toLocaleString() || "N/A"}</div>
-                    <div className="mb-2"><strong>Status:</strong> <span style={getStatusBadge(booking.status)} className="badge">{booking.status}</span></div>
-                    <div className="mb-2"><strong>Payment:</strong> <span style={getStatusBadge(booking.payment?.status)} className="badge">{booking.payment?.status}</span></div>
+                    <div className="mb-2"><strong>Status:</strong> <span style={getStatusBadge(booking.status)} className="badge rounded-pill px-2">{booking.status}</span></div>
+                    <div className="mb-2"><strong>Payment:</strong> <span style={getStatusBadge(booking.payment?.status)} className="badge rounded-pill px-2">{booking.payment?.status}</span></div>
                     <div className="mb-2"><strong>Date:</strong> {new Date(booking.createdAt).toLocaleDateString()}</div>
                   </div>
                 </div>

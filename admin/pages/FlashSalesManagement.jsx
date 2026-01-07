@@ -70,7 +70,7 @@ function FlashSalesManagement() {
           <h2>All Flash Sales</h2>
         </Col>
         <Col xs="auto">
-          <Link to="/add-flash-sale">
+          <Link to="/flash-sales/add">
             <Button variant="primary">Add Flash Sale</Button>
           </Link>
         </Col>
@@ -92,7 +92,7 @@ function FlashSalesManagement() {
                     Status: {sale.isActive ? "Active" : "Inactive"}
                   </Card.Text>
                   <Link
-                    to={`/edit-flash-sale/${sale._id}`}
+                    to={`/flash-sales/edit/${sale._id}`}
                     className="btn btn-outline-secondary me-2"
                     title="Edit"
                   >

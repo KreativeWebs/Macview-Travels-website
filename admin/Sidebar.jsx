@@ -47,6 +47,7 @@ export default function Sidebar({ open }) {
       path: "newsletter/subscribers",
       icon: "fa-solid fa-users",
     },
+    { name: "Users", path: "users", icon: "fa-solid fa-users" },
     { name: "Settings", path: "settings", icon: "fa-solid fa-gear" },
   ];
 
@@ -58,7 +59,7 @@ export default function Sidebar({ open }) {
         flex: open ? '0 0 220px' : '0 0 70px',
         transition: "0.3s",
         minHeight: "100vh",
-        backgroundColor: "transparent",
+        backgroundColor: "white",
         overflowX: 'hidden',
         boxSizing: 'border-box',
       }}

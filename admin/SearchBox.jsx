@@ -6,7 +6,7 @@ export default function SearchBox() {
         type="text"
         className="form-control"
         style={{ width: "280px", boxShadow: "none",
-                borderColor: "#c9b5b5ff", }}
+                borderColor: "#ced4da", }}
         placeholder="Search clients, bookings..."
       />
     </div>

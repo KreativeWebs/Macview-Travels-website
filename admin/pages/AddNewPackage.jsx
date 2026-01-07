@@ -148,7 +148,7 @@ export default function AddNewPackage() {
         toast.success("Package created successfully!");
       }
 
-      navigate("/admin/packages");
+      navigate("/packages");
     } catch (error) {
       console.error("Error saving package:", error);
       toast.error("Failed to save package");

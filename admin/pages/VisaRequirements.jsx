@@ -58,7 +58,7 @@ export default function VisaRequirements() {
       {/* Page Title */}
       <div className="d-flex justify-content-between align-items-center mb-4">
         <h2 className="fw-bold">Visa Requirements Management</h2>
-        <Link to="/admin/add-visa-requirement" className="btn btn-primary">
+        <Link to="/visa-requirements/add" className="btn btn-primary">
           <i className="fas fa-plus me-2"></i>
           Add New Requirement
         </Link>
@@ -75,7 +75,7 @@ export default function VisaRequirements() {
         ) : requirements.length === 0 ? (
           <div className="p-4 text-center">
             <p className="text-muted mb-3">No visa requirements found</p>
-            <Link to="/admin/add-visa-requirement" className="btn btn-outline-primary">
+            <Link to="/visa-requirements/add" className="btn btn-outline-primary">
               Add First Requirement
             </Link>
           </div>
@@ -127,7 +127,7 @@ export default function VisaRequirements() {
                     <td className="text-center">
                       <div className="btn-group" role="group">
                         <Link
-                          to={`/admin/edit-visa-requirement/${requirement._id}`}
+                          to={`/visa-requirements/edit/${requirement._id}`}
                           className="btn btn-sm btn-outline-primary"
                           title="Edit"
                         >
