@@ -6,5 +6,6 @@ import tailwindcss from '@tailwindcss/vite'
 export default defineConfig({
   root: "frontend",
   envDir: "..",
+  resolve: { dedupe: ['react', 'react-dom'] },
   plugins: [react(), tailwindcss()],
 })

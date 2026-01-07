@@ -62,7 +62,9 @@ export const authenticateAdmin = async (req, res, next) => {
   try {
     const token = req.headers.authorization?.split(' ')[1] || req.cookies.refreshToken;
 
+    // debug logging for failed auth investigation
     if (!token) {
+      console.warn(`Admin auth: no token provided. Headers: ${JSON.stringify(req.headers ? { authorization: !!req.headers.authorization } : {})}, Cookies: ${JSON.stringify(req.cookies ? Object.keys(req.cookies) : [])}`);
       return res.status(401).json({ success: false, message: "No access token provided" });
     }
 
@@ -71,6 +73,7 @@ export const authenticateAdmin = async (req, res, next) => {
       // Try to verify as access token first (admin login creates access tokens)
       decoded = jwt.verify(token, process.env.ACCESS_TOKEN_SECRET);
     } catch (accessError) {
+      console.warn(`Admin auth: access token verification failed: ${accessError.message}`);
       if (accessError.name === 'TokenExpiredError') {
         // Try to refresh using refresh token from cookies
         const refreshToken = req.cookies.refreshToken;
@@ -85,9 +88,11 @@ export const authenticateAdmin = async (req, res, next) => {
             req.headers.authorization = `Bearer ${newAccessToken}`;
             decoded = jwt.verify(newAccessToken, process.env.ACCESS_TOKEN_SECRET);
           } catch (refreshError) {
+            console.warn(`Admin auth: refresh token failed: ${refreshError.message}`);
             throw new Error("Invalid token signature");
           }
         } else {
+          console.warn('Admin auth: token expired and no refresh token present');
           throw new Error("Invalid token signature");
         }
       } else {
@@ -95,6 +100,7 @@ export const authenticateAdmin = async (req, res, next) => {
         try {
           decoded = jwt.verify(token, process.env.REFRESH_TOKEN_SECRET);
         } catch (refreshError) {
+          console.warn(`Admin auth: refresh verification also failed: ${refreshError.message}`);
           throw new Error("Invalid token signature");
         }
       }
@@ -103,13 +109,14 @@ export const authenticateAdmin = async (req, res, next) => {
     const admin = await Admin.findById(decoded.id);
 
     if (!admin || !admin.isActive) {
+      console.warn(`Admin auth: admin not found or inactive for id ${decoded.id}`);
       return res.status(401).json({ success: false, message: "Invalid admin token" });
     }
 
     req.admin = admin;
     next();
   } catch (error) {
-    console.error("Admin authentication error:", error);
+    console.error("Admin authentication error:", error.message || error);
     res.status(401).json({ success: false, message: "Authentication failed" });
   }
 };

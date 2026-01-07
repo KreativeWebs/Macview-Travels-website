@@ -15,10 +15,13 @@ import packagesRoutes from "./routes/packagesRoutes.js";
 import adminRoutes from "./routes/adminRoutes.js";
 import newsletterRoutes from "./routes/newsletterRoutes.js";
 import adminNewsletterRoutes from "./routes/adminNewsletterRoutes.js";
+import { adminBasicAuth } from "./middleware/adminBasicAuth.js"; 
 import flashSaleRoutes from "./routes/flashSaleRoutes.js";
 import path from "path";
 import { fileURLToPath } from "url";
 import cors from "cors";
+import fs from "fs";
+import { createProxyMiddleware } from "http-proxy-middleware";
 
 // -----------------------------
 // File path fixes for ES Modules
@@ -38,6 +41,7 @@ const PORT = process.env.PORT || 5000;
 const allowedOrigins = [
   "http://localhost:5173",
   "http://localhost:5174",
+  "http://localhost:5176",
   "https://healthcheck.railway.app",
   "https://www.macviewtravel.com",
   "https://admin.macviewtravel.com",
@@ -46,11 +50,17 @@ const allowedOrigins = [
 app.use(
   cors({
     origin: (origin, callback) => {
-      if (!origin || allowedOrigins.includes(origin)) {
-        callback(null, true);
-      } else {
-        callback(new Error("Not allowed by CORS"));
+      // allow non-browser requests with no Origin header (curl, server-to-server)
+      if (!origin) return callback(null, true);
+      // allow any localhost origin during development for convenience
+      if (process.env.NODE_ENV !== "production" && origin.startsWith("http://localhost")) {
+        return callback(null, true);
       }
+      if (allowedOrigins.includes(origin)) {
+        return callback(null, true);
+      }
+      logger.warn(`Blocked CORS origin: ${origin}`);
+      return callback(new Error("Not allowed by CORS"));
     },
     credentials: true,
   })
@@ -150,12 +160,53 @@ app.use("/api/flight-bookings", flightBookingRoutes);
 app.use("/api/hotel-bookings", hotelRoutes);
 app.use("/api/visa", visaRoutes);
 app.use("/api/packages", packagesRoutes);
-app.use("/api/admin", adminRoutes);
-app.use("/api/admin", adminBasicAuth);
+app.use("/api/admin", adminBasicAuth, adminRoutes);
 app.use("/api/newsletter", newsletterRoutes);
-app.use("/api/admin/newsletter", adminNewsletterRoutes);
+app.use("/api/admin/newsletter", adminBasicAuth, adminNewsletterRoutes);
 app.use("/api/flash-sales", flashSaleRoutes);
 app.use("/uploads", express.static(path.join(process.cwd(), "uploads")));
+
+// -----------------------------
+// Admin frontend (dev proxy or production static)
+// -----------------------------
+// Behavior:
+// - In development, proxy /admin to the dev server (default http://localhost:5174)
+//   so you can run Vite separately while still accessing /admin/* from backend.
+// - In production, serve the built admin files from admin/dist under /admin.
+const ADMIN_DEV_SERVER = process.env.ADMIN_DEV_SERVER || "http://localhost:5174";
+const adminDistPath = path.join(process.cwd(), "admin", "dist");
+
+if (process.env.NODE_ENV === "production") {
+  if (fs.existsSync(adminDistPath)) {
+    app.use("/admin", express.static(adminDistPath));
+    app.get("/admin/*", (req, res) => res.sendFile(path.join(adminDistPath, "index.html")));
+    logger.info(`Serving admin from ${adminDistPath}`);
+  } else {
+    logger.warn(`Admin build not found at ${adminDistPath}. Please run 'npm run build' inside the admin folder.`);
+  }
+} else {
+  // development: proxy requests to the Vite dev server for admin
+  try {
+    app.use(
+      "/admin",
+      createProxyMiddleware({ target: ADMIN_DEV_SERVER, changeOrigin: true, ws: true })
+    );
+    logger.info(`Proxying /admin to ${ADMIN_DEV_SERVER}`);
+  } catch (err) {
+    logger.warn(`Admin dev proxy not configured: ${err.message}`);
+  }
+}
+
+// -----------------------------
+// CORS error handler
+// -----------------------------
+app.use((err, req, res, next) => {
+  if (err && err.message === "Not allowed by CORS") {
+    logger.warn(`CORS Error: ${err.message} - Origin: ${req.get("Origin")}`);
+    return res.status(403).json({ error: "CORS Error: Origin not allowed" });
+  }
+  next(err);
+});
 
 // -----------------------------
 // HTTP Server + Socket.IO

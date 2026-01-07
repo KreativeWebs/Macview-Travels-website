@@ -36,14 +36,24 @@ const createRefreshToken = (userId) => {
 
 // Set refresh cookie with dev + prod support
 const setRefreshCookie = (res, token) => {
-  res.cookie("refreshToken", token, {
+  const cookieOptions = {
     httpOnly: true,
-    secure: true,
-    sameSite: "none",
-    domain: ".macviewtravel.com",
     path: "/",
     maxAge: 7 * 24 * 60 * 60 * 1000, // 7 days
-  });
+  };
+
+  if (process.env.NODE_ENV === "production") {
+    // Production: secure cookie, cross-site allowed for subdomain usage
+    cookieOptions.secure = true;
+    cookieOptions.sameSite = "none";
+    cookieOptions.domain = ".macviewtravel.com";
+  } else {
+    // Development: no domain, not secure so browser accepts cookie on localhost
+    cookieOptions.secure = false;
+    cookieOptions.sameSite = "lax"; // reasonable default for local dev
+  }
+
+  res.cookie("refreshToken", token, cookieOptions);
 };
 
 /* ================================
@@ -150,7 +160,10 @@ router.post("/login",
 ================================ */
 router.post("/refresh", async (req, res) => {
   const token = req.cookies.refreshToken;
-  if (!token) return res.status(401).json({ message: "No refresh token" });
+  if (!token) {
+    console.warn(`Refresh attempt: no refresh token in cookies. Cookies keys: ${JSON.stringify(Object.keys(req.cookies || {}))}`);
+    return res.status(401).json({ message: "No refresh token" });
+  }
 
   try {
     const decoded = jwt.verify(token, process.env.REFRESH_TOKEN_SECRET);

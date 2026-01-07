@@ -1,9 +1,8 @@
-import React from "react";
-import { Routes, Route, useLocation } from "react-router-dom";
+import React, { useEffect } from "react";
+import { Routes, Route, useLocation, Navigate } from "react-router-dom";
 import { ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import "@fortawesome/fontawesome-free/css/all.min.css";
-import { useEffect } from "react";
 import { useAuthStore } from "./store/authStore";
 import PublicLayout from "./components/PublicLayout";
 import Home from "./pages/Home";
@@ -38,33 +37,9 @@ import FAQ from "./pages/FAQ.jsx";
 import Unsubscribe from "./pages/Unsubscribe.jsx";
 import FlashSaleSuccess from "./pages/FlashSaleSuccess.jsx";
 
-import AdminLayout from "./admin/AdminLayout";
-import Dashboard from "./admin/pages/AdminHome";
-import AdminLogin from "./admin/pages/AdminLogin.jsx";
-import Clients from "./admin/pages/Clients";
-import ClientProfile from "./admin/pages/ClientProfile";
-import VisaRequests from "./admin/pages/VisaRequests";
-import FlightBookings from "./admin/pages/FlightBookings";
-import HotelBookings from "./admin/pages/HotelBookings";
-import Transfers from "./admin/pages/Transfers";
-import Settings from "./admin/pages/Settings";
-import AddNewVisa from "./admin/pages/AddNewVisa.jsx";
-import AddNewFlightRequest from "./admin/pages/AddNewFlightRequest.jsx";
-import AddNewHotel from "./admin/pages/AddNewHotel.jsx";
-import VisaRequirements from "./admin/pages/VisaRequirements.jsx";
-import AddNewVisaRequirement from "./admin/pages/AddNewVisaRequirement.jsx";
-import AddNewPackage from "./admin/pages/AddNewPackage";
-import PackagesManagement from "./admin/pages/PackagesManagement";
-import AddNewFlashSale from "./admin/pages/AddNewFlashSale";
-import FlashSalesManagement from "./admin/pages/FlashSalesManagement";
-import FlashSalesList from "./admin/pages/FlashSalesList";
-import PackageBookings from "./admin/pages/PackageBookings";
 import PackageDetails from "./pages/PackageDetails";
 import FlashSales from "./pages/FlashSales";
 import FlashSaleDetails from "./pages/FlashSaleDetails";
-import AdminCreateNewsletter from "./admin/pages/AdminCreateNewsletter.jsx";
-import AdminNewsletterSubscribers from "./admin/pages/AdminNewsletterSubscribers.jsx";
-import AdminSocketNotifications from "./components/AdminSocketNotifications";
 
 
 function FloatingButtonsController() {
@@ -96,6 +71,26 @@ function AuthInitializer() {
   return null;
 }
 
+function AdminRedirect() {
+  useEffect(() => {
+    const isDevelopment = window.location.hostname === "localhost";
+    const adminUrl = isDevelopment ? "http://localhost:5174" : "https://admin.macviewtravel.com";
+    window.location.href = adminUrl;
+  }, []);
+
+  return null;
+}
+
+function AdminLoginRedirect() {
+  useEffect(() => {
+    const isDevelopment = window.location.hostname === "localhost";
+    const adminUrl = isDevelopment ? "http://localhost:5174/login" : "https://admin.macviewtravel.com/login";
+    window.location.href = adminUrl;
+  }, []);
+
+  return null;
+}
+
 export default function App() {
   const location = useLocation();
 
@@ -108,6 +103,10 @@ export default function App() {
       <AuthInitializer />
       <FloatingButtonsController />
       <Routes>
+        {/* Redirect /admin to subdomain */}
+        <Route path="/admin" element={<AdminRedirect />} />
+        <Route path="/adminlogin" element={<AdminLoginRedirect />} />
+
         {/* Public website */}
         <Route element={<PublicLayout />}>
           <Route path="/" element={<Home />} />
@@ -154,50 +153,8 @@ export default function App() {
           <Route path="/flash-sale-success" element={<FlashSaleSuccess />} />
         </Route>
 
-        {/* Admin login */}
-        <Route path="/adminlogin" element={<AdminLogin />} />
 
-        {/* Admin routes */}
-        <Route path="/admin" element={<AdminLayout />}>
-          <Route index element={<Dashboard />} />
-          <Route path="clients" element={<Clients />} />
-          <Route path="clients/:id" element={<ClientProfile />} />
-          <Route path="visa" element={<VisaRequests />} />
-          <Route path="visa/addnewvisa" element={<AddNewVisa />} />
-          <Route path="flights" element={<FlightBookings />} />
-          <Route path="addnewflight" element={<AddNewFlightRequest />} />
-          <Route path="hotels" element={<HotelBookings />} />
-          <Route path="transfers" element={<Transfers />} />
-          <Route path="settings" element={<Settings />} />
-          <Route path="visa-requirements" element={<VisaRequirements />} />
-          <Route
-            path="add-visa-requirement"
-            element={<AddNewVisaRequirement />}
-          />
-          <Route
-            path="edit-visa-requirement/:id"
-            element={<AddNewVisaRequirement />}
-          />
-          <Route path="addnewhotel" element={<AddNewHotel />} />
-          <Route path="packages" element={<PackagesManagement />} />
-          <Route path="package-bookings" element={<PackageBookings />} />
-          <Route path="addnewpackage" element={<AddNewPackage />} />
-          <Route path="edit-package/:id" element={<AddNewPackage />} />
-          <Route path="createnewsletter" element={<AdminCreateNewsletter />} />
-          <Route
-            path="viewnewsletter"
-            element={<AdminNewsletterSubscribers />}
-          />
-          <Route path="add-flash-sale" element={<AddNewFlashSale />} />
-          <Route path="edit-flash-sale/:id" element={<AddNewFlashSale />} />
-          <Route
-            path="flash-sales-bookings"
-            element={<FlashSalesManagement />}
-          />
-          <Route path="flash-sales" element={<FlashSalesList />} />
-        </Route>
       </Routes>
-      <AdminSocketNotifications />
 
       <ToastContainer
         position="top-right"
