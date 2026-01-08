@@ -42,9 +42,13 @@ const allowedOrigins = [
   "http://localhost:5173",
   "http://localhost:5174",
   "http://localhost:5176",
-  "https://healthcheck.railway.app",
+
+  "https://macviewtravel.com",
   "https://www.macviewtravel.com",
   "https://admin.macviewtravel.com",
+
+  "https://macview-travels-website-production.up.railway.app",
+  "https://healthcheck.railway.app"
 ];
 
 // -----------------------------
