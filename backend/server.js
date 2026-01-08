@@ -48,7 +48,7 @@ const allowedOrigins = [
   "https://admin.macviewtravel.com",
 
   "https://macview-travels-website-production.up.railway.app",
-  "https://healthcheck.railway.app"
+  // "https://healthcheck.railway.app"
 ];
 
 // -----------------------------
