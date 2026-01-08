@@ -18,6 +18,11 @@
 - [x] Updated admin/src/store/authStore.jsx: axios.post(`${fullBaseURL}/api/admin/login`, ...) → axios.post(`${fullBaseURL}/api/admin-login`, ...)
 
 ## Testing
-- Deploy the backend changes.
-- Test admin login from https://admin.macviewtravel.com.
-- Verify no CORS errors and successful login.
+- [x] Deploy the backend changes.
+- [x] Test admin login from https://admin.macviewtravel.com.
+- [ ] Verify no CORS errors and successful login.
+
+## Test Results
+- CORS error persists for /api/admin-login, /api/refresh, and socket.io.
+- Possible cause: Deployed server not updated with latest changes.
+- Next step: Redeploy the backend to apply the route change and CORS configuration.
