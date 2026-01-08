@@ -48,7 +48,7 @@ const allowedOrigins = [
   "https://admin.macviewtravel.com",
 
   "https://macview-travels-website-production.up.railway.app",
-  // "https://healthcheck.railway.app"
+  "https://healthcheck.railway.app"
 ];
 
 // -----------------------------
@@ -250,13 +250,18 @@ io.on("connection", (socket) => {
 global.io = io;
 
 // -----------------------------
-// Start server after DB connection
+// Start HTTP server FIRST (Railway requirement)
+// -----------------------------
+server.listen(PORT, () => {
+  logger.info(`Server started on port ${PORT}`);
+});
+
+// -----------------------------
+// Connect to DB (async, non-blocking)
 // -----------------------------
 connectToDB()
   .then(() => {
-    server.listen(PORT, () => {
-      logger.info(`Server started on port ${PORT}`);
-    });
+    logger.info("Database connected successfully");
   })
   .catch((err) => {
     logger.error(`DB Connection Failed: ${err.message}`);
