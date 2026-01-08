@@ -1,28 +1,19 @@
-# Admin Login CORS Fix
+# CORS Fix for Admin Panel
 
-## Problem
-- Admin panel at https://admin.macviewtravel.com was unable to login due to CORS error.
-- Error: "No 'Access-Control-Allow-Origin' header is present on the requested resource" for OPTIONS preflight request to /api/admin/login.
+## Completed Tasks
+- [x] Analyzed CORS error messages from admin.macviewtravel.com to macview-travels-website-production.up.railway.app
+- [x] Identified that Socket.IO polling requests were failing CORS checks despite Express CORS setup
+- [x] Added CORS configuration to Socket.IO server with same origin function as Express
+- [x] Updated server.js to include CORS options in Socket.IO Server constructor
+- [x] Fixed CORS origin function to return specific origin instead of true for proper header setting
 
-## Root Cause
-- The admin login route was at /api/admin/login, which falls under the /api/admin path.
-- The server applies adminBasicAuth middleware to all /api/admin routes.
-- adminBasicAuth (express-basic-auth) sends 401 responses without CORS headers for OPTIONS requests, overriding the CORS middleware.
-
-## Solution
-- Moved admin login route from "/admin/login" to "/admin-login" in authRoutes.js to avoid adminBasicAuth.
-- Updated client-side authStore.jsx to use the new endpoint /api/admin-login.
+## Pending Tasks
+- [ ] Deploy the updated backend code to production
+- [ ] Test admin login and Socket.IO connections from https://admin.macviewtravel.com
+- [ ] Verify that CORS errors are resolved in browser console
 
 ## Changes Made
-- [x] Changed route in backend/routes/authRoutes.js: router.post("/admin/login", ...) → router.post("/admin-login", ...)
-- [x] Updated admin/src/store/authStore.jsx: axios.post(`${fullBaseURL}/api/admin/login`, ...) → axios.post(`${fullBaseURL}/api/admin-login`, ...)
-
-## Testing
-- [x] Deploy the backend changes.
-- [x] Test admin login from https://admin.macviewtravel.com.
-- [ ] Verify no CORS errors and successful login.
-
-## Test Results
-- CORS error persists for /api/admin-login, /api/refresh, and socket.io.
-- Possible cause: Deployed server not updated with latest changes.
-- Next step: Redeploy the backend to apply the route change and CORS configuration.
+- Modified backend/server.js:
+  - Extracted CORS origin function to reusable variable
+  - Added CORS options to Socket.IO Server with same origin function, credentials, methods, and headers
+  - Changed corsOriginFunction to return strippedOrigin instead of true when allowed, ensuring Access-Control-Allow-Origin is set to the specific origin

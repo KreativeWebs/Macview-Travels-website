@@ -48,22 +48,27 @@ const allowedOrigins = [
 ];
 
 // -----------------------------
+// CORS origin function
+// -----------------------------
+const corsOriginFunction = function (origin, callback) {
+  const strippedOrigin = origin?.replace(/\/+$/, ''); // remove trailing slashes
+  logger.info(`CORS check: raw_origin=${origin}, stripped_origin=${strippedOrigin}, allowed=${allowedOrigins.includes(strippedOrigin)}`);
+
+  if (!origin) return callback(null, true); // allow server-to-server requests
+
+  if (allowedOrigins.includes(strippedOrigin)) {
+    return callback(null, strippedOrigin);
+  } else {
+    logger.warn(`Blocked CORS origin: ${strippedOrigin}`);
+    return callback(new Error('Not allowed by CORS'));
+  }
+};
+
+// -----------------------------
 // CORS (using cors package)
 // -----------------------------
 app.use(cors({
-  origin: function (origin, callback) {
-    const strippedOrigin = origin?.replace(/\/+$/, ''); // remove trailing slashes
-    logger.info(`CORS check: raw_origin=${origin}, stripped_origin=${strippedOrigin}, allowed=${allowedOrigins.includes(strippedOrigin)}`);
-
-    if (!origin) return callback(null, true); // allow server-to-server requests
-
-    if (allowedOrigins.includes(strippedOrigin)) {
-      return callback(null, true);
-    } else {
-      logger.warn(`Blocked CORS origin: ${strippedOrigin}`);
-      return callback(new Error('Not allowed by CORS'));
-    }
-  },
+  origin: corsOriginFunction,
   credentials: true,
   methods: ["GET", "POST", "PUT", "DELETE", "OPTIONS"],
   allowedHeaders: ["Origin", "X-Requested-With", "Content-Type", "Accept", "Authorization"]
@@ -202,6 +207,12 @@ const io = new Server(server, {
   pingInterval: 25000,
   connectTimeout: 45000,
   maxHttpBufferSize: 1e8,
+  cors: {
+    origin: corsOriginFunction,
+    credentials: true,
+    methods: ["GET", "POST"],
+    allowedHeaders: ["Origin", "X-Requested-With", "Content-Type", "Accept", "Authorization"]
+  }
 });
 
 io.on("connection", (socket) => {
