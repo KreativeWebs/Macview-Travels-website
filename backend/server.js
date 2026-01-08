@@ -44,35 +44,52 @@ const allowedOrigins = [
   "http://localhost:5176",
   "https://healthcheck.railway.app",
   "https://www.macviewtravel.com",
-  "https://admin.macviewtravel.com"
+  "https://admin.macviewtravel.com",
 ];
 
 // -----------------------------
 // CORS origin function
 // -----------------------------
 const corsOriginFunction = function (origin, callback) {
-  const strippedOrigin = origin?.replace(/\/+$/, ''); // remove trailing slashes
-  logger.info(`CORS check: raw_origin=${origin}, stripped_origin=${strippedOrigin}, allowed=${allowedOrigins.includes(strippedOrigin)}`);
+  const strippedOrigin = origin?.replace(/\/+$/, ""); // remove trailing slashes
+  logger.info(
+    `CORS check: raw_origin=${origin}, stripped_origin=${strippedOrigin}, allowed=${allowedOrigins.includes(
+      strippedOrigin
+    )}`
+  );
 
   if (!origin) return callback(null, true); // allow server-to-server requests
 
   if (allowedOrigins.includes(strippedOrigin)) {
-    return callback(null, strippedOrigin);
+    return callback(null, true); // allow origin
   } else {
     logger.warn(`Blocked CORS origin: ${strippedOrigin}`);
-    return callback(new Error('Not allowed by CORS'));
+    return callback(new Error("Not allowed by CORS"));
   }
 };
 
 // -----------------------------
-// CORS (using cors package)
+// CORS middleware
 // -----------------------------
-app.use(cors({
-  origin: corsOriginFunction,
-  credentials: true,
-  methods: ["GET", "POST", "PUT", "DELETE", "OPTIONS"],
-  allowedHeaders: ["Origin", "X-Requested-With", "Content-Type", "Accept", "Authorization"]
-}));
+app.use(
+  cors({
+    origin: corsOriginFunction,
+    credentials: true,
+    methods: ["GET", "POST", "PUT", "DELETE", "OPTIONS"],
+    allowedHeaders: [
+      "Origin",
+      "X-Requested-With",
+      "Content-Type",
+      "Accept",
+      "Authorization",
+    ],
+  })
+);
+
+// -----------------------------
+// OPTIONS preflight (for POST requests with credentials)
+// -----------------------------
+app.options("*", cors({ origin: corsOriginFunction, credentials: true }));
 
 // -----------------------------
 // Security Middleware (Helmet)
@@ -208,11 +225,17 @@ const io = new Server(server, {
   connectTimeout: 45000,
   maxHttpBufferSize: 1e8,
   cors: {
-    origin: corsOriginFunction,
+    origin: allowedOrigins, // <-- array of allowed origins for Socket.IO
     credentials: true,
     methods: ["GET", "POST"],
-    allowedHeaders: ["Origin", "X-Requested-With", "Content-Type", "Accept", "Authorization"]
-  }
+    allowedHeaders: [
+      "Origin",
+      "X-Requested-With",
+      "Content-Type",
+      "Accept",
+      "Authorization",
+    ],
+  },
 });
 
 io.on("connection", (socket) => {
