@@ -219,22 +219,17 @@ if (process.env.NODE_ENV === "production") {
 const server = http.createServer(app);
 const io = new Server(server, {
   transports: ["websocket", "polling"],
-  allowEIO3: true,
-  pingTimeout: 60000,
-  pingInterval: 25000,
-  connectTimeout: 45000,
-  maxHttpBufferSize: 1e8,
   cors: {
-    origin: allowedOrigins, // <-- array of allowed origins for Socket.IO
+    origin: (origin, callback) => {
+      if (!origin) return callback(null, true); // allow server-to-server
+      const strippedOrigin = origin.replace(/\/+$/, "");
+      if (allowedOrigins.includes(strippedOrigin)) {
+        callback(null, true);
+      } else {
+        callback(new Error("Not allowed by CORS"));
+      }
+    },
     credentials: true,
-    methods: ["GET", "POST"],
-    allowedHeaders: [
-      "Origin",
-      "X-Requested-With",
-      "Content-Type",
-      "Accept",
-      "Authorization",
-    ],
   },
 });
 
