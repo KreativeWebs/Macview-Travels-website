@@ -132,7 +132,7 @@ export const useAuthStore = create((set, get) => ({
   adminLogin: async (email, password) => {
     set({ isLoading: true, error: null });
     try {
-      const res = await axios.post(`${fullBaseURL}/api/admin/login`, { email, password });
+      const res = await axios.post(`${fullBaseURL}/api/admin-login`, { email, password });
 
       // Store token in localStorage for adminAxios
       localStorage.setItem('adminToken', res.data.accessToken);

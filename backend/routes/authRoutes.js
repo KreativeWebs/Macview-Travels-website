@@ -345,7 +345,7 @@ router.post("/reset-password/:token", async (req, res) => {
 /* ================================
    ADMIN LOGIN
 ================================ */
-router.post("/admin/login", async (req, res) => {
+router.post("/admin-login", async (req, res) => {
   const { email, password } = req.body;
   try {
     const adminUser = await Admin.findOne({ email });

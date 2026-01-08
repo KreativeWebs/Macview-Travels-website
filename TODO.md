@@ -1,3 +1,23 @@
-- [x] Remove console.log from frontend/src/socket.js
-- [x] Remove console.log from frontend/src/api/adminAxios.js
-- [x] Remove console.log from frontend/src/App.jsx
+# Admin Login CORS Fix
+
+## Problem
+- Admin panel at https://admin.macviewtravel.com was unable to login due to CORS error.
+- Error: "No 'Access-Control-Allow-Origin' header is present on the requested resource" for OPTIONS preflight request to /api/admin/login.
+
+## Root Cause
+- The admin login route was at /api/admin/login, which falls under the /api/admin path.
+- The server applies adminBasicAuth middleware to all /api/admin routes.
+- adminBasicAuth (express-basic-auth) sends 401 responses without CORS headers for OPTIONS requests, overriding the CORS middleware.
+
+## Solution
+- Moved admin login route from "/admin/login" to "/admin-login" in authRoutes.js to avoid adminBasicAuth.
+- Updated client-side authStore.jsx to use the new endpoint /api/admin-login.
+
+## Changes Made
+- [x] Changed route in backend/routes/authRoutes.js: router.post("/admin/login", ...) → router.post("/admin-login", ...)
+- [x] Updated admin/src/store/authStore.jsx: axios.post(`${fullBaseURL}/api/admin/login`, ...) → axios.post(`${fullBaseURL}/api/admin-login`, ...)
+
+## Testing
+- Deploy the backend changes.
+- Test admin login from https://admin.macviewtravel.com.
+- Verify no CORS errors and successful login.
