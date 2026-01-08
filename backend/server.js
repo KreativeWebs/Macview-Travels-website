@@ -224,12 +224,14 @@ const io = new Server(server, {
       if (!origin) return callback(null, true); // allow server-to-server
       const strippedOrigin = origin.replace(/\/+$/, "");
       if (allowedOrigins.includes(strippedOrigin)) {
-        callback(null, strippedOrigin); // return the specific allowed origin
+        callback(null, true); // ✅ Changed from 'strippedOrigin' to 'true'
       } else {
+        logger.warn(`Blocked Socket.IO origin: ${strippedOrigin}`);
         callback(new Error("Not allowed by CORS"));
       }
     },
     credentials: true,
+    methods: ["GET", "POST"],
   },
 });
 
