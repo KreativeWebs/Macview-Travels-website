@@ -61,7 +61,7 @@ const corsOriginFunction = function (origin, callback) {
   if (!origin) return callback(null, true); // allow server-to-server requests
 
   if (allowedOrigins.includes(strippedOrigin)) {
-    return callback(null, true); // allow origin
+    return callback(null, strippedOrigin); // return the specific allowed origin
   } else {
     logger.warn(`Blocked CORS origin: ${strippedOrigin}`);
     return callback(new Error("Not allowed by CORS"));
@@ -224,7 +224,7 @@ const io = new Server(server, {
       if (!origin) return callback(null, true); // allow server-to-server
       const strippedOrigin = origin.replace(/\/+$/, "");
       if (allowedOrigins.includes(strippedOrigin)) {
-        callback(null, true);
+        callback(null, strippedOrigin); // return the specific allowed origin
       } else {
         callback(new Error("Not allowed by CORS"));
       }
