@@ -21,6 +21,7 @@ import path from "path";
 import { fileURLToPath } from "url";
 import fs from "fs";
 import { createProxyMiddleware } from "http-proxy-middleware";
+import cors from "cors";
 
 // -----------------------------
 // File path fixes for ES Modules
@@ -47,35 +48,26 @@ const allowedOrigins = [
 ];
 
 // -----------------------------
-// CORS (dynamic + credentials + preflight)
+// CORS (using cors package)
 // -----------------------------
-app.use((req, res, next) => {
-  const origin = req.headers.origin?.replace(/\/+$/, ''); // remove trailing slashes
+app.use(cors({
+  origin: function (origin, callback) {
+    const strippedOrigin = origin?.replace(/\/+$/, ''); // remove trailing slashes
+    logger.info(`CORS check: raw_origin=${origin}, stripped_origin=${strippedOrigin}, allowed=${allowedOrigins.includes(strippedOrigin)}`);
 
-  logger.info(`CORS check: raw_origin=${req.headers.origin}, stripped_origin=${origin}, method=${req.method}, path=${req.path}, allowed=${allowedOrigins.includes(origin)}`);
+    if (!origin) return callback(null, true); // allow server-to-server requests
 
-  if (!origin) return next(); // allow server-to-server requests
-
-  if (allowedOrigins.includes(origin)) {
-    res.header("Access-Control-Allow-Origin", origin);
-    res.header("Access-Control-Allow-Credentials", "true");
-    res.header("Access-Control-Allow-Methods", "GET,POST,PUT,DELETE,OPTIONS");
-    res.header(
-      "Access-Control-Allow-Headers",
-      "Origin, X-Requested-With, Content-Type, Accept, Authorization"
-    );
-
-    if (req.method === "OPTIONS") {
-      logger.info(`CORS: Handling OPTIONS for ${req.path}`);
-      return res.sendStatus(204); // preflight request
+    if (allowedOrigins.includes(strippedOrigin)) {
+      return callback(null, true);
+    } else {
+      logger.warn(`Blocked CORS origin: ${strippedOrigin}`);
+      return callback(new Error('Not allowed by CORS'));
     }
-
-    return next();
-  }
-
-  logger.warn(`Blocked CORS origin: ${origin}`);
-  return res.status(403).json({ error: "CORS Error: Origin not allowed" });
-});
+  },
+  credentials: true,
+  methods: ["GET", "POST", "PUT", "DELETE", "OPTIONS"],
+  allowedHeaders: ["Origin", "X-Requested-With", "Content-Type", "Accept", "Authorization"]
+}));
 
 // -----------------------------
 // Security Middleware (Helmet)
