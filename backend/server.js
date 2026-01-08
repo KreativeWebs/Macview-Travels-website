@@ -52,7 +52,7 @@ const allowedOrigins = [
 app.use((req, res, next) => {
   const origin = req.headers.origin?.replace(/\/+$/, ''); // remove trailing slashes
 
-  console.log(`CORS check: origin=${origin}, method=${req.method}, path=${req.path}, allowed=${allowedOrigins.includes(origin)}`);
+  logger.info(`CORS check: raw_origin=${req.headers.origin}, stripped_origin=${origin}, method=${req.method}, path=${req.path}, allowed=${allowedOrigins.includes(origin)}`);
 
   if (!origin) return next(); // allow server-to-server requests
 
@@ -66,7 +66,7 @@ app.use((req, res, next) => {
     );
 
     if (req.method === "OPTIONS") {
-      console.log(`CORS: Handling OPTIONS for ${req.path}`);
+      logger.info(`CORS: Handling OPTIONS for ${req.path}`);
       return res.sendStatus(204); // preflight request
     }
 
