@@ -196,11 +196,6 @@ if (process.env.NODE_ENV === "production") {
 // -----------------------------
 const server = http.createServer(app);
 const io = new Server(server, {
-  cors: {
-    origin: allowedOrigins,
-    credentials: true,
-    methods: ["GET", "POST"],
-  },
   transports: ["websocket", "polling"],
   allowEIO3: true,
   pingTimeout: 60000,
