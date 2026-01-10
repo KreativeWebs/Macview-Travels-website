@@ -197,6 +197,9 @@ function Header() {
                   fontWeight: "500",
                   fontSize: "15px",
                   color: isActive("/") ? "#f1741e" : "inherit",
+                  display: "flex",
+                  alignItems: "center",
+                  whiteSpace: "nowrap",
                 }}
               >
                 <i className="fa fa-home pe-2"></i>
@@ -212,6 +215,9 @@ function Header() {
                   fontWeight: "500",
                   fontSize: "15px",
                   color: isActive("/AboutUs") ? "#f1741e" : "inherit",
+                  display: "flex",
+                  alignItems: "center",
+                  whiteSpace: "nowrap",
                 }}
               >
                 <i className="fa fa-users pe-4"></i>
@@ -227,6 +233,8 @@ function Header() {
                   fontWeight: "500",
                   fontSize: "15px",
                   color: isActive("/Services") ? "#f1741e" : "inherit",
+                  display: "flex",
+                  alignItems: "center",
                 }}
               >
                 <i className="fa fa-briefcase pe-2"></i>
@@ -242,6 +250,8 @@ function Header() {
                   fontWeight: "500",
                   fontSize: "15px",
                   color: isActive("/Packages") ? "#f1741e" : "inherit",
+                  display: "flex",
+                  alignItems: "center",
                 }}
               >
                 <i className="fa fa-suitcase pe-2"></i>
@@ -258,6 +268,9 @@ function Header() {
                   fontSize: "15px",
                   cursor: "pointer",
                   color: isActive("/managebookings") ? "#f1741e" : "inherit",
+                  display: "flex",
+                  alignItems: "center",
+                  whiteSpace: "nowrap",
                 }}
               >
                 <i className="fa fa-plane pe-2"></i>
@@ -273,6 +286,9 @@ function Header() {
                   fontWeight: "500",
                   fontSize: "15px",
                   color: isActive("/Contact") ? "#f1741e" : "inherit",
+                  display: "flex",
+                  alignItems: "center",
+                  whiteSpace: "nowrap",
                 }}
               >
                 <i className="fa fa-envelope pe-2"></i>
