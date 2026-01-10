@@ -33,7 +33,7 @@ const PasswordStrength = ({ password }) => {
               fontSize: "12px",
             }}
           >
-            {req.met ? "✓" : "✗"}
+            {req.met ? <i className="fa fa-check"></i> : <i className="fa fa-times"></i>}
           </span>
           <span style={{ color: req.met ? "green" : "red" }}>{req.label}</span>
         </div>
