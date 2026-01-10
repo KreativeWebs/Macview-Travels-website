@@ -367,14 +367,14 @@ function FlashSaleDetails() {
                           uploadProgress["passportPhotograph-0"].status ===
                             "success" && (
                             <small className="text-success">
-                              ✓ Uploaded successfully
+                              <i className="fa fa-check"></i> Uploaded successfully
                             </small>
                           )}
                         {uploadProgress["passportPhotograph-0"] &&
                           uploadProgress["passportPhotograph-0"].status ===
                             "error" && (
                             <small className="text-danger">
-                              ✗ Upload failed
+                              <i className="fa fa-times"></i> Upload failed
                             </small>
                           )}
                         {uploadProgress["passportPhotograph-0"] &&

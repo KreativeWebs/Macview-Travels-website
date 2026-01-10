@@ -495,11 +495,11 @@ function HotelBooking() {
                   )}
                   {progress && progress.status === "success" && (
                     <small className="text-success">
-                      ✓ Uploaded successfully
+                      <i className="fa fa-check"></i> Uploaded successfully
                     </small>
                   )}
                   {progress && progress.status === "failed" && (
-                    <small className="text-danger">✗ Upload failed</small>
+                    <small className="text-danger"><i className="fa fa-times"></i> Upload failed</small>
                   )}
                   {progress && progress.status === "uploading" && (
                     <small className="text-primary">Uploading...</small>

@@ -8,10 +8,10 @@ function PackageSuccess(){
       message1="Your package booking has been received successfully."
       message2={
         <>
-          Our team is processing your booking. We would get back to you via WhatsApp <strong>shortly</strong>.
+          Our team is processing your package booking. We would get back to you via WhatsApp <strong>shortly</strong>.
         </>
       }
-      imageSrc="/assets/img/ticket.png"
+      imageSrc="/assets/img/package.png"
       imageAlt="Package Booking"
       buttonText="Back to Home"
       buttonLink= "/"
