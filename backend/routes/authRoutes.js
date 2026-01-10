@@ -59,8 +59,22 @@ const setRefreshCookie = (res, token) => {
 /* ================================
    SIGNUP
 ================================ */
-router.post("/signup", async (req, res) => {
-  const { firstName, email, password } = req.body;
+router.post("/signup",
+  [
+    body('email').isEmail().normalizeEmail().withMessage('Please provide a valid email'),
+    body('password').notEmpty().withMessage('Password is required'),
+  ],
+  async (req, res) => {
+    const errors = validationResult(req);
+    if (!errors.isEmpty()) {
+      return res.status(400).json({
+        success: false,
+        message: 'Validation failed',
+        errors: errors.array()
+      });
+    }
+
+    const { firstName, email, password } = req.body;
 
   try {
     if (!firstName || !email || !password) {
