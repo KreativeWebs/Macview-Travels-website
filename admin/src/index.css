@@ -321,5 +321,25 @@ button.btn-secondary:hover, button.btn-secondary:focus, button.btn-secondary:act
   box-shadow: none !important;
 }
 
+/* Force LTR direction for the entire admin app */
+html, body {
+  direction: ltr !important;
+}
+
+/* Quill editor direction fixes */
+.ql-editor {
+  direction: ltr !important;
+  text-align: left !important;
+  unicode-bidi: embed !important;
+}
+
+.ql-container {
+  direction: ltr !important;
+}
+
+.ql-toolbar {
+  direction: ltr !important;
+}
+
 
 

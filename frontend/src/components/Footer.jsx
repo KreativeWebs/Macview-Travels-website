@@ -22,19 +22,19 @@ export default function Footer() {
                 to make your adventures seamless and memorable.
               </p>
 
-              <Link className="btn btn-link" to="/aboutus">
+              <Link className="btn btn-link" to="/aboutus" style={{ textDecoration: "none",}}>
                 About Us
               </Link>
-              <Link className="btn btn-link" to="/contact">
+              <Link className="btn btn-link" to="/contact" style={{ textDecoration: "none",}}>
                 Contact Us
               </Link>
-              <Link className="btn btn-link" to="/privacy-policy">
+              <Link className="btn btn-link" to="/privacy-policy" style={{ textDecoration: "none",}}>
                 Privacy Policy
               </Link>
-              <Link className="btn btn-link" to="/terms-and-conditions">
+              <Link className="btn btn-link" to="/terms-and-conditions" style={{ textDecoration: "none",}}>
                 Terms &amp; Conditions
               </Link>
-              <Link className="btn btn-link" to="/faq">
+              <Link className="btn btn-link" to="/faq" style={{ textDecoration: "none",}}>
                 FAQs &amp; Help
               </Link>
             </div>
@@ -124,21 +124,21 @@ export default function Footer() {
           <div className="copyright">
             <div className="row">
               <div className="col-md-6 text-center text-md-start mb-3 mb-md-0">
-                ©{" "}
-                <Link className="border-bottom" to="/">
+                © 2026{" "}
+                <Link to="/" style={{ textDecoration: "none",}}>
                   Macview Travels
                 </Link>
                 , All Rights Reserved. Designed by{" "}
-                <Link className="border-bottom" to="/">
-                  David Ishaka
+                <Link to="https://wa.me/2349121167621" style={{ textDecoration: "none",}}>
+                  3Dvisuals Creative Hub
                 </Link>
               </div>
 
               <div className="col-md-6 text-center text-md-end">
                 <div className="footer-menu">
-                  <Link to="/">Home</Link>
-                  <Link to="/contact">Help</Link>
-                  <Link to="/faq">FAQs</Link>
+                  <Link to="/" style={{ textDecoration: "none",}}>Home</Link>
+                  <Link to="/contact" style={{ textDecoration: "none",}}>Help</Link>
+                  <Link to="/faq" style={{ textDecoration: "none",}}>FAQs</Link>
                 </div>
               </div>
             </div>

@@ -54,6 +54,13 @@ function AddNewFlashSale() {
     setFormData({ ...formData, [name]: value });
   };
 
+  const handlePriceChange = (e) => {
+    const { value } = e.target;
+    // Allow only digits and commas
+    const filteredValue = value.replace(/[^0-9,]/g, '');
+    setFormData({ ...formData, price: filteredValue });
+  };
+
   const handleFileChange = (e) => {
     setFormData({ ...formData, backgroundImage: e.target.files[0] });
   };
@@ -64,7 +71,7 @@ function AddNewFlashSale() {
     setMessage("");
 
     const data = new FormData();
-    data.append("price", formData.price);
+    data.append("price", formData.price.replace(/,/g, ''));
     data.append("destinationCity", formData.destinationCity);
     data.append("departureCity", formData.departureCity);
     data.append("dateValidFrom", formData.dateValidFrom);
@@ -133,13 +140,11 @@ function AddNewFlashSale() {
             <Form.Group className="mb-3">
               <Form.Label>Price</Form.Label>
               <Form.Control
-                type="number"
+                type="text"
                 name="price"
                 value={formData.price}
-                onChange={handleInputChange}
+                onChange={handlePriceChange}
                 placeholder="Enter price"
-                min="0"
-                step="0.01"
                 required
               />
             </Form.Group>

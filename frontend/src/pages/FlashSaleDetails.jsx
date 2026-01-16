@@ -248,7 +248,7 @@ function FlashSaleDetails() {
               <Card.Body>
                 <Card.Title>{flashSale.destinationCity} Flash Sale</Card.Title>
                 <Card.Text>
-                  <strong>Price:</strong> ₦{flashSale.price}
+                  <strong>Price:</strong> ₦{flashSale.price.toLocaleString()}
                   <br />
                   <strong>From:</strong> {flashSale.departureCity}
                   <br />
@@ -367,7 +367,8 @@ function FlashSaleDetails() {
                           uploadProgress["passportPhotograph-0"].status ===
                             "success" && (
                             <small className="text-success">
-                              <i className="fa fa-check"></i> Uploaded successfully
+                              <i className="fa fa-check"></i> Uploaded
+                              successfully
                             </small>
                           )}
                         {uploadProgress["passportPhotograph-0"] &&
@@ -440,7 +441,13 @@ function FlashSaleDetails() {
                   <Button
                     type="button"
                     onClick={handleNext}
-                    style={{ backgroundColor: "#f1741e", color: "white", border: "none", paddingLeft : "20px", paddingRight : "20px" }}
+                    style={{
+                      backgroundColor: "#f1741e",
+                      color: "white",
+                      border: "none",
+                      paddingLeft: "20px",
+                      paddingRight: "20px",
+                    }}
                     disabled={bookingLoading}
                   >
                     {bookingLoading ? "Submitting..." : "Next"}
@@ -469,7 +476,7 @@ function FlashSaleDetails() {
               <Card.Body>
                 <Card.Title>{flashSale.destinationCity} Flash Sale</Card.Title>
                 <Card.Text>
-                  <strong>Price:</strong> ₦{flashSale.price}
+                  <strong>Price:</strong> ₦{flashSale.price.toLocaleString()}
                   <br />
                   <strong>From:</strong> {flashSale.departureCity}
                   <br />
@@ -576,7 +583,13 @@ function FlashSaleDetails() {
                   <Button
                     onClick={handleBack}
                     className="w-100 mt-3"
-                    style={{ paddingTop: "1rem", paddingBottom: "1rem", backgroundColor: "#175aa1", border: "none", color: "white" }}
+                    style={{
+                      paddingTop: "1rem",
+                      paddingBottom: "1rem",
+                      backgroundColor: "#175aa1",
+                      border: "none",
+                      color: "white",
+                    }}
                   >
                     Back
                   </Button>

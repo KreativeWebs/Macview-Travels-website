@@ -1,19 +1,7 @@
-# CORS Fix for Admin Panel
+# TODO: Fix Price Formatting Issues
 
-## Completed Tasks
-- [x] Analyzed CORS error messages from admin.macviewtravel.com to macview-travels-website-production.up.railway.app
-- [x] Identified that Socket.IO polling requests were failing CORS checks despite Express CORS setup
-- [x] Added CORS configuration to Socket.IO server with same origin function as Express
-- [x] Updated server.js to include CORS options in Socket.IO Server constructor
-- [x] Fixed CORS origin function to return specific origin instead of true for proper header setting
-
-## Pending Tasks
-- [ ] Deploy the updated backend code to production
-- [ ] Test admin login and Socket.IO connections from https://admin.macviewtravel.com
-- [ ] Verify that CORS errors are resolved in browser console
-
-## Changes Made
-- Modified backend/server.js:
-  - Extracted CORS origin function to reusable variable
-  - Added CORS options to Socket.IO Server with same origin function, credentials, methods, and headers
-  - Changed corsOriginFunction to return strippedOrigin instead of true when allowed, ensuring Access-Control-Allow-Origin is set to the specific origin
+- [x] Update frontend/src/pages/FlashSaleDetails.jsx to format price display with commas in form step
+- [x] Update frontend/src/pages/FlashSaleDetails.jsx to format price display with commas in confirmation step
+- [x] Update admin/pages/AddNewFlashSale.jsx to change price input type to text
+- [x] Update admin/pages/AddNewFlashSale.jsx to add onChange handler for price input to allow commas and format value
+- [x] Update admin/pages/AddNewFlashSale.jsx to parse price (remove commas) on form submission

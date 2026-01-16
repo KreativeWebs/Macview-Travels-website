@@ -33,6 +33,9 @@ import PackageBookings from "../pages/PackageBookings";
 import AdminCreateNewsletter from "../pages/AdminCreateNewsletter";
 import AdminNewsletterSubscribers from "../pages/AdminNewsletterSubscribers";
 import Users from "../pages/Users";
+import CreateBlog from "../pages/CreateBlog";
+import AllBlogs from "../pages/AllBlogs";
+import BlogComments from "../pages/BlogComments";
 
 import AdminSocketNotifications from "./components/AdminSocketNotifications";
 
@@ -93,6 +96,10 @@ export default function App() {
           <Route path="newsletter/create" element={<AdminCreateNewsletter />} />
           <Route path="newsletter/subscribers" element={<AdminNewsletterSubscribers />} />
           <Route path="users" element={<Users />} />
+          <Route path="blogs" element={<AllBlogs />} />
+          <Route path="blogs/create" element={<CreateBlog />} />
+          <Route path="blogs/create/:id" element={<CreateBlog />} />
+          <Route path="blogs/comments" element={<BlogComments />} />
         </Route>
 
         {/* Catch-all */}

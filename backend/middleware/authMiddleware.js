@@ -64,7 +64,7 @@ export const authenticateAdmin = async (req, res, next) => {
 
     if (!token) {
       console.warn(`Admin auth: no token provided in Authorization header`);
-      return res.status(401).json({ success: false, message: "No access token provided" });
+      return res.status(404).json({ success: false, message: "No access token provided" });
     }
 
     let decoded;
@@ -74,9 +74,9 @@ export const authenticateAdmin = async (req, res, next) => {
     } catch (error) {
       console.warn(`Admin auth: token verification failed: ${error.message}`);
       if (error.name === 'TokenExpiredError') {
-        return res.status(401).json({ success: false, message: "Access token expired. Please login again." });
+        return res.status(404).json({ success: false, message: "Access token expired. Please login again." });
       }
-      return res.status(401).json({ success: false, message: "Invalid token" });
+      return res.status(404).json({ success: false, message: "Invalid token" });
     }
 
     const admin = await Admin.findById(decoded.id);
@@ -90,6 +90,6 @@ export const authenticateAdmin = async (req, res, next) => {
     next();
   } catch (error) {
     console.error("Admin authentication error:", error.message || error);
-    res.status(401).json({ success: false, message: "Authentication failed" });
+    res.status(404).json({ success: false, message: "Authentication failed" });
   }
 };

@@ -40,6 +40,8 @@ import FlashSaleSuccess from "./pages/FlashSaleSuccess.jsx";
 import PackageDetails from "./pages/PackageDetails";
 import FlashSales from "./pages/FlashSales";
 import FlashSaleDetails from "./pages/FlashSaleDetails";
+import AllBlogs from "./pages/AllBlogs";
+import BlogDetails from "./pages/BlogDetails";
 
 
 function FloatingButtonsController() {
@@ -151,6 +153,8 @@ export default function App() {
           <Route path="/flash-sales" element={<FlashSales />} />
           <Route path="/flash-sale/:id" element={<FlashSaleDetails />} />
           <Route path="/flash-sale-success" element={<FlashSaleSuccess />} />
+          <Route path="/blogs" element={<AllBlogs />} />
+          <Route path="/blog/:id" element={<BlogDetails />} />
         </Route>
 
 

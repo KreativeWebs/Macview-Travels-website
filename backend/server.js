@@ -17,6 +17,9 @@ import newsletterRoutes from "./routes/newsletterRoutes.js";
 import adminNewsletterRoutes from "./routes/adminNewsletterRoutes.js";
 import { adminBasicAuth } from "./middleware/adminBasicAuth.js";
 import flashSaleRoutes from "./routes/flashSaleRoutes.js";
+import blogRoutes from "./routes/blogRoutes.js";
+import commentRoutes from "./routes/commentRoutes.js";
+import adRoutes from "./routes/adRoutes.js";
 import path from "path";
 import { fileURLToPath } from "url";
 import fs from "fs";
@@ -189,6 +192,9 @@ app.use("/api/admin", adminBasicAuth, adminRoutes);
 app.use("/api/newsletter", newsletterRoutes);
 app.use("/api/admin/newsletter", adminBasicAuth, adminNewsletterRoutes);
 app.use("/api/flash-sales", flashSaleRoutes);
+app.use("/api/blogs", blogRoutes);
+app.use("/api/comments", commentRoutes);
+app.use("/api/ads", adRoutes);
 app.use("/uploads", express.static(path.join(process.cwd(), "uploads")));
 
 // -----------------------------

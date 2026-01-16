@@ -12,6 +12,7 @@ import Process from "./Process";
 import Testimonial from "./Testimonial";
 import Newsletter from "./Newsletter";
 import FeaturedHotels from "./FeaturedHotels";
+import BlogSection from "../components/BlogSection";
 
 
 export default function Home() {
@@ -34,9 +35,10 @@ export default function Home() {
       <VisaCatalogue />
       <Process />
       <Testimonial />
+      <BlogSection />
       <Newsletter />
-      
-      
+
+
     </div>
   );
 }

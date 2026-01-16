@@ -48,6 +48,8 @@ export default function Sidebar({ open }) {
       icon: "fa-solid fa-users",
     },
     { name: "Users", path: "users", icon: "fa-solid fa-users" },
+    { name: "All Blogs", path: "blogs", icon: "fa-solid fa-blog" },
+    { name: "Blog Comments", path: "blogs/comments", icon: "fa-solid fa-comments" },
     { name: "Settings", path: "settings", icon: "fa-solid fa-gear" },
   ];
 

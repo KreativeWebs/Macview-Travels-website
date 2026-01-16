@@ -13,6 +13,25 @@ import upload from "../config/multer.js";
 import FlashSale from "../models/FlashSale.js";
 import FlashSaleBooking from "../models/FlashSaleBooking.js";
 import User from "../models/User.js";
+import {
+  getBlogs,
+  getRecentBlogs,
+  getBlogById,
+  createBlog,
+  updateBlog,
+  deleteBlog,
+  getAllBlogs,
+  getBlogByIdAdmin,
+  uploadBlogImage,
+} from "../controllers/blogController.js";
+import {
+  getCommentsByBlog,
+  createComment,
+  replyToComment,
+  deleteComment,
+  deleteReply,
+  getAllComments,
+} from "../controllers/commentController.js";
 
 const router = express.Router();
 
@@ -1924,5 +1943,25 @@ router.delete("/flash-sales/:id", async (req, res) => {
     res.status(500).json({ message: "Error deleting flash sale" });
   }
 });
+
+// Blog routes
+router.get("/blogs", getBlogs);
+router.get("/blogs/recent", getRecentBlogs);
+router.get("/blogs/all", getAllBlogs);
+router.get("/blogs/admin", getAllBlogs); // Admin endpoint to get all blogs
+router.get("/blogs/admin/:id", getBlogByIdAdmin); // Admin endpoint to get single blog by ID
+router.get("/blogs/:id", getBlogById);
+router.post("/blogs", upload.single("image"), createBlog);
+router.put("/blogs/:id", upload.single("image"), updateBlog);
+router.delete("/blogs/:id", deleteBlog);
+router.post("/blogs/upload-image", upload.single("image"), uploadBlogImage);
+
+// Comment routes
+router.get("/comments", getAllComments);
+router.get("/comments/:blogId", getCommentsByBlog);
+router.post("/comments", createComment);
+router.post("/comments/:commentId/reply", replyToComment);
+router.delete("/comments/:commentId/reply/:replyIndex", deleteReply);
+router.delete("/comments/:id", deleteComment);
 
 export default router;
