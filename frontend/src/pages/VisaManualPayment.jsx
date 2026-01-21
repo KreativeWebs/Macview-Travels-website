@@ -13,7 +13,7 @@ function VisaManualPayment() {
   const [submitting, setSubmitting] = useState(false);
 
   if (!state) {
-    navigate("/visa-processing");
+    navigate("/visaprocessing");
     return null;
   }
 
@@ -149,7 +149,7 @@ function VisaManualPayment() {
                     </div>
                     <div className="col-md-4">
                       <strong>Account Number:</strong>
-                      <p className="fs-4 fw-bold text-primary">{accountDetails.accountNumber}</p>
+                      <p className="fs-4 fw-bold" style={{color: "#175aa1"}}>{accountDetails.accountNumber}</p>
                     </div>
                   </div>
                   <div className="mt-3">
@@ -199,14 +199,14 @@ function VisaManualPayment() {
                 <div className="d-flex gap-2">
                   <button
                     type="button"
-                    className="btn btn-outline-secondary"
-                    onClick={() => navigate("/visa-processing")}
+                    className="btn" style={{backgroundColor: "#f1741e", color: "#fff"}}
+                    onClick={() => navigate("/visaprocessing")}
                   >
                     Back
                   </button>
                   <button
                     type="submit"
-                    className="btn btn-primary"
+                    className="btn" style={{backgroundColor: "#175aa1", color: "#fff"}}
                     disabled={uploading || submitting}
                   >
                     {uploading ? "Uploading..." : submitting ? "Submitting..." : "Submit Application"}
