@@ -100,7 +100,7 @@ export default function VisaRequirements() {
                         <div key={index} className="mb-1">
                           <span className="badge bg-primary me-2">{visaType.name}</span>
                           <small className="text-muted">
-                            ₦{visaType.fee} | {visaType.processingTime}
+                            {visaType.currency === "USD" ? "$" : "₦"}{visaType.fee} | {visaType.processingTime}
                           </small>
                         </div>
                       ))}

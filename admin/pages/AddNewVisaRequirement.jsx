@@ -13,6 +13,7 @@ export default function AddNewVisaRequirement() {
       {
         name: "",
         fee: "",
+        currency: "NGN",
         processingTime: "",
         paymentMethod: "paystack",
         requirements: [
@@ -51,6 +52,7 @@ export default function AddNewVisaRequirement() {
         {
           name: "",
           fee: "",
+          currency: "NGN",
           processingTime: "",
           paymentMethod: "paystack",
           requirements: [
@@ -166,11 +168,18 @@ export default function AddNewVisaRequirement() {
           // Populate form with data from server (ensure fee is a string so empty input works)
           setFormData({
             country: req.country || "",
-            visaTypes: Array.isArray(req.visaTypes) && req.visaTypes.length > 0 ? req.visaTypes.map(v => ({ ...v, fee: v.fee != null ? String(v.fee) : "" })) : [
+            visaTypes: Array.isArray(req.visaTypes) && req.visaTypes.length > 0 ? req.visaTypes.map(v => ({
+              ...v,
+              fee: v.fee != null ? String(v.fee) : "",
+              currency: v.currency || "NGN",
+              paymentMethod: v.paymentMethod || "paystack"
+            })) : [
               {
                 name: "",
                 fee: "",
+                currency: "NGN",
                 processingTime: "",
+                paymentMethod: "paystack",
                 requirements: [
                   { label: "", type: "file", required: true, hint: "" }
                 ]
@@ -190,8 +199,13 @@ export default function AddNewVisaRequirement() {
             if (found) {
               setFormData({
                 country: found.country || "",
-                visaTypes: Array.isArray(found.visaTypes) && found.visaTypes.length > 0 ? found.visaTypes.map(v => ({ ...v, fee: v.fee != null ? String(v.fee) : "" })) : [
-                  { name: "", fee: "", processingTime: "", requirements: [{ label: "", type: "file", required: true, hint: "" }] }
+                visaTypes: Array.isArray(found.visaTypes) && found.visaTypes.length > 0 ? found.visaTypes.map(v => ({
+                  ...v,
+                  fee: v.fee != null ? String(v.fee) : "",
+                  currency: v.currency || "NGN",
+                  paymentMethod: v.paymentMethod || "paystack"
+                })) : [
+                  { name: "", fee: "", currency: "NGN", processingTime: "", paymentMethod: "paystack", requirements: [{ label: "", type: "file", required: true, hint: "" }] }
                 ]
               });
               setIsEdit(true);
@@ -262,7 +276,7 @@ export default function AddNewVisaRequirement() {
               </div>
 
               <div className="row g-3 mb-3">
-                <div className="col-md-4">
+                <div className="col-md-3">
                   <label className="form-label">Visa Type Name *</label>
                   <input
                     type="text"
@@ -273,18 +287,29 @@ export default function AddNewVisaRequirement() {
                     required
                   />
                 </div>
-                <div className="col-md-4">
-                  <label className="form-label">Fee (₦)</label>
+                <div className="col-md-2">
+                  <label className="form-label">Fee</label>
                   <input
                     type="number"
                     className="form-control"
                     value={visaType.fee ?? ""}
                     onChange={(e) => handleVisaTypeChange(visaTypeIndex, "fee", e.target.value)}
                     min="0"
-                    step="1000"
+                    step="1"
                   />
                 </div>
-                <div className="col-md-4">
+                <div className="col-md-2">
+                  <label className="form-label">Currency</label>
+                  <select
+                    className="form-select"
+                    value={visaType.currency || "NGN"}
+                    onChange={(e) => handleVisaTypeChange(visaTypeIndex, "currency", e.target.value)}
+                  >
+                    <option value="NGN">₦ (Naira)</option>
+                    <option value="USD">$ (Dollar)</option>
+                  </select>
+                </div>
+                <div className="col-md-3">
                   <label className="form-label">Processing Time *</label>
                   <input
                     type="text"

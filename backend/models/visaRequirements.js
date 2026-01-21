@@ -12,6 +12,7 @@ const visaRequirementSchema = new mongoose.Schema({
   visaTypes: [{
     name: { type: String, required: true },      // "tourist", "business"
     fee: { type: Number, default: 0 },
+    currency: { type: String, enum: ["NGN", "USD"], default: "NGN" },
     processingTime: { type: String },
     paymentMethod: { type: String, enum: ["paystack", "manual"], default: "paystack" },
     requirements: [requirementSchema]             // array of required items

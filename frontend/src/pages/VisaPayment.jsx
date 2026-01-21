@@ -30,7 +30,7 @@ function VisaPayment() {
     return null;
   }
 
-  const { formData, selectedCountry, selectedVisaType, touristRequirements, fee, processingTime, paymentMethod } = data;
+  const { formData, selectedCountry, selectedVisaType, touristRequirements, fee, processingTime, paymentMethod, currency = "NGN" } = data;
 
   const handlePaymentSuccess = async (paymentRef) => {
     try {
@@ -179,11 +179,23 @@ function VisaPayment() {
               <div className="card-body">
                 <h5 className="card-title">Documents</h5>
                 <hr />
-                {touristRequirements.map((req, idx) => (
-                  <div key={idx} className="mb-3">
-                    <p><strong>{req.label}:</strong> {getFileNameFromUrl(formData[req.label])}</p>
-                  </div>
-                ))}
+                {touristRequirements.map((req, idx) => {
+                  const fieldValue = formData[req.label];
+                  let displayValue = "";
+
+                  if (req.type === "file") {
+                    displayValue = getFileNameFromUrl(fieldValue);
+                  } else {
+                    // For text and date inputs, display the value directly
+                    displayValue = fieldValue || "Not provided";
+                  }
+
+                  return (
+                    <div key={idx} className="mb-3">
+                      <p><strong>{req.label}:</strong> {displayValue}</p>
+                    </div>
+                  );
+                })}
               </div>
             </div>
           </div>
@@ -195,7 +207,7 @@ function VisaPayment() {
                 <hr />
                 <p><strong>Country:</strong> {selectedCountry}</p>
                 <p><strong>Visa Type:</strong> {selectedVisaType}</p>
-                <p><strong>Fee:</strong> ₦{fee.toLocaleString()}</p>
+                <p><strong>Fee:</strong> {currency === "USD" ? "$" : "₦"}{fee.toLocaleString()}</p>
               </div>
             </div>
 
@@ -225,6 +237,7 @@ function VisaPayment() {
                       touristRequirements,
                       fee,
                       processingTime,
+                      currency,
                     },
                   })}
                   className="btn w-100"

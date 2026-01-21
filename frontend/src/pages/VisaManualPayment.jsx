@@ -17,13 +17,13 @@ function VisaManualPayment() {
     return null;
   }
 
-  const { formData, selectedCountry, selectedVisaType, touristRequirements, fee, processingTime } = state;
+  const { formData, selectedCountry, selectedVisaType, touristRequirements, fee, processingTime, currency } = state;
 
   // Hardcoded account details - TODO: Move to environment variables
   const accountDetails = {
-    bankName: "First Bank of Nigeria",
-    accountName: "Macview Travels Limited",
-    accountNumber: "1234567890", // Replace with actual account number
+    bankName: "United Bank for Africa (UBA)",
+    accountName: "Macview-J Travel Solutions Limited",
+    accountNumber: "3004873230",
   };
 
   const handleFileChange = (e) => {
@@ -74,17 +74,45 @@ function VisaManualPayment() {
       const user = useAuthStore.getState().user;
 
       // Prepare application data
+      const documents = [];
+
+      touristRequirements.forEach((req) => {
+        const fieldValue = formData[req.label];
+
+        // Handle array of files (multiple uploads)
+        if (Array.isArray(fieldValue)) {
+          fieldValue.forEach((file) => {
+            if (file && !file.failed && file.fileUrl) {
+              documents.push({
+                label: req.label,
+                fileUrl: file.fileUrl,
+              });
+            }
+          });
+        }
+        // Handle single file object
+        else if (fieldValue && !fieldValue.failed && fieldValue.fileUrl) {
+          documents.push({
+            label: req.label,
+            fileUrl: fieldValue.fileUrl,
+          });
+        }
+        // Handle text input or other values
+        else {
+          documents.push({
+            label: req.label,
+            textValue: fieldValue || "",
+          });
+        }
+      });
+
       const applicationData = {
         fullName: formData.fullName,
         email: user?.email || "",
         phoneNumber: `${formData.countryCode}${formData.phoneNumber}`,
         destinationCountry: selectedCountry,
         visaType: selectedVisaType,
-        documents: touristRequirements.map(req => ({
-          label: req.label,
-          fileUrl: formData[req.label]?.fileUrl || "",
-          textValue: formData[req.label]?.textValue || "",
-        })),
+        documents,
         payment: {
           provider: "manual",
           receiptUrl,
@@ -154,7 +182,7 @@ function VisaManualPayment() {
                   </div>
                   <div className="mt-3">
                     <strong>Amount to Pay:</strong>
-                    <p className="fs-5 fw-bold text-success">₦{fee.toLocaleString()}</p>
+                    <p className="fs-5 fw-bold text-success">{currency === "USD" ? "$" : "₦"}{fee.toLocaleString()}</p>
                   </div>
                 </div>
               </div>
@@ -163,7 +191,7 @@ function VisaManualPayment() {
               <div className="mb-4">
                 <h5>Payment Instructions:</h5>
                 <ol>
-                  <li>Transfer the exact amount (₦{fee.toLocaleString()}) to the account details above</li>
+                  <li>Transfer the exact amount ({currency === "USD" ? "$" : "₦"}{fee.toLocaleString()}) to the account details above</li>
                   <li>Take a screenshot or save the payment receipt from your banking app</li>
                   <li>Upload the receipt below</li>
                   <li>Click "Submit Application" to complete your visa application</li>

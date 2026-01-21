@@ -8,27 +8,13 @@ export const getVisaRequirements = async (req, res) => {
   try {
     const { country } = req.params;
 
-    // Find visa info by country (case-insensitive and flexible matching)
-    // First try exact match, then try partial matches
-    let visaData = await visaRequirements.findOne({
-      country: { $regex: new RegExp(`^${country}$`, "i") },
+    // Escape regex special characters in country name
+    const escapedCountry = country.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
+
+    // Find visa info by exact country match (case-insensitive)
+    const visaData = await visaRequirements.findOne({
+      country: { $regex: new RegExp(`^${escapedCountry}$`, "i") },
     });
-
-    // If no exact match, try partial matching (e.g., "South Africa" might match "SouthAfrica")
-    if (!visaData) {
-      const normalizedCountry = country.replace(/\s+/g, '').toLowerCase();
-      visaData = await visaRequirements.findOne({
-        country: { $regex: new RegExp(normalizedCountry, "i") },
-      });
-    }
-
-    // If still no match, try matching the first word (e.g., "Morocco Sticker" might match "Morocco")
-    if (!visaData) {
-      const firstWord = country.split(' ')[0];
-      visaData = await visaRequirements.findOne({
-        country: { $regex: new RegExp(`^${firstWord}`, "i") },
-      });
-    }
 
     if (!visaData) {
       return res.status(404).json({ message: `Visa information not found for country: ${country}` });

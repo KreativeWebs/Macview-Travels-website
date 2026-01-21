@@ -22,9 +22,11 @@ function VisaProcessing() {
     phoneNumber: "",
     countryCode: "+234",
   });
+
   const [touristRequirements, setTouristRequirements] = useState(prevState.touristRequirements || []);
   const [fee, setFee] = useState(prevState.fee || 0);
   const [processingTime, setProcessingTime] = useState(prevState.processingTime || "");
+  const [currency, setCurrency] = useState(prevState.currency || "NGN");
   const [uploadProgress, setUploadProgress] = useState({});
   const [selectedFiles, setSelectedFiles] = useState({});
   const [paddingTop, setPaddingTop] = useState(150);
@@ -158,6 +160,7 @@ function VisaProcessing() {
         setTouristRequirements(touristVisa.requirements || []);
         setFee(touristVisa.fee || 0);
         setProcessingTime(touristVisa.processingTime || "");
+        setCurrency(touristVisa.currency || "NGN");
       } catch (error) {
         console.error(error);
         toast.error("Error fetching visa data");
@@ -249,6 +252,7 @@ function VisaProcessing() {
         fee: touristVisa.fee,
         processingTime: touristVisa.processingTime,
         paymentMethod,
+        currency: touristVisa.currency || "NGN",
       },
     });
   };
@@ -320,10 +324,12 @@ function VisaProcessing() {
               ))
             ) : (
               <>
-              
+
               </>
             )}
           </select>
+
+
 
           {touristRequirements.length > 0 && (
             <div className="mt-4">
@@ -387,7 +393,7 @@ function VisaProcessing() {
                 </div>
               ))}
               {processingTime && <p><strong>Processing Time:</strong> {processingTime}</p>}
-              <p><strong>Fee:</strong> ₦{fee.toLocaleString()}</p>
+              <p><strong>Fee:</strong> {currency === "USD" ? "$" : "₦"}{fee.toLocaleString()}</p>
             </div>
           )}
 
