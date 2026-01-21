@@ -42,15 +42,27 @@ const setRefreshCookie = (res, token) => {
     maxAge: 7 * 24 * 60 * 60 * 1000, // 7 days
   };
 
+  const origin = res.req.headers.origin;
+
   if (process.env.NODE_ENV === "production") {
     // Production: secure cookie, cross-site allowed for subdomain usage
     cookieOptions.secure = true;
     cookieOptions.sameSite = "none";
-    cookieOptions.domain = ".macviewtravel.com";
+    // For Railway deployment, don't set domain to avoid mismatch
+    if (!process.env.RAILWAY_ENVIRONMENT) {
+      cookieOptions.domain = ".macviewtravel.com";
+    }
   } else {
     // Development: no domain, not secure so browser accepts cookie on localhost
     cookieOptions.secure = false;
     cookieOptions.sameSite = "lax"; // reasonable default for local dev
+  }
+
+  // Override for localhost requests to production (for development testing)
+  if (origin && origin.includes('localhost') && process.env.NODE_ENV === "production") {
+    cookieOptions.secure = false;
+    cookieOptions.sameSite = "none"; // Keep none for cross-site
+    // Don't set domain for Railway to allow localhost to production requests
   }
 
   res.cookie("refreshToken", token, cookieOptions);
@@ -272,13 +284,27 @@ router.post("/google-login", async (req, res) => {
    LOGOUT
 ================================ */
 router.post("/logout", (req, res) => {
-  res.clearCookie("refreshToken", {
+  const clearCookieOptions = {
     httpOnly: true,
     secure: true,
     sameSite: "none",
-    domain: ".macviewtravel.com",
     path: "/",
-  });
+  };
+
+  const origin = req.headers.origin;
+
+  // For Railway deployment, don't set domain to avoid mismatch
+  if (!process.env.RAILWAY_ENVIRONMENT) {
+    clearCookieOptions.domain = ".macviewtravel.com";
+  }
+
+  // Override for localhost requests to production (for development testing)
+  if (origin && origin.includes('localhost')) {
+    clearCookieOptions.secure = false;
+    clearCookieOptions.sameSite = "lax";
+  }
+
+  res.clearCookie("refreshToken", clearCookieOptions);
   res.json({ message: "Logged out successfully" });
 });
 
