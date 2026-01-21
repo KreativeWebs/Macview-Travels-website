@@ -576,6 +576,76 @@ export function VisaDetails({ app, onStatusUpdate }) {
           ))}
         </div>
       )}
+
+      {/* Payment Receipt Section */}
+      {app.payment?.receiptUrl && (
+        <div className="mb-3">
+          <small className="text-muted d-block">Payment Receipt</small>
+          <div className="mt-2">
+            {app.payment.receiptUrl.match(/\.(jpg|jpeg|png|gif|webp)$/i) ? (
+              <div className="text-center">
+                <img
+                  src={app.payment.receiptUrl.startsWith('http') ? app.payment.receiptUrl : `VITE_API_BASE_URL${app.payment.receiptUrl}`}
+                  alt="Payment Receipt"
+                  className="img-fluid rounded shadow-sm"
+                  style={{ maxWidth: '100%', maxHeight: '300px', cursor: 'pointer' }}
+                  onClick={() => window.open(app.payment.receiptUrl.startsWith('http') ? app.payment.receiptUrl : `VITE_API_BASE_URL${app.payment.receiptUrl}`, '_blank')}
+                />
+                <div className="mt-2 d-flex gap-2 justify-content-center">
+                  <a
+                    href={app.payment.receiptUrl.startsWith('http') ? app.payment.receiptUrl : `VITE_API_BASE_URL${app.payment.receiptUrl}`}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="btn btn-sm btn-outline-primary btn-icon"
+                    title="View full size"
+                    aria-label="View full size"
+                  >
+                    <i className="fas fa-eye" aria-hidden="true"></i>
+                    <span className="visually-hidden">View full size</span>
+                  </a>
+                  <button
+                    onClick={() => handleDownload(app.payment.receiptUrl.startsWith('http') ? app.payment.receiptUrl : `VITE_API_BASE_URL${app.payment.receiptUrl}`, 'payment-receipt.jpg')}
+                    className="btn btn-sm btn-outline-success btn-icon"
+                    title="Download"
+                    aria-label="Download"
+                  >
+                    <i className="fas fa-download" aria-hidden="true"></i>
+                    <span className="visually-hidden">Download</span>
+                  </button>
+                </div>
+              </div>
+            ) : (
+              <div>
+                <div className="d-flex gap-2 align-items-center">
+                  <a
+                    href={app.payment.receiptUrl.startsWith('http') ? app.payment.receiptUrl : `VITE_API_BASE_URL${app.payment.receiptUrl}`}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="btn btn-sm btn-outline-primary btn-icon"
+                    title="View receipt"
+                    aria-label="View receipt"
+                  >
+                    <i className="fas fa-eye" aria-hidden="true"></i>
+                    <span className="visually-hidden">View receipt</span>
+                  </a>
+                  <button
+                    onClick={() => handleDownload(app.payment.receiptUrl.startsWith('http') ? app.payment.receiptUrl : `VITE_API_BASE_URL${app.payment.receiptUrl}`, 'payment-receipt.pdf')}
+                    className="btn btn-sm btn-outline-success btn-icon"
+                    title="Download"
+                    aria-label="Download"
+                  >
+                    <i className="fas fa-download" aria-hidden="true"></i>
+                    <span className="visually-hidden">Download</span>
+                  </button>
+                </div>
+                <small className="text-muted d-block mt-1">
+                  Payment receipt file
+                </small>
+              </div>
+            )}
+          </div>
+        </div>
+      )}
     </div>
   );
 }
