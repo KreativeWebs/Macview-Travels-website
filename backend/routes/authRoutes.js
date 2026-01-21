@@ -58,10 +58,10 @@ const setRefreshCookie = (res, token) => {
     cookieOptions.sameSite = "lax"; // reasonable default for local dev
   }
 
-  // Override for localhost requests to production (for development testing)
-  if (origin && origin.includes('localhost') && process.env.NODE_ENV === "production") {
+  // Override for localhost requests (for development testing)
+  if (origin && origin.includes('localhost')) {
     cookieOptions.secure = false;
-    cookieOptions.sameSite = "none"; // Keep none for cross-site
+    cookieOptions.sameSite = "lax"; // Use lax for localhost requests
     // Don't set domain for Railway to allow localhost to production requests
   }
 
@@ -185,9 +185,15 @@ router.post("/login",
    For silent login on frontend
 ================================ */
 router.post("/refresh", async (req, res) => {
-  const token = req.cookies.refreshToken;
+  let token = req.cookies.refreshToken;
+
+  // Fallback to request body if not in cookies (for production)
   if (!token) {
-    console.warn(`Refresh attempt: no refresh token in cookies. Cookies keys: ${JSON.stringify(Object.keys(req.cookies || {}))}`);
+    token = req.body.refreshToken;
+  }
+
+  if (!token) {
+    console.warn(`Refresh attempt: no refresh token in cookies or body. Cookies keys: ${JSON.stringify(Object.keys(req.cookies || {}))}`);
     return res.status(401).json({ message: "No refresh token" });
   }
 
