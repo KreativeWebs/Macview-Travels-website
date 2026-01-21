@@ -26,19 +26,19 @@ router.post("/upload-document", upload.single("file"), (req, res) => {
   try {
     // Check if file was uploaded
     if (!req.file) {
-      return res.status(400).json({ 
-        success: false, 
-        error: "No file uploaded" 
+      return res.status(400).json({
+        success: false,
+        error: "No file uploaded"
       });
     }
 
-    return res.json({
+    return res.status(200).json({
       success: true,
       fileUrl: req.file.path, // Cloudinary file URL returned
     });
   } catch (error) {
     console.error("Upload error:", error);
-    res.status(500).json({ success: false, error: error.message });
+    return res.status(500).json({ success: false, error: error.message });
   }
 });
 
@@ -47,6 +47,12 @@ router.post("/apply", async (req, res) => {
   try {
     const { fullName, email, phoneNumber, destinationCountry, visaType, documents, payment, processingTime } = req.body;
 
+    // For manual payments, keep status as "pending" until admin verifies
+    const paymentData = { ...payment };
+    if (payment.provider === "manual") {
+      paymentData.status = "pending";
+    }
+
     const newApplication = new VisaApplication({
       fullName,
       email,
@@ -54,7 +60,7 @@ router.post("/apply", async (req, res) => {
       destinationCountry,
       visaType,
       documents,
-      payment,
+      payment: paymentData,
       processingTime,
       status: "received",
     });

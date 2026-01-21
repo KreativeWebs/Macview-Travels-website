@@ -54,6 +54,24 @@ export default function VisaRequests() {
       });
     });
 
+    // Listen for payment status updates
+    socket.on('visaApplicationPaymentUpdate', (update) => {
+      console.log('VisaRequests: Received payment update:', update);
+      // Update the application payment status in real-time
+      setApplications(prevApps =>
+        prevApps.map(app =>
+          app._id === update.id
+            ? { ...app, payment: update.payment }
+            : app
+        )
+      );
+
+      // Update selected application if it's the one being updated
+      if (selected && selected._id === update.id) {
+        setSelected(prev => ({ ...prev, payment: update.payment }));
+      }
+    });
+
     // Also listen for global refresh
     socket.on('globalRefresh', () => {
       console.log('VisaRequests: Global refresh triggered');
@@ -363,6 +381,22 @@ export function VisaDetails({ app, onStatusUpdate }) {
     }
   };
 
+  const updatePaymentStatus = async (newStatus) => {
+    try {
+      setUpdating(true);
+      await adminAxios.put(`/visa-applications/${app._id}/payment`, { status: newStatus });
+      // Update the local state to reflect the change
+      app.payment = app.payment || {};
+      app.payment.status = newStatus;
+      // Trigger a re-render by updating the component state
+      setStatus(prev => prev); // This will cause a re-render
+    } catch (error) {
+      console.error("Error updating payment status:", error);
+    } finally {
+      setUpdating(false);
+    }
+  };
+
   const handleDownload = async (fileUrl, fileName) => {
     try {
       // For Cloudinary URLs, we need to fetch and download as blob
@@ -437,9 +471,21 @@ export function VisaDetails({ app, onStatusUpdate }) {
           </div>
           <div className="col-6">
             <small className="text-muted d-block">Payment</small>
-            <span className={`badge ${app.payment?.status === 'paid' || app.addedByAdmin ? 'bg-success' : 'bg-warning'}`}>
-              {app.addedByAdmin ? 'paid' : (app.payment?.status || 'pending')}
-            </span>
+            {app.payment?.provider === 'manual' && app.payment?.status !== 'paid' ? (
+              <select
+                className="form-select form-select-sm"
+                value={app.payment?.status || 'pending'}
+                onChange={(e) => updatePaymentStatus(e.target.value)}
+                disabled={updating}
+              >
+                <option value="pending">Pending</option>
+                <option value="paid">Paid</option>
+              </select>
+            ) : (
+              <span className={`badge ${app.payment?.status === 'paid' || app.addedByAdmin ? 'bg-success' : 'bg-warning'}`}>
+                {app.addedByAdmin ? 'paid' : (app.payment?.status || 'pending')}
+              </span>
+            )}
           </div>
         </div>
       </div>

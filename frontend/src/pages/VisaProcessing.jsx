@@ -6,6 +6,9 @@ import { toast } from "react-toastify";
 import { useAuthStore } from "../store/authStore";
 import { countryCodes } from "../data/countryCodes";
 
+const BASE_URL = import.meta.env.DEV ? "http://localhost:5000" : (import.meta.env.VITE_API_BASE_URL || "http://localhost:5000");
+const API_BASE_URL = BASE_URL.startsWith('http') ? BASE_URL : `http://${BASE_URL}`;
+
 function VisaProcessing() {
   const navigate = useNavigate();
   const location = useLocation();
@@ -55,7 +58,7 @@ function VisaProcessing() {
     }));
 
     try {
-      const res = await fetch(`${import.meta.env.VITE_API_BASE_URL}/api/visa/upload-document`, {
+      const res = await fetch(`${API_BASE_URL}/api/visa/upload-document`, {
         method: "POST",
         body: form,
       });
@@ -137,7 +140,7 @@ function VisaProcessing() {
 
     const fetchVisaData = async () => {
       try {
-        const res = await fetch(`${import.meta.env.VITE_API_BASE_URL}/api/visa/requirements/${selectedCountry}`);
+        const res = await fetch(`${API_BASE_URL}/api/visa/requirements/${selectedCountry}`);
         if (!res.ok) throw new Error("Failed to fetch visa requirements");
 
         const data = await res.json();
@@ -167,7 +170,7 @@ function VisaProcessing() {
   // Fetch list of available countries so admin-added entries appear immediately
   const fetchCountries = async () => {
     try {
-      const res = await fetch(`${import.meta.env.VITE_API_BASE_URL}/api/visa/requirements`);
+      const res = await fetch(`${API_BASE_URL}/api/visa/requirements`);
       if (!res.ok) throw new Error("Failed to fetch visa countries");
       const data = await res.json();
       setAvailableCountries(Array.isArray(data.requirements) ? data.requirements : []);
@@ -186,7 +189,7 @@ function VisaProcessing() {
     // Only run on client
     let socket;
     try {
-      socket = io(import.meta.env.VITE_API_BASE_URL, {
+      socket = io(API_BASE_URL, {
         transports: ["websocket", "polling"],
       });
 
@@ -235,6 +238,8 @@ function VisaProcessing() {
       return;
     }
 
+    const paymentMethod = touristVisa.paymentMethod || "paystack";
+
     navigate("/visa-payment", {
       state: {
         formData,
@@ -243,6 +248,7 @@ function VisaProcessing() {
         touristRequirements: touristVisa.requirements,
         fee: touristVisa.fee,
         processingTime: touristVisa.processingTime,
+        paymentMethod,
       },
     });
   };

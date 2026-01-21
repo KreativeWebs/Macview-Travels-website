@@ -30,7 +30,7 @@ function VisaPayment() {
     return null;
   }
 
-  const { formData, selectedCountry, selectedVisaType, touristRequirements, fee, processingTime } = data;
+  const { formData, selectedCountry, selectedVisaType, touristRequirements, fee, processingTime, paymentMethod } = data;
 
   const handlePaymentSuccess = async (paymentRef) => {
     try {
@@ -215,21 +215,48 @@ function VisaPayment() {
               >
                 Edit Information
               </button>
-              <PaystackPayment
-                amount={fee}
-                fullName={formData.fullName}
-                onSuccess={handlePaymentSuccess}
-                buttonText="Confirm & Pay"
-                className="paystack-flash-sale-btn w-100"
-                style={{
-                  color: "#fff",
-                  border: "none",
-                  borderRadius: "3px",
-                  padding: "12px 24px",
-                  fontWeight: "600",
-                  fontFamily: "Raleway"
-                }}
-              />
+              {paymentMethod === "manual" ? (
+                <button
+                  onClick={() => navigate("/visa-manual-payment", {
+                    state: {
+                      formData,
+                      selectedCountry,
+                      selectedVisaType,
+                      touristRequirements,
+                      fee,
+                      processingTime,
+                    },
+                  })}
+                  className="btn w-100"
+                  style={{
+                    backgroundColor: "#ff5e14",
+                    color: "#fff",
+                    border: "none",
+                    borderRadius: "3px",
+                    padding: "12px 24px",
+                    fontWeight: "600",
+                    fontFamily: "Raleway"
+                  }}
+                >
+                  Proceed to Payment
+                </button>
+              ) : (
+                <PaystackPayment
+                  amount={fee}
+                  fullName={formData.fullName}
+                  onSuccess={handlePaymentSuccess}
+                  buttonText="Pay Now"
+                  className="paystack-flash-sale-btn w-100"
+                  style={{
+                    color: "#fff",
+                    border: "none",
+                    borderRadius: "3px",
+                    padding: "12px 24px",
+                    fontWeight: "600",
+                    fontFamily: "Raleway"
+                  }}
+                />
+              )}
             </div>
           </div>
         </div>

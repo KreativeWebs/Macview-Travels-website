@@ -103,7 +103,7 @@ app.options("*", cors({ origin: corsOriginFunction, credentials: true }));
 // -----------------------------
 app.use(
   helmet({
-    crossOriginOpenerPolicy: { policy: "same-origin-allow-popups" },
+    crossOriginOpenerPolicy: process.env.NODE_ENV === "production" ? { policy: "same-origin-allow-popups" } : false,
     contentSecurityPolicy: {
       directives: {
         defaultSrc: ["'self'"],

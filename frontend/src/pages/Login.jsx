@@ -7,7 +7,8 @@ import { useAuthStore } from "../store/authStore";
 import Modal from "bootstrap/js/dist/modal";
 import { toast } from "react-toastify";
 
-const BASE_URL = import.meta.env.VITE_API_BASE_URL;
+const BASE_URL = import.meta.env.DEV ? "http://localhost:5000" : (import.meta.env.VITE_API_BASE_URL || "http://localhost:5000");
+const API_BASE_URL = BASE_URL.startsWith('http') ? BASE_URL : `http://${BASE_URL}`;
 
 function Login() {
   const [showPassword, setShowPassword] = useState(false);
@@ -131,12 +132,20 @@ function Login() {
       const user = result.user;
       const idToken = await user.getIdToken();
 
-      const response = await fetch(`${BASE_URL}/api/google-login`, {
+      const response = await fetch(`${API_BASE_URL}/api/google-login`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         credentials: "include",
         body: JSON.stringify({ idToken, email: user.email, firstName: user.displayName }),
       });
+
+      if (!response.ok) {
+        const errorText = await response.text();
+        console.error("Google login failed:", response.status, errorText);
+        setGoogleLoading(false);
+        toast.error("Google login failed. Please try again.");
+        return;
+      }
 
       let data;
       try {

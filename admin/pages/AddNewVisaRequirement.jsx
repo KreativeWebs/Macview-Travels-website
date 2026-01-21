@@ -14,6 +14,7 @@ export default function AddNewVisaRequirement() {
         name: "",
         fee: "",
         processingTime: "",
+        paymentMethod: "paystack",
         requirements: [
           {
             label: "",
@@ -51,6 +52,7 @@ export default function AddNewVisaRequirement() {
           name: "",
           fee: "",
           processingTime: "",
+          paymentMethod: "paystack",
           requirements: [
             {
               label: "",
@@ -293,6 +295,18 @@ export default function AddNewVisaRequirement() {
                     required
                   />
                 </div>
+              </div>
+
+              <div className="mb-3">
+                <label className="form-label">Payment Method</label>
+                <select
+                  className="form-select"
+                  value={visaType.paymentMethod || "paystack"}
+                  onChange={(e) => handleVisaTypeChange(visaTypeIndex, "paymentMethod", e.target.value)}
+                >
+                  <option value="paystack">Paystack (Online Payment)</option>
+                  <option value="manual">Manual Payment (Bank Transfer)</option>
+                </select>
               </div>
 
               {/* Requirements */}

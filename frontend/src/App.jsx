@@ -28,6 +28,7 @@ import HotelBookingConfirmation from "./pages/HotelBookingConfirmation.jsx";
 import VisaSuccess from "./pages/VisaSuccess.jsx";
 import PackageSuccess from "./pages/PackageSuccess.jsx";
 import VisaPayment from "./pages/VisaPayment";
+import VisaManualPayment from "./pages/VisaManualPayment.jsx";
 import PackageConfirmation from "./pages/PackageConfirmation.jsx";
 import ForgotPassword from "./pages/ForgotPassword.jsx";
 import ResetPassword from "./pages/ResetPassword.jsx";
@@ -139,6 +140,7 @@ export default function App() {
             element={<PackageConfirmation />}
           />
           <Route path="/visa-payment" element={<VisaPayment />} />
+          <Route path="/visa-manual-payment" element={<VisaManualPayment />} />
           <Route path="/forgot-password" element={<ForgotPassword />} />
           <Route path="/reset-password/:token" element={<ResetPassword />} />
           <Route path="/privacy-policy" element={<PrivacyPolicy />} />
