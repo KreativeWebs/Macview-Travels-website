@@ -19,11 +19,11 @@ function VisaManualPayment() {
 
   const { formData, selectedCountry, selectedVisaType, touristRequirements, fee, processingTime, currency } = state;
 
-  // Hardcoded account details - TODO: Move to environment variables
+  // Account details from environment variables
   const accountDetails = {
-    bankName: "United Bank for Africa (UBA)",
-    accountName: "Macview-J Travel Solutions Limited",
-    accountNumber: "3004873230",
+    bankName: import.meta.env.BANK_NAME || "United Bank for Africa (UBA)",
+    accountName: import.meta.env.BANK_ACCOUNT_NAME || "Macview-J Travel Solutions Limited",
+    accountNumber: import.meta.env.BANK_ACCOUNT_NUMBER || "3004873230",
   };
 
   const handleFileChange = (e) => {
