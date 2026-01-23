@@ -13,6 +13,13 @@ function FeaturedPackagesCard({
 })
 
 {
+  const truncateDescription = (desc) => {
+    if (desc && desc.length > 200) {
+      return desc.substring(0, 200) + '...';
+    }
+    return desc || '';
+  };
+
   return (
     <>
       <div className="col-lg-4 col-md-6 wow fadeInUp" data-wow-delay="0.1s">
@@ -21,6 +28,8 @@ function FeaturedPackagesCard({
           style={{
             borderRadius: "15px",
             height: "600px",
+            display: "flex",
+            flexDirection: "column",
           }}
         >
           <div
@@ -29,6 +38,7 @@ function FeaturedPackagesCard({
               width: "100%", // makes it stretch full width of parent
               height: "250px", // set your preferred fixed height
               overflow: "hidden",
+              flexShrink: 0,
             }}
           >
             <img
@@ -56,19 +66,19 @@ function FeaturedPackagesCard({
               {packagepersons}
             </small>
           </div>
-          <div className="text-center p-4">
+          <div className="text-center p-4" style={{ display: 'flex', flexDirection: 'column', height: '100%' }}>
             <h3 className="mb-0" style={{ fontFamily: "Raleway" }}>
               {packageprice}
             </h3>
 
             <h5
               className="mt-4"
-              style={{ fontFamily: "Raleway", color: "#175AA1" }}
+              style={{ fontFamily: "Raleway", color: "#175AA1", fontWeight: "800", fontSize: "20px" }}
             >
               {packagetitle}
             </h5>
-            <p>
-             {packagedesc}
+            <p style={{ fontSize: "14px", lineHeight: "1.4", marginBottom: "15px", flexGrow: 1 }}>
+             {truncateDescription(packagedesc)}
             </p>
             <div className="d-flex justify-content-center mb-2">
               <Link

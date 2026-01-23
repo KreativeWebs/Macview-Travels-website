@@ -282,7 +282,7 @@ export default function PackageDetails() {
         heroheaderbg={packageData.backgroundImage}
         heroheadertitle={packageData.title}
         pageName="Package Details"
-        heroheaderdesc={packageData.description}
+        heroheaderdesc=""
       />
 
       <div className="container-xxl py-5">

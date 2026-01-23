@@ -29,7 +29,9 @@ function UpdateVisa() {
     phoneNumber: "",
     countryCode: "+234",
   });
-  const [touristRequirements, setTouristRequirements] = useState([]);
+  const [selectedVisaType, setSelectedVisaType] = useState("");
+  const [availableVisaTypes, setAvailableVisaTypes] = useState([]);
+  const [visaRequirements, setVisaRequirements] = useState([]);
   const [fee, setFee] = useState(0);
   const [processingTime, setProcessingTime] = useState("");
   const [uploadProgress, setUploadProgress] = useState({});
@@ -72,20 +74,23 @@ function UpdateVisa() {
         if (!res.ok) throw new Error("Failed to fetch visa requirements");
 
         const data = await res.json();
-        const touristVisa = data.visaTypes.find(v => v.name.toLowerCase() === "tourist");
 
-        if (!touristVisa) {
-          toast.error("No Tourist visa available for this country");
+        if (!data.visaTypes || data.visaTypes.length === 0) {
+          toast.error("No visa types available for this country");
           setVisaData(null);
-          setTouristRequirements([]);
+          setAvailableVisaTypes([]);
+          setVisaRequirements([]);
           setFee(0);
           return;
         }
 
         setVisaData(data);
-        setTouristRequirements(touristVisa.requirements || []);
-        setFee(touristVisa.fee || 0);
-        setProcessingTime(touristVisa.processingTime || "");
+        setAvailableVisaTypes(data.visaTypes);
+
+        // If no visa type is selected yet, select the first one
+        if (!selectedVisaType && data.visaTypes.length > 0) {
+          setSelectedVisaType(data.visaTypes[0].name);
+        }
       } catch (error) {
         console.error(error);
         toast.error("Error fetching visa data");
@@ -94,6 +99,23 @@ function UpdateVisa() {
 
     fetchVisaData();
   }, [selectedCountry]);
+
+  // Update requirements when visa type changes
+  useEffect(() => {
+    if (!visaData || !selectedVisaType) return;
+
+    const selectedVisa = visaData.visaTypes.find(v => v.name.toLowerCase() === selectedVisaType.toLowerCase());
+
+    if (selectedVisa) {
+      setVisaRequirements(selectedVisa.requirements || []);
+      setFee(selectedVisa.fee || 0);
+      setProcessingTime(selectedVisa.processingTime || "");
+    } else {
+      setVisaRequirements([]);
+      setFee(0);
+      setProcessingTime("");
+    }
+  }, [selectedVisaType, visaData]);
 
   // Fetch list of available countries
   const fetchCountries = async () => {
@@ -213,7 +235,7 @@ function UpdateVisa() {
     }
 
     // Prepare documents
-    const documents = touristRequirements.map(req => ({
+    const documents = visaRequirements.map(req => ({
       label: req.label,
       type: req.type,
       required: req.required,
@@ -224,7 +246,7 @@ function UpdateVisa() {
       fullName: formData.fullName,
       phoneNumber: `${formData.countryCode}${formData.phoneNumber}`,
       destinationCountry: selectedCountry,
-      visaType: "Tourist",
+      visaType: selectedVisaType,
       documents,
     };
 
@@ -325,10 +347,30 @@ function UpdateVisa() {
             )}
           </select>
 
-          {touristRequirements.length > 0 && (
+          {availableVisaTypes.length > 0 && (
+            <>
+              <label className="form-label mt-3">Select Visa Type</label>
+              <select
+                value={selectedVisaType}
+                onChange={e => setSelectedVisaType(e.target.value)}
+                className="form-select"
+                required
+                style={{ borderRadius: "4px", borderColor: "#c9b5b5ff" }}
+              >
+                <option value="">Select a visa type</option>
+                {availableVisaTypes.map((visaType) => (
+                  <option key={visaType.name} value={visaType.name}>
+                    {visaType.name}
+                  </option>
+                ))}
+              </select>
+            </>
+          )}
+
+          {visaRequirements.length > 0 && (
             <div className="mt-4">
-              <p style={{ fontWeight: "bold" }}>Tourist Visa Requirements</p>
-              {touristRequirements.map((req, index) => (
+              <p style={{ fontWeight: "bold" }}>{selectedVisaType} Visa Requirements</p>
+              {visaRequirements.map((req, index) => (
                 <div key={index} className="mt-3">
                   <label className="form-label">{req.label}</label>
                   {req.type === "file" ? (

@@ -23,7 +23,9 @@ function VisaProcessing() {
     countryCode: "+234",
   });
 
-  const [touristRequirements, setTouristRequirements] = useState(prevState.touristRequirements || []);
+  const [selectedVisaType, setSelectedVisaType] = useState(prevState.selectedVisaType || "");
+  const [availableVisaTypes, setAvailableVisaTypes] = useState([]);
+  const [visaRequirements, setVisaRequirements] = useState(prevState.visaRequirements || []);
   const [fee, setFee] = useState(prevState.fee || 0);
   const [processingTime, setProcessingTime] = useState(prevState.processingTime || "");
   const [currency, setCurrency] = useState(prevState.currency || "NGN");
@@ -146,21 +148,23 @@ function VisaProcessing() {
         if (!res.ok) throw new Error("Failed to fetch visa requirements");
 
         const data = await res.json();
-        const touristVisa = data.visaTypes.find(v => v.name.toLowerCase() === "tourist");
 
-        if (!touristVisa) {
-          toast.error("No Tourist visa available for this country");
+        if (!data.visaTypes || data.visaTypes.length === 0) {
+          toast.error("No visa types available for this country");
           setVisaData(null);
-          setTouristRequirements([]);
+          setAvailableVisaTypes([]);
+          setVisaRequirements([]);
           setFee(0);
           return;
         }
 
         setVisaData(data);
-        setTouristRequirements(touristVisa.requirements || []);
-        setFee(touristVisa.fee || 0);
-        setProcessingTime(touristVisa.processingTime || "");
-        setCurrency(touristVisa.currency || "NGN");
+        setAvailableVisaTypes(data.visaTypes);
+
+        // If no visa type is selected yet, select the first one
+        if (!selectedVisaType && data.visaTypes.length > 0) {
+          setSelectedVisaType(data.visaTypes[0].name);
+        }
       } catch (error) {
         console.error(error);
         toast.error("Error fetching visa data");
@@ -169,6 +173,25 @@ function VisaProcessing() {
 
     fetchVisaData();
   }, [selectedCountry]);
+
+  // Update requirements when visa type changes
+  useEffect(() => {
+    if (!visaData || !selectedVisaType) return;
+
+    const selectedVisa = visaData.visaTypes.find(v => v.name.toLowerCase() === selectedVisaType.toLowerCase());
+
+    if (selectedVisa) {
+      setVisaRequirements(selectedVisa.requirements || []);
+      setFee(selectedVisa.fee || 0);
+      setProcessingTime(selectedVisa.processingTime || "");
+      setCurrency(selectedVisa.currency || "NGN");
+    } else {
+      setVisaRequirements([]);
+      setFee(0);
+      setProcessingTime("");
+      setCurrency("NGN");
+    }
+  }, [selectedVisaType, visaData]);
 
   // Fetch list of available countries so admin-added entries appear immediately
   const fetchCountries = async () => {
@@ -215,7 +238,7 @@ function VisaProcessing() {
   }, []);
 
   const handleNext = () => {
-    if (!formData.fullName || !formData.phoneNumber || !selectedCountry) {
+    if (!formData.fullName || !formData.phoneNumber || !selectedCountry || !selectedVisaType) {
       toast.error("Please fill all required fields");
       return;
     }
@@ -234,25 +257,25 @@ function VisaProcessing() {
       return;
     }
 
-    const touristVisa = visaData.visaTypes.find(v => v.name.toLowerCase() === "tourist");
-
-    if (!touristVisa) {
-      toast.error("Tourist visa type not found");
+    // Find the selected visa type
+    const visaType = visaData.visaTypes.find(v => v.name.toLowerCase() === selectedVisaType.toLowerCase());
+    if (!visaType) {
+      toast.error("Selected visa type not found");
       return;
     }
 
-    const paymentMethod = touristVisa.paymentMethod || "paystack";
+    const paymentMethod = visaType.paymentMethod || "paystack";
 
     navigate("/visa-payment", {
       state: {
         formData,
         selectedCountry,
-        selectedVisaType: "Tourist",
-        touristRequirements: touristVisa.requirements,
-        fee: touristVisa.fee,
-        processingTime: touristVisa.processingTime,
+        selectedVisaType: visaType.name,
+        visaRequirements: visaType.requirements,
+        fee: visaType.fee,
+        processingTime: visaType.processingTime,
         paymentMethod,
-        currency: touristVisa.currency || "NGN",
+        currency: visaType.currency || "NGN",
       },
     });
   };
@@ -305,7 +328,7 @@ function VisaProcessing() {
           </div>
 
           <p className="mt-5" style={{ fontWeight: "bold" }}>VISA DETAILS</p>
-          <hr />
+           <hr />
 
           <label className="form-label mt-3">Select Country</label>
           <select
@@ -329,12 +352,30 @@ function VisaProcessing() {
             )}
           </select>
 
+          {availableVisaTypes.length > 0 && (
+            <>
+              <label className="form-label mt-3">Select Visa Type</label>
+              <select
+                value={selectedVisaType}
+                onChange={e => setSelectedVisaType(e.target.value)}
+                className="form-select"
+                required
+                style={{ borderRadius: "4px", borderColor: "#c9b5b5ff" }}
+              >
+                <option value="">Select a visa type</option>
+                {availableVisaTypes.map((visaType) => (
+                  <option key={visaType.name} value={visaType.name}>
+                    {visaType.name}
+                  </option>
+                ))}
+              </select>
+            </>
+          )}
 
-
-          {touristRequirements.length > 0 && (
+          {visaRequirements.length > 0 && selectedVisaType && (
             <div className="mt-4">
-              <p style={{ fontWeight: "bold" }}>Tourist Visa Requirements</p>
-              {touristRequirements.map((req, index) => (
+              <p style={{ fontWeight: "bold" }}>{selectedVisaType} Visa Requirements</p>
+              {visaRequirements.map((req, index) => (
                 <div key={index} className="mt-3">
                   <label className="form-label">{req.label}</label>
                   {req.type === "file" ? (
