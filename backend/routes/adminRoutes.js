@@ -1109,10 +1109,59 @@ router.delete("/visa-requirements/:id", async (req, res) => {
   }
 });
 
+// Reorder packages
+router.put("/packages/reorder", async (req, res) => {
+  try {
+    const { packageId, direction } = req.body;
+
+    if (!packageId || !direction) {
+      return res.status(400).json({ message: "Package ID and direction are required" });
+    }
+
+    if (!['up', 'down'].includes(direction)) {
+      return res.status(400).json({ message: "Direction must be 'up' or 'down'" });
+    }
+
+    // Get all active packages sorted by order
+    const packages = await Package.find({ isActive: true }).sort({ order: 1, createdAt: -1 });
+    const currentIndex = packages.findIndex(pkg => pkg._id.toString() === packageId);
+
+    if (currentIndex === -1) {
+      return res.status(404).json({ message: "Package not found" });
+    }
+
+    let targetIndex;
+    if (direction === 'up' && currentIndex > 0) {
+      targetIndex = currentIndex - 1;
+    } else if (direction === 'down' && currentIndex < packages.length - 1) {
+      targetIndex = currentIndex + 1;
+    } else {
+      return res.json({ message: "Cannot move package in that direction" });
+    }
+
+    // Swap the packages in the array to get the new order
+    const newPackages = [...packages];
+    [newPackages[currentIndex], newPackages[targetIndex]] = [newPackages[targetIndex], newPackages[currentIndex]];
+
+    // Update orders to be sequential (0, 1, 2, ...)
+    for (let i = 0; i < newPackages.length; i++) {
+      newPackages[i].order = i;
+      await newPackages[i].save();
+    }
+
+    // Return the updated packages sorted by order
+    const updatedPackages = await Package.find({ isActive: true }).sort({ order: 1, createdAt: -1 });
+    res.json({ message: "Package reordered successfully", packages: updatedPackages });
+  } catch (error) {
+    console.error("Error reordering packages:", error);
+    res.status(500).json({ message: "Error reordering packages" });
+  }
+});
+
 // Get all packages
 router.get("/packages", async (req, res) => {
   try {
-    const packages = await Package.find({ isActive: true }).sort({ createdAt: -1 });
+    const packages = await Package.find({ isActive: true }).sort({ order: 1, createdAt: -1 });
     res.json({ packages });
   } catch (error) {
     console.error("Error fetching packages:", error);
@@ -1162,6 +1211,10 @@ router.post("/packages", upload.single("backgroundImage"), async (req, res) => {
       backgroundImageUrl = req.file.path; // Cloudinary URL
     }
 
+    // Get the maximum order value for active packages
+    const maxOrderPackage = await Package.findOne({ isActive: true }).sort({ order: -1 });
+    const nextOrder = maxOrderPackage ? maxOrderPackage.order + 1 : 0;
+
     const newPackage = new Package({
       title,
       description,
@@ -1175,6 +1228,7 @@ router.post("/packages", upload.single("backgroundImage"), async (req, res) => {
       requirements: requirements ? JSON.parse(requirements) : [],
       promoCode: promoCode || "",
       discountPercentage: Number(discountPercentage) || 0,
+      order: nextOrder,
     });
 
     await newPackage.save();
@@ -1259,6 +1313,8 @@ router.delete("/packages/:id", async (req, res) => {
     res.status(500).json({ message: "Error deleting package" });
   }
 });
+
+
 
 // Create package booking from admin
 router.post("/package-bookings", async (req, res) => {

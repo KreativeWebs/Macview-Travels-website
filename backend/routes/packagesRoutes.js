@@ -62,7 +62,7 @@ router.get("/exchange-rate", async (req, res) => {
 // -----------------------------------------------------------
 router.get("/", async (req, res) => {
   try {
-    const packages = await Package.find({ isActive: true }).sort({ createdAt: -1 });
+    const packages = await Package.find({ isActive: true }).sort({ order: 1, createdAt: -1 });
     res.json({ packages });
   } catch (error) {
     console.error("Error fetching packages:", error);

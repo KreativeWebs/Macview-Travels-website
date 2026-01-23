@@ -76,6 +76,10 @@ const packageSchema = new mongoose.Schema(
       max: 100,
       default: 0,
     },
+    order: {
+      type: Number,
+      default: 0,
+    },
   },
   {
     timestamps: true,

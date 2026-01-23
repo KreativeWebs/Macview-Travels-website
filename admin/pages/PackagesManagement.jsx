@@ -50,6 +50,27 @@ export default function PackagesManagement() {
     setPackageToDelete(null);
   };
 
+  const handleReorder = async (packageId, direction) => {
+    try {
+      // Make API call
+      const response = await adminAxios.put("/packages/reorder", { packageId, direction });
+      toast.success("Package reordered successfully");
+
+      // Use the updated packages from the response
+      if (response.data.packages) {
+        setPackages(response.data.packages);
+      } else {
+        // Fallback to fetch if no packages in response
+        fetchPackages();
+      }
+    } catch (error) {
+      console.error("Error reordering package:", error);
+      toast.error("Failed to reorder package");
+      // Revert on error by fetching fresh data
+      fetchPackages();
+    }
+  };
+
   if (loading) {
     return (
       <div className="container-fluid">
@@ -125,7 +146,22 @@ export default function PackagesManagement() {
                           <td>{pkg.persons}</td>
                           <td>
                             <div className="btn-group" role="group">
-                  
+                              <button
+                                className="btn btn-sm btn-outline-primary"
+                                onClick={() => handleReorder(pkg._id, 'up')}
+                                title="Move Up"
+                                disabled={packages.indexOf(pkg) === 0}
+                              >
+                                <i className="fas fa-arrow-up"></i>
+                              </button>
+                              <button
+                                className="btn btn-sm btn-outline-primary"
+                                onClick={() => handleReorder(pkg._id, 'down')}
+                                title="Move Down"
+                                disabled={packages.indexOf(pkg) === packages.length - 1}
+                              >
+                                <i className="fas fa-arrow-down"></i>
+                              </button>
                               <Link
                                 to={`/packages/edit/${pkg._id}`}
                                 className="btn btn-sm btn-outline-secondary"
