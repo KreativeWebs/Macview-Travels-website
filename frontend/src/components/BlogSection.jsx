@@ -77,7 +77,7 @@ export default function BlogSection() {
               blogImage={blog.image}
               blogTitle={blog.title}
               blogDate={new Date(blog.date).toLocaleDateString()}
-              blogExcerpt={truncateAtSentence(blog.content, 300)}
+              blogExcerpt={truncateAtSentence(blog.content, 200)}
               blogId={blog._id}
             />
           ))}
@@ -108,7 +108,7 @@ export default function BlogSection() {
                     blogImage={blog.image}
                     blogTitle={blog.title}
                     blogDate={new Date(blog.date).toLocaleDateString()}
-              blogExcerpt={truncateAtSentence(blog.content, 220)}
+              blogExcerpt={truncateAtSentence(blog.content, 200)}
                     blogId={blog._id}
                   />
                 </div>

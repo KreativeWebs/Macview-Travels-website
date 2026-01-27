@@ -74,9 +74,33 @@ export const authenticateAdmin = async (req, res, next) => {
     } catch (error) {
       console.warn(`Admin auth: token verification failed: ${error.message}`);
       if (error.name === 'TokenExpiredError') {
-        return res.status(404).json({ success: false, message: "Access token expired. Please login again." });
+        // Try to refresh using refresh token from cookies
+        const refreshToken = req.cookies.refreshToken;
+        if (refreshToken) {
+          try {
+            const refreshDecoded = jwt.verify(refreshToken, process.env.REFRESH_TOKEN_SECRET);
+            // Check if it's an admin
+            const admin = await Admin.findById(refreshDecoded.id);
+            if (!admin || !admin.isActive) {
+              return res.status(401).json({ success: false, message: "Invalid admin refresh token" });
+            }
+            // Create new access token
+            const newAccessToken = jwt.sign({ id: refreshDecoded.id }, process.env.ACCESS_TOKEN_SECRET, {
+              expiresIn: "15m",
+            });
+            // Set the new token in the header for this request
+            req.headers.authorization = `Bearer ${newAccessToken}`;
+            decoded = jwt.verify(newAccessToken, process.env.ACCESS_TOKEN_SECRET);
+          } catch (refreshError) {
+            console.warn(`Admin auth: refresh failed: ${refreshError.message}`);
+            return res.status(401).json({ success: false, message: "Invalid or expired refresh token" });
+          }
+        } else {
+          return res.status(401).json({ success: false, message: "Access token expired and no refresh token available" });
+        }
+      } else {
+        return res.status(401).json({ success: false, message: "Invalid token" });
       }
-      return res.status(404).json({ success: false, message: "Invalid token" });
     }
 
     const admin = await Admin.findById(decoded.id);
@@ -90,6 +114,6 @@ export const authenticateAdmin = async (req, res, next) => {
     next();
   } catch (error) {
     console.error("Admin authentication error:", error.message || error);
-    res.status(404).json({ success: false, message: "Authentication failed" });
+    res.status(401).json({ success: false, message: "Authentication failed" });
   }
 };
